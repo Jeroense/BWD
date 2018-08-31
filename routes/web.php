@@ -32,6 +32,7 @@ Route::prefix('manage')->middleware('role:superadministrator|administrator|edito
 
 Route::prefix('products')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
     Route::get('/', 'ProductController@index');
+    Route::get('/index', 'ProductController@index')->name('products.index');
     Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
 });
 

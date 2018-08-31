@@ -13,7 +13,7 @@
         </p>
 
         <ul class="menu-list">
-            <li><a href="{{route('products.dashboard')}}" class="{{ Nav::isRoute('products.dashboard') }}">Artikel index</a></li>
+            <li><a href="{{route('products.index')}}" class="{{ Nav::isRoute('products.index') }}">Artikel index</a></li>
         </ul>
     </aside>
 </div>
