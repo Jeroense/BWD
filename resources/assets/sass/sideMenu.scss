@@ -1,0 +1,30 @@
+#side-menu {
+    position: fixed;
+    top: 4rem;
+    left: -242px;
+    bottom: 0;
+    width: 242px;
+    background-color: white;
+    overflow-y: scroll;
+    transition: left 0.5s ease-in-out;
+
+    &.is-active {
+        left: 0;
+        transition: left 0.5s ease-in-out;
+    }
+
+    @include desktop {
+        left: 0;
+    }
+}
+
+#slideout-button {
+    font-size: 200%;
+    text-align: left;
+    margin-left: 0;
+    transition: 1s;
+    &.is-active {
+        transition: 1s;
+        transform: rotateY(180deg);
+    }
+}
