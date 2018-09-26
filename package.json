@@ -21,6 +21,7 @@
         "bulma": "^0.7.1"
     },
     "dependencies": {
-        "font-awesome": "^4.7.0"
+        "font-awesome": "^4.7.0",
+        "npm": "^6.4.1"
     }
 }

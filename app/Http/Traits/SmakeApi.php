@@ -17,9 +17,33 @@ trait SmakeApi {
             'Accept-Language' => 'nl'
         ];
 
-        $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
-        $products = json_decode($client->request($method, $url, ['headers' => $headers])->getBody())->data;
-        // dd($products);
+        $client = new Client([
+            'base_uri' => env('SMAKE_URI', '')
+        ]);
+        $products = json_decode($client->request($method, $url, [
+            'headers' => $headers
+        ])->getBody())->data;
         return $products;
+    }
+
+    public function GetMedia($imageId) {
+
+        $resource = fopen('productImages/' . 'logo'. '.png', 'w');
+
+        $headers = [
+            'Accept' => 'image/png',
+        ];
+        $options = [
+            'sink' => $resource,
+            'http_errors' => false
+        ];
+
+        $client = new Client([
+            'base_uri' => env('MEDIA_URI', '')
+        ]);
+
+        $media = $client->get($imageId, $options);
+        fclose($resource);
+        return $media;
     }
 }

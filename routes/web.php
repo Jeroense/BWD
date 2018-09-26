@@ -33,7 +33,16 @@ Route::prefix('manage')->middleware('role:superadministrator|administrator|edito
 Route::prefix('products')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
     Route::get('/', 'ProductController@index');
     Route::get('/index', 'ProductController@index')->name('products.index');
+    Route::get('/media', 'ProductController@media')->name('products.media');
     Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
+});
+
+Route::prefix('design')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
+    Route::get('/', 'DesignController@index');
+    Route::get('/dashboard', 'DesignController@dashboard')->name('design.dashboard');
+    Route::get('/index', 'DesignController@index')->name('design.index');
+    Route::get('/upload', 'DesignController@upload')->name('design.upload');
+
 });
 
 Route::get('/home', 'HomeController@index')->name('home');

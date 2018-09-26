@@ -14,6 +14,7 @@
 
         <ul class="menu-list">
             <li><a href="{{route('products.index')}}" class="{{ Nav::isRoute('products.index') }}">Artikel index</a></li>
+            <li><a href="{{route('products.media')}}" class="{{ Nav::isRoute('products.media') }}">Media index</a></li>
         </ul>
     </aside>
 </div>

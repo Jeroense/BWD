@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
+use App\Design;
 use Illuminate\Http\Request;
-use App\Http\Traits\SmakeApi;
 
-class ProductController extends Controller
+class DesignController extends Controller
 {
-    use SmakeApi;
+    public function dashboard() {
+        return view('design.dashboard');
+    }
 
     /**
      * Display a listing of the resource.
@@ -17,21 +18,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = $this->GetJson();
-        // dd($products);
-        return view('products.index',compact('products'));
+        return view('design.index');
     }
 
-    public function media()
+    public function upload()
     {
-        $imageId='2838736/w_200,h_223/w_200,h_223/fit_fill/fm_png';
-        $media = $this->GetMedia($imageId);
-         dd($media);
-        return view('products.media',compact('media'));
-    }
-
-    public function dashboard() {
-        return view('products.dashboard');
+        return view('design.upload');
     }
 
     /**
@@ -58,10 +50,10 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Product  $product
+     * @param  \App\Design  $design
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show(Design $design)
     {
         //
     }
@@ -69,10 +61,10 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Product  $product
+     * @param  \App\Design  $design
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit(Design $design)
     {
         //
     }
@@ -81,10 +73,10 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Product  $product
+     * @param  \App\Design  $design
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Design $design)
     {
         //
     }
@@ -92,10 +84,10 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Product  $product
+     * @param  \App\Design  $design
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Design $design)
     {
         //
     }

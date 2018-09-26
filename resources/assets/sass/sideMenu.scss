@@ -6,6 +6,7 @@
     width: 242px;
     background-color: white;
     overflow-y: scroll;
+    z-index: 10;
     transition: left 0.5s ease-in-out;
 
     &.is-active {

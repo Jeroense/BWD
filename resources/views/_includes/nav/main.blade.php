@@ -35,6 +35,10 @@
                     Artikelen
                 </a>
 
+                <a class="navbar-item is-hoverable" href="{{ route('design.dashboard') }}">
+                        Designs
+                    </a>
+
                 <a class="navbar-item is-hoverable" href="#">
                     Overzichten
                 </a>

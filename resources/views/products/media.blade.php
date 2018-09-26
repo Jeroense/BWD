@@ -4,7 +4,7 @@
 <div class="container">
     <div class="columns m-t-5">
         <div class="column">
-            <h1 class="title">Producten</h1>
+            <h1 class="title">Overzicht Media</h1>
         </div> <!-- end of column -->
 
         <div class="column">
@@ -22,10 +22,6 @@
                 @endforeach
             </div>
 
-            {{-- <div class="field">
-                <label for="name" class="label">Email</label>
-                <p class="m-l-15">{{ $user->email }}</p>
-            </div> --}}
 
 
         </div>

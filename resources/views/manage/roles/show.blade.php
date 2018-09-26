@@ -1,7 +1,7 @@
 @extends('layouts.manage')
 @section('content')
-<div class="container column is-10 is-offset-2">
-    <div class="columns m-t-10">
+<div class="container">
+    <div class="columns m-t-5">
         <div class="column">
             <h1 class="title">{{ $role->display_name }}<small class="m-l-25"><em>({{ $role->name }})</em></small></h1>
             <h5 class="subtitle">{{ $role->description }}</h5>

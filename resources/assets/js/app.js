@@ -4,16 +4,15 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-
 require('./bootstrap');
 require('./sideBar');
-// window.Vue = require('Vue');
-// window.Vue = require('Vue');
+
+
+
 import Buefy from 'buefy';
-// import 'buefy/lib/buefy.css';
 
 Vue.use(Buefy);
-require('./sideBar');
+// require('./sideBar');
 
 // Setup Vue object
 // var app = new Vue({
@@ -23,3 +22,4 @@ require('./sideBar');
 //     }
 // });
 
+require('./upload');
