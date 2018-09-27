@@ -1,5 +1,4 @@
-@extends('layouts.design')
+@extends('layouts.orders')
 @section('content')
 
 @endsection
-

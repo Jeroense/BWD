@@ -6,10 +6,9 @@
  */
 require('./bootstrap');
 require('./sideBar');
+require('./upload');
 
-
-
-import Buefy from 'buefy';
+// import Buefy from 'buefy';
 
 Vue.use(Buefy);
 // require('./sideBar');
@@ -22,4 +21,3 @@ Vue.use(Buefy);
 //     }
 // });
 
-require('./upload');

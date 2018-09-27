@@ -37,11 +37,19 @@ Route::prefix('products')->middleware('role:superadministrator|administrator|edi
     Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
 });
 
+Route::prefix('orders')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
+    Route::get('/', 'OrderController@index');
+    Route::get('/index', 'OrderController@index')->name('orders.index');
+    Route::get('/media', 'OrderController@media')->name('orders.media');
+    Route::get('/dashboard', 'OrderController@dashboard')->name('orders.dashboard');
+});
+
 Route::prefix('design')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
     Route::get('/', 'DesignController@index');
     Route::get('/dashboard', 'DesignController@dashboard')->name('design.dashboard');
     Route::get('/index', 'DesignController@index')->name('design.index');
     Route::get('/upload', 'DesignController@upload')->name('design.upload');
+    Route::post('/fSave', 'DesignController@fSave')->name('design.fSave');
 
 });
 

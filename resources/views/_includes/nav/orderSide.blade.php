@@ -5,7 +5,7 @@
             Orders
         </p>
         <ul class="menu-list">
-            <li><a href="{{route('products.dashboard')}}" class="{{ Nav::isRoute('products.dashboard') }}">Orders 1</a></a></li>
+            <li><a href="{{route('orders.dashboard')}}" class="{{ Nav::isRoute('orders.dashboard') }}">Orders 1</a></a></li>
         </ul>
 
         <p class="menu-label">
@@ -13,7 +13,7 @@
         </p>
 
         <ul class="menu-list">
-            <li><a href="{{route('products.dashboard')}}" class="{{ Nav::isRoute('products.dashboard') }}">Orders 2</a></li>
+            <li><a href="{{route('orders.dashboard')}}" class="{{ Nav::isRoute('orders.dashboard') }}">Orders 2</a></li>
         </ul>
     </aside>
 </div>

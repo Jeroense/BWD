@@ -1,25 +1,19 @@
 @extends('layouts.design')
-{{-- @section('scripts')
-<script src="{{ asset('js/upload.js') }}"></script>
-@endsection --}}
-
 @section('content')
 <div class="container">
     <div class="columns m-t-5">
         <div class="column">
             <h1 class="title">Design upload</h1>
             <hr/>
-            <form>
+            <form action="{{ route('design.fSave') }}" method="POST" enctype="multipart/form-data">
+                {{csrf_field()}}
                 <div class="field">
-                    <label for="imageFile"></label>
-                    <input type="file" name="imageFile">
+                    <label for="designImage"></label>
+                    <input type="file" name="designImage">
                 </div>
-
-                <input type="button" id="uploadFile" class=" button is-success is-small" value="save">
+                <input type="submit" id="uploadFile" class="button is-success is-small" value="save">
             </form>
         </div> <!-- end of column -->
     </div>
 </div>
-
-
 @endsection

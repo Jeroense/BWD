@@ -1,19 +1,10 @@
 const accordions = document.getElementsByClassName('has-submenu')
-const SlideOutButton = document.getElementById('slideout-button').addEventListener('click', function(e){
+// const SlideOutButton =
+document.getElementById('slideout-button').addEventListener('click', function(e){
     this.classList.toggle('is-active');
     document.getElementById('side-menu').classList.toggle('is-active');
 });
 
-// function setSubmenuStyles (submenu, maxHeight, margins) {
-//     submenu.style.maxHeight = maxHeight
-//     submenu.style.marginTop = margins
-//     submenu.style.marginBottom = margins
-// }
-
-// SlideOutButton.click = function() {
-//     this.classList.toggle('is-active');
-//     document.getElementById('side-menu').classList.toggle('is-active');
-// }
 
 for (var i = 0; i < accordions.length; i++) {
     if (accordions[i].classList.contains('is-active')) {

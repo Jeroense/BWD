@@ -5,11 +5,11 @@
                 <img src="{{ asset('images/logo-borduurwerkdeal.png') }}" width="204" height="45" alt="bwd logo"/>
             </a>
 
-            @if((Request::segment(1) == 'manage')|(Request::segment(1) == 'products'))
+            {{-- @if((Request::segment(1) == 'manage')|(Request::segment(1) == 'products')) --}}
                 <a href="#" class="navbar-item is-hidden-desktop" id="slideout-button">
                     <span class="icon"><i class="fa fa-arrow-circle-o-right"></i></span>
                 </a>
-            @endif
+            {{-- @endif --}}
 
             <div class="navbar-burger burger" data-target="navMenu">
                 <span></span>
@@ -27,7 +27,7 @@
                     </a>
                 @endrole
 
-                <a class="navbar-item is-hoverable" href="#">
+                <a class="navbar-item is-hoverable" href="{{ route('orders.dashboard') }}">
                     Orders
                 </a>
 
@@ -36,8 +36,8 @@
                 </a>
 
                 <a class="navbar-item is-hoverable" href="{{ route('design.dashboard') }}">
-                        Designs
-                    </a>
+                    Designs
+                </a>
 
                 <a class="navbar-item is-hoverable" href="#">
                     Overzichten

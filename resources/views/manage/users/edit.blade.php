@@ -42,7 +42,7 @@
                         </p>
                     </div>
                 </div>
-                
+
             </div>
 
             <div class="column is-offset-1">
