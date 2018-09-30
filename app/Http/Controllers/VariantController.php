@@ -6,7 +6,7 @@ use App\Product;
 use Illuminate\Http\Request;
 use App\Http\Traits\SmakeApi;
 
-class ProductController extends Controller
+class VariantController extends Controller
 {
     use SmakeApi;
 
@@ -17,9 +17,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = $this->GetJson();
+        $variants = $this->GetJson();
         // dd($products);
-        return view('products.index',compact('products'));
+        return view('variants.index',compact('variants'));
     }
 
     public function media()
@@ -27,11 +27,11 @@ class ProductController extends Controller
         $imageId='2838736/w_200,h_223/w_200,h_223/fit_fill/fm_png';
         $media = $this->GetMedia($imageId);
          dd($media);
-        return view('products.media',compact('media'));
+        return view('variants.media',compact('media'));
     }
 
     public function dashboard() {
-        return view('products.dashboard');
+        return view('variants.dashboard');
     }
 
     /**

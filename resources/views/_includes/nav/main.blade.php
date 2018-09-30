@@ -31,8 +31,8 @@
                     Orders
                 </a>
 
-                <a class="navbar-item is-hoverable" href="{{ route('products.dashboard') }}">
-                    Artikelen
+                <a class="navbar-item is-hoverable" href="{{ route('variants.dashboard') }}">
+                    Varianten
                 </a>
 
                 <a class="navbar-item is-hoverable" href="{{ route('design.dashboard') }}">

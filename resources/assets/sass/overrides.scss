@@ -1,26 +1,26 @@
 /* ========================================
-   ============ Text Overrides ===========
-   ======================================== */
+============ Text Overrides ===========
+======================================== */
 
-   .is-muted {
+.is-muted {
     color: $grey-light !important;
-  }
+}
 
-  a.is-muted:hover{
+a.is-muted:hover{
     color: $grey !important;
-  }
+}
 
-  /* ========================================
-     =========== Dropdown Override ==========
-     ======================================== */
+/* ========================================
+    =========== Dropdown Override ==========
+    ======================================== */
 
-  // Bulma doesn't come with a dropdown, so I have to take
-  // matters into my own hands. This creates a dropdown menu
-  .dropdown {
+// Bulma doesn't come with a dropdown, so I have to take
+// matters into my own hands. This creates a dropdown menu
+.dropdown {
     position: relative;
-  }
+}
 
-  .dropdown-menu {
+.dropdown-menu {
     box-shadow: 0 0 8px #777;
     background-color: white;
     display: none;
@@ -33,87 +33,90 @@
     box-shadow: 0 0 1px rgba(57,70,78,.15), 0 20px 55px -8px rgba(57,70,78,.25);
     text-align: left;
     li {
-      &.seperator {
+        &.seperator {
         margin: 5px 0;
         width: 100%;
         border-top: 1px solid #ccc;
-      }
+        }
 
-      &>a {
+        &>a {
         display: block;
         padding: 5px 0 5px 15px;
         margin: 5px 0;
         &:hover {
-          background-color: whitesmoke;
+            background-color: whitesmoke;
         }
-      }
+        }
     }
-  }
+}
 
-  .dropdown.is-open .dropdown-menu{
+.dropdown.is-open .dropdown-menu{
     display: block;
-  }
+}
 
-  .dropdown.is-aligned-right .dropdown-menu {
+.dropdown.is-aligned-right .dropdown-menu {
     left: auto;
     right: 0;
-  }
+}
 
 
-  /* ========================================
-     =========== Nav Item Override ==========
-     ======================================== */
+/* ========================================
+    =========== Nav Item Override ==========
+    ======================================== */
 
-  // I want the .nav-item design that comes from bulma,
-  // but with <button> instead of <a>. This is the bulma
-  // code but targeting <button> instead, plus a few
-  // modifications to normalize the <button> css
+// I want the .nav-item design that comes from bulma,
+// but with <button> instead of <a>. This is the bulma
+// code but targeting <button> instead, plus a few
+// modifications to normalize the <button> css
 
-  button.nav-item {
+button.nav-item {
     background-color: transparent;
     border: none;
     color: $text-light;
 
     &:hover {
-      color: $link-hover;
+        color: $link-hover;
     }
 
     // Modifiers
     &.is-active {
-      color: $link-active;
+        color: $link-active;
     }
 
     &.is-tab {
-      border-bottom: 1px solid transparent;
-      border-top: 1px solid transparent;
-      padding-bottom: calc(0.75rem - 1px);
-      padding-left: 1rem;
-      padding-right: 1rem;
-      padding-top: calc(0.75rem - 1px);
+        border-bottom: 1px solid transparent;
+        border-top: 1px solid transparent;
+        padding-bottom: calc(0.75rem - 1px);
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: calc(0.75rem - 1px);
     }
 
     &:hover {
-      border-bottom-color: $primary;
-      border-top-color: transparent;
+        border-bottom-color: $primary;
+        border-top-color: transparent;
     }
 
     &.is-active {
-      border-bottom: 3px solid $primary;
-      color: $primary;
-      padding-bottom: calc(0.75rem - 3px);
+        border-bottom: 3px solid $primary;
+        color: $primary;
+        padding-bottom: calc(0.75rem - 3px);
     }
-  }
+}
 
 
-  .nav-item img {
+.nav-item img {
     max-height: 2.8rem;
-  }
+}
 
-  .navbar {
+.navbar {
     height: 4rem;
-  }
+}
 
-  hr {
+hr {
     border: 1px solid lightgrey;
-  }
+}
 
+.table td {
+    vertical-align: middle;
+}

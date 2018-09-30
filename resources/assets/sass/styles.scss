@@ -2,3 +2,13 @@
     color: #333;
     font-weight: 600;
 }
+
+.designImage {
+    border: 1px solid rgb(212, 212, 212);
+    margin: 20px;
+    padding: 10px;
+}
+
+.designImage:hover {
+    width: 400px;
+}

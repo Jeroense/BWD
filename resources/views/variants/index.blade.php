@@ -1,10 +1,10 @@
-@extends('layouts.manage')
+@extends('layouts.variants')
 
 @section('content')
 <div class="container">
     <div class="columns m-t-5">
         <div class="column">
-            <h1 class="title">Producten</h1>
+            <h1 class="title">Varianten</h1>
         </div> <!-- end of column -->
 
         <div class="column">
@@ -17,17 +17,10 @@
         <div class="column">
             <div class="field">
                 <label for="name" class="label">Naam</label>
-                @foreach($products as $product)
-                    <p class="m-l-15">{{ $product->title }}</p>
+                @foreach($variants as $variant)
+                    <p class="m-l-15">{{ $variant->title }}</p>
                 @endforeach
             </div>
-
-            {{-- <div class="field">
-                <label for="name" class="label">Email</label>
-                <p class="m-l-15">{{ $user->email }}</p>
-            </div> --}}
-
-
         </div>
     </div>
 </div>

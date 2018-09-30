@@ -25,16 +25,15 @@ Route::prefix('manage')->middleware('role:superadministrator|administrator|edito
     Route::get('/dashboard', 'ManageController@dashboard')->name('manage.dashboard');
     Route::resource('/users', 'UserController');
     Route::resource('/system', 'SystemController');
-
     Route::resource('/permissions', 'PermissionController', ['except' => 'destroy']);
     Route::resource('/roles', 'RoleController', ['except' => 'destroy']);
 });
 
-Route::prefix('products')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
-    Route::get('/', 'ProductController@index');
-    Route::get('/index', 'ProductController@index')->name('products.index');
-    Route::get('/media', 'ProductController@media')->name('products.media');
-    Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
+Route::prefix('variants')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
+    Route::get('/', 'VariantController@index');
+    Route::get('/index', 'VariantController@index')->name('variants.index');
+    Route::get('/media', 'VariantController@media')->name('variants.media');
+    Route::get('/dashboard', 'VariantController@dashboard')->name('variants.dashboard');
 });
 
 Route::prefix('orders')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
@@ -49,7 +48,7 @@ Route::prefix('design')->middleware('role:superadministrator|administrator|edito
     Route::get('/dashboard', 'DesignController@dashboard')->name('design.dashboard');
     Route::get('/index', 'DesignController@index')->name('design.index');
     Route::get('/upload', 'DesignController@upload')->name('design.upload');
-    Route::post('/fSave', 'DesignController@fSave')->name('design.fSave');
+    Route::post('/fSave', 'DesignController@store')->name('design.fSave');
 
 });
 

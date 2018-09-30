@@ -17,32 +17,15 @@ class DesignController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return view('design.index');
+        $images = Design::All();
+        // dd($images);
+        return view('design.index', compact('images'));
     }
 
     public function upload() {
         return view('design.upload');
     }
 
-    public function fSave(Request $request) {
-
-        $this->validate($request, [
-            'designImage' => 'required|image|mimes:jpeg,jpg,png|max:9216'
-        ]);
-
-        $image = $request->designImage;
-        $design = new Design();
-        $design->originalName = $image->getClientOriginalName();
-        $design->mimeType = $image->getClientMimeType();
-        $design->fileSize = $image->getClientSize();
-        $design->fileName = time().md5($design->originalName).'.'.$image->getClientOriginalExtension();
-        $design->path = public_path('designImages');
-        $image->move($design->path, $design->fileName);
-        $design->save();
-
-        dd($image);
-        return view('design.index');
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -62,7 +45,21 @@ class DesignController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'designImage' => 'required|image|mimes:jpeg,jpg,png|max:9216'
+        ]);
+
+        $image = $request->designImage;
+        $design = new Design();
+        $design->originalName = $image->getClientOriginalName();
+        $design->mimeType = $image->getClientMimeType();
+        $design->fileSize = $image->getClientSize();
+        $design->fileName = time().md5($design->originalName).'.'.$image->getClientOriginalExtension();
+        $design->path = public_path('designImages');
+        $image->move($design->path, $design->fileName);
+        $design->save();
+
+        return redirect()->route('design.index');
     }
 
     /**
