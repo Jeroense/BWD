@@ -22,7 +22,7 @@ class CreateProductsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('variants', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('productId');
             $table->decimal('price',7,2);
@@ -43,24 +43,24 @@ class CreateProductsTable extends Migration
 
         Schema::create('attributes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('variantId');
+            $table->unsignedInteger('productId');
             $table->string('key');
             $table->string('value');
 
-            $table->foreign('variantId')
+            $table->foreign('productId')
                     ->references('id')
-                    ->on('variants')
+                    ->on('products')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });
 
         Schema::create('views', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('variantId');
+            $table->unsignedInteger('productId');
 
-            $table->foreign('variantId')
+            $table->foreign('productId')
                     ->references('id')
-                    ->on('variants')
+                    ->on('products')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });
@@ -179,7 +179,7 @@ class CreateProductsTable extends Migration
         Schema::dropIfExists('back');
         Schema::dropIfExists('views');
         Schema::dropIfExists('attributes');
-        Schema::dropIfExists('variants');
+        Schema::dropIfExists('products');
         Schema::dropIfExists('products');
     }
 }

@@ -7,6 +7,8 @@
 require('./bootstrap');
 require('./sideBar');
 require('./upload');
+require('./showProductDetail');
+
 
 import Buefy from 'buefy';
 

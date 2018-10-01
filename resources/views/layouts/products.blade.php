@@ -1,8 +1,8 @@
 @include('layouts._main')
 <body>
-    <div id="app">
+    <div id="app" class="contentArea">
         @include('_includes.nav.main')
-        @include('_includes.nav.variantSide')
+        @include('_includes.nav.productside')
         @yield('content')
         <script src="{{ asset('js/app.js') }}"></script>
         @yield('scripts')

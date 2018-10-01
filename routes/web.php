@@ -29,11 +29,13 @@ Route::prefix('manage')->middleware('role:superadministrator|administrator|edito
     Route::resource('/roles', 'RoleController', ['except' => 'destroy']);
 });
 
-Route::prefix('variants')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
-    Route::get('/', 'VariantController@index');
-    Route::get('/index', 'VariantController@index')->name('variants.index');
-    Route::get('/media', 'VariantController@media')->name('variants.media');
-    Route::get('/dashboard', 'VariantController@dashboard')->name('variants.dashboard');
+Route::prefix('products')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
+    Route::get('/', 'ProductController@index');
+    // Route::get('/index', 'ProductController@index')->name('products.index');
+    // Route::get('/create', 'ProductController@create')->name('products.create');
+    Route::resource('/products', 'ProductController');
+    Route::get('/media', 'ProductController@media')->name('products.media');
+    Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
 });
 
 Route::prefix('orders')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {

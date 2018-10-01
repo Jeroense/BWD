@@ -30,7 +30,7 @@
 
 @include('layouts._main')
 <body>
-    <div id="app" class="mainContent">
+    <div id="app" class="contentArea">
         @include('_includes.nav.main')
         @include('_includes.nav.designSide')
         <div class="column is-10 is-offset-3">
