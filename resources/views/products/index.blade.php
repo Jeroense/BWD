@@ -6,7 +6,6 @@
         <div class="column">
             <h1 class="title">Producten</h1>
         </div> <!-- end of column -->
-
         <div class="column">
         </div>
     </div>
@@ -23,8 +22,86 @@
                             <td colspan="2">{{ $product->description }}</td>
                             <td><a href="javascript:void(0)" class="button is-success productDetail">Details</a></td>
                         </tr>
-                        <tr class='test1'>
-                            <td class="hideDetail">{{ $product->id }}</td>
+                        <tr class="hideDetail">
+                            <td>
+                            @foreach($product->variants as $variant)
+                                <ul>
+                                    <li><strong>Variant ID: {{ $variant->id }}</strong></li>
+                                    <hr class="hrVariant">
+                                    <li>Origin code: <strong>{{ $variant->origin->code }}</strong></li>
+                                    <li>Prijs: <strong>{{ $variant->price }}</strong></li>
+                                    <li>BTW: <strong>{{ $variant->tax }}</strong></li>
+                                    <li>Totaal: <strong>{{ $variant->total }}</strong></li>
+                                    <li>BTW tarief: <strong>{{ $variant->tax_rate }}</strong></li>
+                                    <hr class="hrVariant">
+                                    @foreach($variant->attributes as $attribute)
+                                        <ul class="m-l-15">
+                                            <li>{{ $attribute->name }}: <strong>{{ $attribute->value }}</strong></li>
+                                        </ul>
+                                    @endforeach
+                                    <hr class="hrVariant">
+                                    <ul class="m-l-30">
+                                        <li>Media ID: <strong>{{ $variant->media_id }}</strong></li>
+                                        <li>Back view: Composite media id: <strong>{{ $variant->views->back->composite_media_id }}</strong></li>
+                                        @foreach($variant->views->back->customizations as $customization)
+                                            <ul class="m-l-15">
+                                                <li>Customization:</li>
+                                                <ul class="m-l-15">
+                                                    <li> Type: <strong>{{ $customization->type or 'Type not defined'}}</strong></li>
+                                                    <li> production media id: <strong>{{ $customization->production_media_id or 'No media found'}}</strong></li>
+                                                    <li> Preview media id: <strong>{{ $customization->preview_media_id or 'No media found'}}</strong></li>
+                                                    <li> Width: <strong>{{ $customization->dimension->width or 'No width found'}}</strong></li>
+                                                    <li> Height: <strong>{{ $customization->dimension->height or 'No height found'}}</strong></li>
+                                                </ul>
+                                            </ul>
+                                        @endforeach
+                                        <li>Left view: Composite media id: <strong>{{ $variant->views->left->composite_media_id }}</strong></li>
+                                        @foreach($variant->views->left->customizations as $customization)
+                                            <ul class="m-l-15">
+                                                <li>Customization:</li>
+                                                <ul class="m-l-15">
+                                                    <li> Type: <strong>{{ $customization->type or 'Type not defined'}}</strong></li>
+                                                    <li> production media id: <strong>{{ $customization->production_media_id or 'No media found'}}</strong></li>
+                                                    <li> Preview media id: <strong>{{ $customization->preview_media_id or 'No media found'}}</strong></li>
+                                                    <li> Width: <strong>{{ $customization->dimension->width or 'No width found'}}</strong></li>
+                                                    <li> Height: <strong>{{ $customization->dimension->height or 'No height found'}}</strong></li>
+                                                </ul>
+                                            </ul>
+                                        @endforeach
+                                        <li>Front view: Composite media id: <strong>{{ $variant->views->front->composite_media_id }}</strong></li>
+                                        @foreach($variant->views->front->customizations as $customization)
+                                            <ul class="m-l-15">
+                                                <li>Customization:</li>
+                                                <ul class="m-l-15">
+                                                    <li> Type: <strong>{{ $customization->type or 'Type not defined'}}</strong></li>
+                                                    <li> production media id: <strong>{{ $customization->production_media_id or 'No media found'}}</strong></li>
+                                                    <li> Preview media id: <strong>{{ $customization->preview_media_id or 'No media found'}}</strong></li>
+                                                    <li> Width: <strong>{{ $customization->dimension->width or 'No width found'}}</strong></li>
+                                                    <li> Height: <strong>{{ $customization->dimension->height or 'No height found'}}</strong></li>
+                                                </ul>
+                                            </ul>
+                                        @endforeach
+                                        <li>Right view: Composite media id: <strong>{{ $variant->views->right->composite_media_id }}</strong></li>
+                                        @foreach($variant->views->right->customizations as $customization)
+                                            <ul class="m-l-15">
+                                                <li>Customization:</li>
+                                                <ul class="m-l-15">
+                                                    <li> Type: <strong>{{ $customization->type or 'Type not defined'}}</strong></li>
+                                                    <li> production media id: <strong>{{ $customization->production_media_id or 'No media found'}}</strong></li>
+                                                    <li> Preview media id: <strong>{{ $customization->preview_media_id or 'No media found'}}</strong></li>
+                                                    <li> Width: <strong>{{ $customization->dimension->width or 'No width found'}}</strong></li>
+                                                    <li> Height: <strong>{{ $customization->dimension->height or 'No height found'}}</strong></li>
+                                                </ul>
+                                            </ul>
+                                        @endforeach
+                                    </ul>
+                                    <hr class="hrVariant">
+                                    <li>Created at: <strong>{{ $variant->created_at }}</strong></li>
+                                    <li>Updated at: <strong>{{ $variant->updated_at }}</strong></li>
+                                </ul>
+                                <hr class="detailSection">
+                            @endforeach
+                        </td>
                         </tr>
                     </table>
                     <hr>

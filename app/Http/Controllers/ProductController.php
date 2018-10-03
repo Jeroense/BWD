@@ -26,7 +26,7 @@ class ProductController extends Controller
     {
         $imageId='2838736/w_200,h_223/w_200,h_223/fit_fill/fm_png';
         $media = $this->GetMedia($imageId);
-         dd($media);
+        //  dd($media);
         return view('products.media',compact('media'));
     }
 

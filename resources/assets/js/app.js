@@ -8,8 +8,8 @@ require('./bootstrap');
 require('./sideBar');
 require('./upload');
 require('./showProductDetail');
-
-
+require('./customization');
+customization
 import Buefy from 'buefy';
 
 Vue.use(Buefy);

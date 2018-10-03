@@ -8,6 +8,28 @@
             </div>
         </div>
         <hr class="m-t-0">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {{csrf_field()}}
+            <div class="field">
+                <label class="inputLabel" for="baseImage">Kies een T-shirt</label>
+                <input type="file" id="baseImage" name="baseImage" accept=".jpg, .jpeg, .png">
+            </div>
+            <input type="submit" id="uploadFile" class="button is-success is-small" value="save">
+        </form>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {{csrf_field()}}
+            <div class="field">
+                <label for="designImage"></label>
+                <input type="file" name="designImage" accept=".jpg, .jpeg, .png">
+            </div>
+            <input type="submit" id="uploadFile" class="button is-success is-small" value="save">
+        </form>
+
+        <div id="container"></div>
+        <script src="customization.js"></script>
+    <input type="button" id="saveImage" value='Save Image'>
+
+
 
         <div class="columns">
             <div class="column">
@@ -21,28 +43,9 @@
             </div>
         </div>
     </div>
+    <script src="customization.js"></script>
 @endsection
 
 @section('scripts')
-    {{-- <script>
-        var app = new Vue({
-            el: '#app',
-            data: {
-                permissionType: 'crud',
-                resource: '',
-                crudSelected: ['create', 'read', 'update', 'delete']
-            },
-            methods: {
-                crudName: function(item) {
-                    return item.substr(0,1).toUpperCase() + item.substr(1) + " " + app.resource.substr(0,1).toUpperCase() + app.resource.substr(1);
-                },
-                crudSlug: function(item) {
-                    return item.toLowerCase() + "-" + app.resource.toLowerCase();
-                },
-                crudDescription: function(item) {
-                    return "Allow a User to " + item.toUpperCase() + " a " + app.resource.substr(0,1).toUpperCase() + app.resource.substr(1);
-                }
-            }
-        });
-    </script> --}}
+
 @endsection
