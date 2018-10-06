@@ -35,6 +35,7 @@ Route::prefix('products')->middleware('role:superadministrator|administrator|edi
     Route::get('/upload', 'ProductController@upload')->name('products.upload');
     Route::get('/download', 'ProductController@download')->name('products.download');
     Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
+    Route::post('/design', 'ProductController@design')->name('products.design');
 });
 
 Route::prefix('orders')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {

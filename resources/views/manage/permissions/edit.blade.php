@@ -1,7 +1,7 @@
 @extends('layouts.manage')
 
 @section('content')
-    <div class="container">
+    <div class="container column is-10 pull-left">
         <div class="columns m-t-5">
             <div class="column">
                 <h1 class="title">View Permission Details</h1>
@@ -35,7 +35,7 @@
                 </p>
             </div>
 
-            <button class="button is-primary">Save Changes</button>
+            <button class="button is-success m-t-15">Save Changes</button>
         </form>
     </div>
 @endsection

@@ -1,6 +1,6 @@
 @extends('layouts.manage')
 @section('content')
-<div class="container">
+<div class="container column is-10 pull-left">
     <div class="columns m-t-5">
         <div class="column">
             <h1 class="title">Edit {{ $role->display_name }}</h1>
@@ -51,14 +51,14 @@
                                 <h2 class="title">Permissions</h2>
                                     @foreach ($permissions as $permission)
                                     <div class="field">
-                                        <b-checkbox v-model="permissionsSelected" native-value="{{ $permission->id }}">{{ $permission->display_name }}<em>({{ $permission->description }})</em></b-checkbox>
+                                        <b-checkbox type="is-success" v-model="permissionsSelected" native-value="{{ $permission->id }}">{{ $permission->display_name }}<em>({{ $permission->description }})</em></b-checkbox>
                                     </div>
                                 @endforeach
                             </div>
                         </div>
                     </article>
                 </div>
-                <button class="button is-primary">Save Changes to Role</button>
+                <button class="button is-success">Save Changes to Role</button>
             </div>
         </div>
     </form>

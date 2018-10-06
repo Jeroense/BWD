@@ -1,7 +1,7 @@
 @extends('layouts.manage')
 
 @section('content')
-    <div class="container column is- is-offset-2">
+    <div class="container column is-10 pull-left">
         <div class="columns m-t-5">
             <div class="column">
                 <h1 class="title">Create New Permission</h1>
@@ -15,8 +15,8 @@
                     {{csrf_field()}}
 
                     <div class="block">
-                        <b-radio v-model="permissionType" name="permission_type" native-value="basic">Basic Permission</b-radio>
-                        <b-radio v-model="permissionType" name="permission_type" native-value="crud">CRUD Permission</b-radio>
+                        <b-radio type="is-success" v-model="permissionType" name="permission_type" native-value="basic">Basic Permission</b-radio>
+                        <b-radio type="is-success" v-model="permissionType" name="permission_type" native-value="crud">CRUD Permission</b-radio>
                     </div>
 
                     <div class="field" v-if="permissionType === 'basic'">
@@ -50,16 +50,16 @@
                     <div class="columns" v-if="permissionType === 'crud'">
                         <div class="column is-one-quarter">
                             <div class="field">
-                                <b-checkbox v-model="crudSelected" native-value="create">Create</b-checkbox>
+                                <b-checkbox type="is-success" v-model="crudSelected" native-value="create">Create</b-checkbox>
                             </div>
                             <div class="field">
-                                <b-checkbox v-model="crudSelected" native-value="read">Read</b-checkbox>
+                                <b-checkbox type="is-success" v-model="crudSelected" native-value="read">Read</b-checkbox>
                             </div>
                             <div class="field">
-                                <b-checkbox v-model="crudSelected" native-value="update">Update</b-checkbox>
+                                <b-checkbox type="is-success" v-model="crudSelected" native-value="update">Update</b-checkbox>
                             </div>
                             <div class="field">
-                                <b-checkbox v-model="crudSelected" native-value="delete">Delete</b-checkbox>
+                                <b-checkbox type="is-success" v-model="crudSelected" native-value="delete">Delete</b-checkbox>
                             </div>
                         </div> <!-- end of .column -->
 
@@ -83,7 +83,7 @@
                         </div>
                     </div>
 
-                    <button class="button is-success">Create Permission</button>
+                    <button class="button is-success m-t-15">Create Permission</button>
                 </form>
             </div>
         </div>

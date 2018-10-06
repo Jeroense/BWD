@@ -1,7 +1,7 @@
 @extends('layouts.manage')
 
 @section('content')
-<div class="container">
+<div class="container column is-9 pull-left">
     <div class="columns m-t-5">
         <div class="column">
             <h1 class="title">Edit User</h1>
@@ -57,7 +57,7 @@
         </div>
         <div class="columns">
             <div class="column">
-                <hr />>
+                <hr />
                 <button class="button is-success is-pulled-right" style="width: 250px;">Update User</button>
             </div>
         </div>

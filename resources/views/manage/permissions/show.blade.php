@@ -1,14 +1,14 @@
 @extends('layouts.manage')
 
 @section('content')
-    <div class="container">
+    <div class="container column is-10 pull-left">
         <div class="columns m-t-5">
             <div class="column">
                 <h1 class="title">View Permission Details</h1>
             </div> <!-- end of column -->
 
             <div class="column">
-                <a href="{{route('permissions.edit', $permission->id)}}" class="button is-primary is-pulled-right"><i class="fa fa-edit m-r-10"></i> Edit Permission</a>
+                <a href="{{route('permissions.edit', $permission->id)}}" class="button is-success is-pulled-right"><i class="fa fa-edit m-r-10"></i> Edit Permission</a>
             </div>
         </div>
         <hr class="m-t-0">

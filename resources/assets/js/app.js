@@ -9,17 +9,8 @@ require('./sideBar');
 require('./upload');
 require('./showProductDetail');
 require('./customization');
-customization
+
+// customization
 import Buefy from 'buefy';
 
 Vue.use(Buefy);
-// require('./sideBar');
-
-// Setup Vue object
-// var app = new Vue({
-//     el: '#app',
-//     data: {
-//         permissionType: '',
-//     }
-// });
-

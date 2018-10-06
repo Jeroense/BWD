@@ -55,6 +55,11 @@ class ProductController extends Controller
         return view('products.create');
     }
 
+    public function design(Request $request) {
+        $result = Attribute::where('value', 'Royal')->first()->id;  // result = variant id.
+        dd($result);
+    }
+
     public function download() {
         $products = $this->GetJson();
         foreach($products as $product) {

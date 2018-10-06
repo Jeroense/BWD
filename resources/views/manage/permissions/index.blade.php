@@ -1,13 +1,13 @@
 @extends('layouts.manage')
 
 @section('content')
-    <div class="container">
+    <div class="container column is-10 pull-left">
         <div class="columns m-t-5">
             <div class="column">
                 <h1 class="title">Manage Permissions</h1>
             </div>
             <div class="column">
-                <a href="{{route('permissions.create')}}" class="button is-primary is-pulled-right"><i class="fa fa-user-plus m-r-10"></i> Create New Permission</a>
+                <a href="{{route('permissions.create')}}" class="button is-success is-pulled-right"><i class="fa fa-user-plus m-r-10"></i> Create New Permission</a>
             </div>
         </div>
         <hr class="m-t-0">

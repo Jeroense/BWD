@@ -1,6 +1,6 @@
 @extends('layouts.manage')
 @section('content')
-<div class="container">
+<div class="container column is-8 pull-left">
     <div class="columns m-t-5">
         <div class="column">
             <h1 class="title">Create new Role</h1>
