@@ -14,6 +14,10 @@ class Variant extends Model
         return $this->hasMany('App\Attribute');
     }
 
+    public function views() {
+        return $this->hasMany('App\View');
+    }
+
     protected $fillable = [
         'variantId',
         'productId',

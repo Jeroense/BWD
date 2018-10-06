@@ -13,6 +13,10 @@ class Back extends Model
         return $this->belongsTo('App\View');
     }
 
+    public function backCustomizations() {
+        return $this->hasMany('App\BackCustomization');
+    }
+
     protected $fillable = [
         'viewId',
         'compositeMediaId'

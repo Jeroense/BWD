@@ -9,11 +9,13 @@ use App\View;
 use App\Front;
 use App\FrontCustomization;
 use App\Back;
+use App\BackCustomization;
 use App\Left;
+use App\LeftCustomization;
 use App\Right;
+use App\RightCustomization;
 use Illuminate\Http\Request;
 use App\Http\Traits\SmakeApi;
-
 
 class ProductController extends Controller
 {
@@ -135,7 +137,7 @@ class ProductController extends Controller
                 }
             }
         }
-        dd($product);
+        // dd($product);
         return view('products.dashboard');
     }
 

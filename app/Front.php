@@ -13,6 +13,10 @@ class Front extends Model
         return $this->belongsTo('App\View');
     }
 
+    public function frontCustomizations() {
+        return $this->hasMany('App\FrontCustomization');
+    }
+
     protected $fillable = [
         'viewId',
         'compositeMediaId'

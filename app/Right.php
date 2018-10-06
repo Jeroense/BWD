@@ -13,6 +13,10 @@ class Right extends Model
         return $this->belongsTo('App\View');
     }
 
+    public function rightCustomizations() {
+        return $this->hasMany('App\RightCustomization');
+    }
+
     protected $fillable = [
         'viewId',
         'compositeMediaId'
