@@ -7,6 +7,11 @@ return [
             'acl' => 'c,r,u,d',
             'profile' => 'r,u'
         ],
+        'sa' => [
+            'users' => 'c,r,u,d',
+            'acl' => 'c,r,u,d',
+            'profile' => 'r,u'
+        ],
         'administrator' => [
             'users' => 'c,r,u,d',
             'profile' => 'r,u'

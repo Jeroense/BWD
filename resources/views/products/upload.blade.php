@@ -1,11 +1,11 @@
-@extends('layouts.design')
+@extends('layouts.products')
 @section('content')
 <div class="container">
     <div class="columns m-t-5">
         <div class="column">
-            <h1 class="title">Design upload</h1>
+            <h1 class="title">Product upload</h1>
             <hr/>
-            <form action="{{ route('design.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                 {{csrf_field()}}
                 <div class="field">
                     <label for="designImage"></label>

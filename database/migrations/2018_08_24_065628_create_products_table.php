@@ -15,21 +15,23 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('smakeId');
             $table->string('productName');
             $table->string('productDescription');
-            $table->boolean('isUploaded');
-            $table->boolean('isPublished');
             $table->timestamps();
         });
 
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('variants', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('productId');
+            $table->unsignedInteger('variantId');
             $table->decimal('price',7,2);
             $table->decimal('tax',7,2);
             $table->decimal('taxRate',4,2);
             $table->integer('mediaId');
-            $table->char('ean', 15)->unique();
+            $table->boolean('isUploaded')->nullable();
+            $table->boolean('isPublished')->nullable();
+            $table->char('ean', 15)->unique()->nullable();
             $table->timestamps();
 
             $table->foreign('productId')
@@ -37,30 +39,40 @@ class CreateProductsTable extends Migration
                     ->on('products')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
-
-
         });
 
         Schema::create('attributes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('productId');
+            $table->unsignedInteger('variantId');
             $table->string('key');
             $table->string('value');
 
-            $table->foreign('productId')
+            $table->foreign('variantId')
                     ->references('id')
-                    ->on('products')
+                    ->on('variants')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });
 
         Schema::create('views', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('productId');
+            $table->unsignedInteger('variantId');
 
-            $table->foreign('productId')
+            $table->foreign('variantId')
                     ->references('id')
-                    ->on('products')
+                    ->on('variants')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+        });
+
+        Schema::create('front', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('viewId');
+            $table->string('compositeMediaId');
+
+            $table->foreign('viewId')
+                    ->references('id')
+                    ->on('views')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });
@@ -68,7 +80,7 @@ class CreateProductsTable extends Migration
         Schema::create('back', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('viewId');
-            $table->integer('compositeMediaId');
+            $table->string('compositeMediaId');
 
             $table->foreign('viewId')
                     ->references('id')
@@ -80,19 +92,7 @@ class CreateProductsTable extends Migration
         Schema::create('left', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('viewId');
-            $table->integer('compositeMediaId');
-
-            $table->foreign('viewId')
-                    ->references('id')
-                    ->on('views')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
-
-        Schema::create('front', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('viewId');
-            $table->integer('compositeMediaId');
+            $table->string('compositeMediaId');
 
             $table->foreign('viewId')
                     ->references('id')
@@ -104,7 +104,7 @@ class CreateProductsTable extends Migration
         Schema::create('right', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('viewId');
-            $table->integer('compositeMediaId');
+            $table->string('compositeMediaId');
 
             $table->foreign('viewId')
                     ->references('id')
@@ -113,10 +113,30 @@ class CreateProductsTable extends Migration
                     ->onDelete('cascade');
         });
 
+        Schema::create('frontCustomizations', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('frontId');
+            $table->string('type')->nullable();
+            $table->string('productionMediaId')->nullable();
+            $table->string('previewMediaId')->nullable();
+            $table->string('width')->nullable();
+            $table->string('height')->nullable();
+
+            $table->foreign('frontId')
+                    ->references('id')
+                    ->on('front')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+        });
+
         Schema::create('backCustomizations', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('backId');
-            $table->string('customization');
+            $table->string('type')->nullable();
+            $table->string('productionMediaId')->nullable();
+            $table->string('previewMediaId')->nullable();
+            $table->string('width')->nullable();
+            $table->string('height')->nullable();
 
             $table->foreign('backId')
                     ->references('id')
@@ -128,7 +148,11 @@ class CreateProductsTable extends Migration
         Schema::create('leftCustomizations', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('leftId');
-            $table->string('customization');
+            $table->string('type')->nullable();
+            $table->string('productionMediaId')->nullable();
+            $table->string('previewMediaId')->nullable();
+            $table->string('width')->nullable();
+            $table->string('height')->nullable();
 
             $table->foreign('leftId')
                     ->references('id')
@@ -137,22 +161,14 @@ class CreateProductsTable extends Migration
                     ->onDelete('cascade');
         });
 
-        Schema::create('frontCustomizations', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('frontId');
-            $table->string('customization');
-
-            $table->foreign('frontId')
-                    ->references('id')
-                    ->on('front')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
-
         Schema::create('rightCustomizations', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('rightId');
-            $table->string('customization');
+            $table->string('type')->nullable();
+            $table->string('productionMediaId')->nullable();
+            $table->string('previewMediaId')->nullable();
+            $table->string('width')->nullable();
+            $table->string('height')->nullable();
 
             $table->foreign('rightId')
                     ->references('id')

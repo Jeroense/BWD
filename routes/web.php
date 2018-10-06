@@ -30,11 +30,10 @@ Route::prefix('manage')->middleware('role:superadministrator|administrator|edito
 });
 
 Route::prefix('products')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
-    Route::get('/', 'ProductController@index');
-    // Route::get('/index', 'ProductController@index')->name('products.index');
-    // Route::get('/create', 'ProductController@create')->name('products.create');
+    // Route::get('/', 'ProductController@index');
     Route::resource('/products', 'ProductController');
-    Route::get('/media', 'ProductController@media')->name('products.media');
+    Route::get('/upload', 'ProductController@upload')->name('products.upload');
+    Route::get('/download', 'ProductController@download')->name('products.download');
     Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
 });
 
@@ -50,7 +49,7 @@ Route::prefix('design')->middleware('role:superadministrator|administrator|edito
     Route::get('/dashboard', 'DesignController@dashboard')->name('design.dashboard');
     Route::get('/index', 'DesignController@index')->name('design.index');
     Route::get('/upload', 'DesignController@upload')->name('design.upload');
-    Route::post('/fSave', 'DesignController@store')->name('design.fSave');
+    Route::post('/store', 'DesignController@store')->name('design.store');
 
 });
 
