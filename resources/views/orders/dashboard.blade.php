@@ -1,4 +1,4 @@
-@extends('layouts.orders')
+@extends('layouts.app')
 @section('content')
 
 @endsection

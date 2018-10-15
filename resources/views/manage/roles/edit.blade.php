@@ -1,16 +1,12 @@
-@extends('layouts.manage')
+@extends('layouts.app')
+@section('pageTitle', 'Rol Wijzigen')
 @section('content')
-<div class="container column is-10 pull-left">
+<div class="container column is-9 pull-left">
     <div class="columns m-t-5">
-        <div class="column">
-            <h1 class="title">Edit {{ $role->display_name }}</h1>
-        </div>
-    </div>
-    <hr class="m-t-0">
     <form action="{{ route('roles.update', $role->id) }}" method="POST">
         {{ csrf_field() }}
         {{ method_field('PUT') }}
-        <div class="columns">
+        {{-- <div class="columns"> --}}
                 <div class="column">
                     <div class="box">
                         <article class="media">
@@ -41,8 +37,8 @@
                         </article>
                     </div>
                 </div>
-            </div>
-        <div class="columns">
+            {{-- </div> --}}
+        {{-- <div class="columns"> --}}
             <div class="column">
                 <div class="box">
                     <article class="media">
@@ -51,16 +47,16 @@
                                 <h2 class="title">Permissions</h2>
                                     @foreach ($permissions as $permission)
                                     <div class="field">
-                                        <b-checkbox type="is-success" v-model="permissionsSelected" native-value="{{ $permission->id }}">{{ $permission->display_name }}<em>({{ $permission->description }})</em></b-checkbox>
+                                        <b-checkbox type="is-danger" v-model="permissionsSelected" native-value="{{ $permission->id }}">{{ $permission->display_name }}<em>({{ $permission->description }})</em></b-checkbox>
                                     </div>
                                 @endforeach
                             </div>
                         </div>
                     </article>
                 </div>
-                <button class="button is-success">Save Changes to Role</button>
+                <button class="button is-danger pull-right">Wijzigingen Opslaan</button>
             </div>
-        </div>
+        {{-- </div> --}}
     </form>
 </div>
 @endsection

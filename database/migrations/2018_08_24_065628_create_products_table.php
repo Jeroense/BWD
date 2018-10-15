@@ -24,7 +24,7 @@ class CreateProductsTable extends Migration
         Schema::create('variants', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('productId');
-            $table->unsignedInteger('variantId');
+            $table->unsignedInteger('variantId')->unique();
             $table->decimal('price',7,2);
             $table->decimal('tax',7,2);
             $table->decimal('taxRate',4,2);

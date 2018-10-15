@@ -1,22 +1,13 @@
-@extends('layouts.manage')
-
+@extends('layouts.app')
+@section('pageTitle', 'Gebruiker Details')
 @section('content')
-<div class="container">
-    <div class="columns m-t-5">
-        <div class="column">
-            <h1 class="title">View User Details</h1>
-        </div> <!-- end of column -->
+<div class="container column is-6 pull-left">
 
-        <div class="column">
-            <a href="{{ route('users.edit', $user->id) }}" class="button is-success is-pulled-right"><i class="fa fa-user m-r-10"></i> Edit User</a>
-        </div>
-    </div>
-    <hr class="m-t-0">
 
     <div class="columns">
         <div class="column">
             <div class="field">
-                <label for="name" class="label">Name</label>
+                <label for="name" class="label">Naam</label>
                 <p class="m-l-15">{{ $user->name }}</p>
             </div>
 
@@ -27,7 +18,7 @@
 
             <div class="field">
                 <div class="field">
-                    <label for="roles" class="label">Roles</label>
+                    <label for="roles" class="label">Rollen</label>
                     <ul>
                         <p class="m-l-15">{{ $user->roles->count() == 0 ? 'This user has not been assigned any roles yet' : ''}}</p>
                         @foreach($user->roles as $role)
@@ -38,5 +29,12 @@
             </div>
         </div>
     </div>
+    <hr class="m-t-0">
+    <div class="columns m-t-5">
+        <div class="column">
+            <a href="{{ route('users.edit', $user->id) }}" class="button is-danger is-pulled-right"><i class="fa fa-user m-r-10"></i> Edit User</a>
+        </div>
+    </div>
+
 </div>
 @endsection

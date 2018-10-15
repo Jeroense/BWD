@@ -15,7 +15,7 @@ class CreateTshirtsTable extends Migration
     {
         Schema::create('tshirts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('color');
+            $table->string('color')->unique();
             $table->string('fileName');
             $table->string('filePath');
             $table->timestamps();

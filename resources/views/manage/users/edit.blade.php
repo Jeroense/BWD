@@ -1,56 +1,46 @@
-@extends('layouts.manage')
-
+@extends('layouts.app')
+@section('pageTitle', 'Gebruiker Wijzigen')
 @section('content')
-<div class="container column is-9 pull-left">
-    <div class="columns m-t-5">
-        <div class="column">
-            <h1 class="title">Edit User</h1>
-        </div>
-    </div>
-    <hr class="m-t-0">
+<div class="mainContent container column is-6 pull-left">
     <form action="{{ route('users.update', $user->id) }}" method="POST">
         {{method_field('PUT')}}
         {{csrf_field()}}
         <div class="columns">
             <div class="column">
                 <div class="field">
-                    <label for="name" class="label">Name:</label>
+                    <label for="name" class="label">Naam:</label>
                     <p class="control">
                         <input type="text" class="input" name="name" id="name" value="{{$user->name}}">
                     </p>
                 </div>
-
                 <div class="field">
                     <label for="email" class="label">Email:</label>
                     <p class="control">
                         <input type="text" class="input" name="email" id="email" value="{{$user->email}}">
                     </p>
                 </div>
-
                 <div class="field">
-                    <label for="password" class="label">Password</label>
+                    <label for="password" class="label">Password:</label>
                     <div class="field">
-                        <b-radio v-model="password_options" name="password_options" native-value="keep">Do Not Change Password</b-radio>
+                        <b-radio type="is-danger" v-model="password_options" name="password_options" native-value="keep">Password niet wijzigen</b-radio>
                     </div>
                     <div class="field">
-                        <b-radio v-model="password_options" name="password_options" native-value="auto">Auto-Generate New Password</b-radio>
+                        <b-radio type="is-danger" v-model="password_options" name="password_options" native-value="auto">Password automatisch genereren</b-radio>
                     </div>
                     <div class="field">
-                        <b-radio v-model="password_options" name="password_options" native-value="manual">Manually Set New Password</b-radio>
+                        <b-radio type="is-danger" v-model="password_options" name="password_options" native-value="manual">Password handmatig aanpassen</b-radio>
                         <p class="control">
                             <input type="text" class="input m-t-10" name="password" id="password" v-if="password_options == 'manual'" placeholder="Manually give a password to this user">
                         </p>
                     </div>
                 </div>
-
             </div>
-
             <div class="column is-offset-1">
-                <label for="roles" class="label">Roles:</label>
+                <label for="roles" class="label">Rollen:</label>
                 <input type="hidden" name="roles" v-model="rolesSelected" :native-value="rolesSelected" />
                 @foreach ($roles as $role)
                     <div class="field">
-                        <b-checkbox v-model="rolesSelected" :native-value="{{ $role->id }}">{{ $role->display_name }}</b-checkbox>
+                        <b-checkbox type="is-danger" v-model="rolesSelected" :native-value="{{ $role->id }}">{{ $role->display_name }}</b-checkbox>
                     </div>
                 @endforeach
             </div>
@@ -58,23 +48,21 @@
         <div class="columns">
             <div class="column">
                 <hr />
-                <button class="button is-success is-pulled-right" style="width: 250px;">Update User</button>
+                <button class="button is-danger is-pulled-right" style="width: 250px;">Update Gebruiker</button>
             </div>
         </div>
     </form>
-</div> <!-- end of .flex-container -->
+</div>
 @endsection
-
 
 @section('scripts')
 <script>
-
     var app = new Vue({
-    el: '#app',
-    data: {
-        password_options: 'keep',
-        rolesSelected: {!! $user->roles->pluck('id') !!}
-    }
+        el: '#app',
+        data: {
+            password_options: 'keep',
+            rolesSelected: {!! $user->roles->pluck('id') !!}
+        }
     });
 
 </script>

@@ -2,11 +2,11 @@
 // Variables
 @import "variables";
 
+// Bulma
+@import "node_modules/bulma/bulma.sass";
+
 // Font-Awesome
 @import "node_modules/font-awesome/scss/font-awesome";
-
-// Bulma
-@import "node_modules/bulma/bulma";
 
 // Bulma Vue Modules
 @import "node_modules/buefy/src/scss/buefy";

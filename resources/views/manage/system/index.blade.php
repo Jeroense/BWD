@@ -1,47 +1,66 @@
-@extends('layouts.manage')
-
-{{-- @section('content')
-    <div class="container">
-      <div class="columns m-t-5">
+@extends('layouts.app')
+@section('pageTitle', 'Systeem Informatie')
+@section('content')
+    <div class="container column is-6 pull-left">
+        <div class="card">
+            <div class="card-content">
+                <table class="table is-narrow">
+                    <tbody>
+                        <tr>
+                            <td>Naam Organisatie:</td>
+                            <td>{{ $sysinfo->organizationName }}</td>
+                        </tr>
+                        <tr>
+                            <td>Straat:</td>
+                            <td>{{ $sysinfo->street }}</td>
+                        </tr>
+                        <tr>
+                            <td>Huisnr.:</td>
+                            <td>{{ $sysinfo->houseNr }}</td>
+                        </tr>
+                        <tr>
+                            <td>Postcode:</td>
+                            <td>{{ $sysinfo->postalCode }}</td>
+                        </tr>
+                        <tr>
+                            <td>Plaats:</td>
+                            <td>{{ $sysinfo->city }}</td>
+                        </tr>
+                        <tr>
+                            <td>Email:</td>
+                            <td>{{ $sysinfo->email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Telefoon:</td>
+                            <td>{{ $sysinfo->phone }}</td>
+                        </tr>
+                        <tr>
+                            <td>KvK:</td>
+                            <td>{{ $sysinfo->cocNr }}</td>
+                        </tr>
+                        <tr>
+                            <td>Btw nummer:</td>
+                            <td>{{ $sysinfo->vatNr }}</td>
+                        </tr>
+                        <tr>
+                            <td>Serienummer Applicatie:</td>
+                            <td>{{ $sysinfo->appSerNr }}</td>
+                        </tr>
+                        <tr>
+                            <td>Api key Bol.com:</td>
+                            <td>{{ $sysinfo->apiKeyBol }}</td>
+                        </tr>
+                        <tr>
+                            <td>Api key Smake:</td>
+                            <td>{{ $sysinfo->apiKeySmake }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <div class="columns m-t-5">
         <div class="column">
-          <h1 class="title">Manage System Info</h1>
+            <a href="{{ route('system.edit', $sysinfo->id) }}" class="button is-danger is-pulled-right"><i class="far fa-edit m-r-10"></i>Systeem Informatie Wijzigen</a>
         </div>
-        {{-- <div class="column">
-          <a href="{{route('users.create')}}" class="button is-primary is-pulled-right"><i class="fa fa-user-plus m-r-10"></i> Create New User</a>
-        </div> --}}
-      </div>
-      <hr class="m-t-0">
-
-      <div class="card">
-        <div class="card-content">
-          <table class="table is-narrow">
-            <thead>
-              <tr>
-                <th>id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Date Created</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($users as $user)
-                <tr>
-                  <th>{{$user->id}}</th>
-                  <td>{{$user->name}}</td>
-                  <td>{{$user->email}}</td>
-                  <td>{{$user->created_at->toFormattedDateString()}}</td>
-                  <td class="has-text-right">
-                        <a class="button is-outlined is-small m-r-5" href="{{route('users.show', $user->id)}}">View</a>
-                        <a class="button is-outlined is-small" href="{{route('users.edit', $user->id)}}">Edit</a>
-                    </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div> <!-- end of .card -->
-
-      {{$users->links()}}
     </div>
-@endsection --}}
+@endsection

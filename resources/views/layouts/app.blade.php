@@ -1,12 +1,16 @@
 @include('layouts._main')
 <body>
-    @include('_includes.nav.main')
-    <div id="app" class="mainContent">
-        @yield('content')
-    </div>
+    <div id="app" class="contentArea">
+        @include('_includes.nav.main')
+        @include('_includes.nav.sideMenu')
+        {{-- <div class="column is-10 is-offset-3"> --}}
+                <div class="column is-12 m-l-275">
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
-    @yield('scripts')
+            @yield('content')
+        </div>
+        <script src="{{ asset('js/app.js') }}"></script>
+        @yield('scripts')
+    </div>
 </body>
 </html>
+

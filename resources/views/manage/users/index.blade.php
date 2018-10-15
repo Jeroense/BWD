@@ -1,13 +1,10 @@
-@extends('layouts.manage')
-
+@extends('layouts.app')
+@section('pageTitle', 'Overzicht Gebruikers')
 @section('content')
-    <div class="container column is-9 pull-left">
+    <div class="container column is-6 pull-left">
         <div class="columns m-t-5">
             <div class="column">
-                <h1 class="title">Manage Users</h1>
-            </div>
-            <div class="column">
-                <a href="{{route('users.create')}}" class="button is-primary is-pulled-right"><i class="fa fa-user-plus m-r-10"></i> Create New User</a>
+                <a href="{{route('users.create')}}" class="button is-danger is-pulled-right"><i class="fa fa-user-plus m-r-10"></i>Nieuwe gebruiker aanmaken</a>
             </div>
         </div>
         <hr class="m-t-0">

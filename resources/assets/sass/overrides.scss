@@ -3,11 +3,11 @@
 ======================================== */
 
 .is-muted {
-    color: $grey-light !important;
+    // color: $grey-light !important;
 }
 
 a.is-muted:hover{
-    color: $grey !important;
+    // color: $grey !important;
 }
 
 /* ========================================
@@ -44,7 +44,7 @@ a.is-muted:hover{
         padding: 5px 0 5px 15px;
         margin: 5px 0;
         &:hover {
-            background-color: whitesmoke;
+            background-color: rgb(165, 4, 4);
         }
         }
     }
@@ -105,13 +105,13 @@ button.nav-item {
 }
 
 
-.nav-item img {
-    max-height: 2.8rem;
-}
+// .nav-item img {
+//     max-height: 2.8rem;
+// }
 
-.navbar {
-    height: 4rem;
-}
+// .navbar {
+//     height: 4rem;
+// }
 
 hr {
     border: 1px solid lightgrey;

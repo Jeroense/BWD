@@ -72,7 +72,7 @@
                         @endif
                     </div>
 
-                    <button class="button is-primary is-outlined is-fullwidth m-t-30">Reset Wachtwoord</button>
+                    <button class="button is-danger is-outlined is-fullwidth m-t-30">Reset Wachtwoord</button>
                 </form>
             </div>
         </div>

@@ -18,7 +18,7 @@ class CreateSystemsTable extends Migration
             $table->string('organizationName');
             $table->string('street');
             $table->string('houseNr');
-            $table->string('postalcode');
+            $table->string('postalCode');
             $table->string('city');
             $table->string('email');
             $table->string('phone');
@@ -26,8 +26,8 @@ class CreateSystemsTable extends Migration
             $table->string('vatNr');
             $table->string('appSerNr');
             $table->string('systemKey');
-            $table->string('apiKeyBol');
-            $table->string('apiKeySmake');
+            $table->text('apiKeyBol');
+            $table->text('apiKeySmake');
             $table->timestamps();
         });
     }

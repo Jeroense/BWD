@@ -1,5 +1,4 @@
-@extends('layouts.products')
-
+@extends('layouts.app')
 @section('content')
 <div class="container column">
     <div class="columns m-t-5">
@@ -23,7 +22,7 @@
                         </tr>
                         <tr>
                             <td colspan="2">{{ $product->description }}</td>
-                            <td><a href="javascript:void(0)" class="button is-success productDetail">Details</a></td>
+                            <td><a href="javascript:void(0)" class="button is-danger productDetail">Details</a></td>
                         </tr>
                         <tr class="hideDetail">
                             <td>
@@ -34,6 +33,8 @@
                                 @foreach($product->variants as $variant)
                                     <ul>
                                         <li>Variant id: <strong>{{ $variant->id }}</strong></li>
+                                        {{-- <li><img src="{{public_path('tshirtImages')}}/{{$variant->fileName}}" width="200"></li> --}}
+                                        <li><img src="{{asset('tshirtImages/').'/'.$variant->fileName}}" width='100'></li>
                                         <li>Origin code: <strong>{{ $variant->origin->code }}</strong></li>
                                         <li>Prijs: <strong>{{ $variant->price }}</strong></li>
                                         <li>BTW: <strong>{{ $variant->tax }}</strong></li>
@@ -112,7 +113,7 @@
                     </table>
                     <hr>
                 @endforeach
-                <a href="{{ route('products.download') }}"  class="button is-success downloadProducts">Download alle Smake producten</a>
+                <a href="{{ route('products.download') }}"  class="button is-danger downloadProducts">Download alle Smake producten</a>
             </div>
         </div>
     </div>

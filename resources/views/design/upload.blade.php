@@ -11,7 +11,7 @@
                     <label for="designImage"></label>
                     <input type="file" name="designImage" accept=".jpg, .jpeg, .png">
                 </div>
-                <input type="submit" id="uploadFile" class="button is-success is-small" value="save">
+                <input type="submit" id="uploadFile" class="button is-danger is-small" value="save">
             </form>
         </div> <!-- end of column -->
     </div>

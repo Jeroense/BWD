@@ -1,4 +1,4 @@
-@extends('layouts.orders')
+@extends('layouts.app')
 
 @section('content')
     <div class="container column is- is-offset-2">

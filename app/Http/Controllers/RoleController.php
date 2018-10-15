@@ -17,7 +17,8 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::all();
-        return view('manage.roles.index')->withRoles($roles);
+        $pageTitle = 'Rollen Overzicht';
+        return view('manage.roles.index', compact('roles', 'pageTitle'));
     }
 
     /**
@@ -40,7 +41,7 @@ class RoleController extends Controller
     public function store(Request $request)
     {
 
-        
+
         $this->validate($request, [
             'name' => 'required|max:100|alpha_dash|unique:permissions,name',
             'display_name' => 'required|max:255',
@@ -81,7 +82,7 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-  
+
         $role = Role::where('id', $id)->with('permissions')->first();
         $permissions = Permission::All();
         return view('manage.roles.edit')->withRole($role)->withPermissions($permissions);

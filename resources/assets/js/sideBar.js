@@ -1,5 +1,5 @@
 const accordions = document.getElementsByClassName('has-submenu')
-// const SlideOutButton =
+
 document.getElementById('slideout-button').addEventListener('click', function(e){
     this.classList.toggle('is-active');
     document.getElementById('side-menu').classList.toggle('is-active');
@@ -29,3 +29,16 @@ for (var i = 0; i < accordions.length; i++) {
         }
     }
 }
+
+/*jQuery time*/
+$(document).ready(function(){
+	$("#accordian h3").click(function(){
+		//slide up all the link lists
+		$("#accordian ul ul").slideUp();
+		//slide down the link list below the h3 clicked - only if its closed
+		if(!$(this).next().is(":visible"))
+		{
+			$(this).next().slideDown();
+		}
+	})
+})

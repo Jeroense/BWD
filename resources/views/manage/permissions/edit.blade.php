@@ -1,15 +1,7 @@
-@extends('layouts.manage')
-
+@extends('layouts.app')
+@section('pageTitle', 'Rechten Wijzigen')
 @section('content')
-    <div class="container column is-10 pull-left">
-        <div class="columns m-t-5">
-            <div class="column">
-                <h1 class="title">View Permission Details</h1>
-            </div> <!-- end of column -->
-
-        </div>
-        <hr class="m-t-0">
-
+    <div class="container column is-6 pull-left">
         <form action="{{route('permissions.update', $permission->id)}}" method="POST">
             {{csrf_field()}}
             {{method_field('PUT')}}
@@ -35,7 +27,7 @@
                 </p>
             </div>
 
-            <button class="button is-success m-t-15">Save Changes</button>
+            <button class="button is-danger m-t-15 pull-right">Wijzigingen opslaan</button>
         </form>
     </div>
 @endsection

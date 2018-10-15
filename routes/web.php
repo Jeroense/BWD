@@ -11,16 +11,14 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Route::get('/', 'WelcomeController@login');
-Route::get('/test', 'TestController@test');
+Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/test', 'TestController@test');
 
 Auth::routes();
 
 Route::prefix('manage')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
+    // Auth::routes();
     Route::get('/', 'ManageController@index');
     Route::get('/dashboard', 'ManageController@dashboard')->name('manage.dashboard');
     Route::resource('/users', 'UserController');
@@ -30,12 +28,12 @@ Route::prefix('manage')->middleware('role:superadministrator|administrator|edito
 });
 
 Route::prefix('products')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
-    // Route::get('/', 'ProductController@index');
-    Route::resource('/products', 'ProductController');
-    Route::get('/upload', 'ProductController@upload')->name('products.upload');
+    Route::get('/', 'ProductController@index');
+    Route::get('/uploadImage', 'ProductController@uploadImage')->name('products.uploadImage');
     Route::get('/download', 'ProductController@download')->name('products.download');
     Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
-    Route::post('/design', 'ProductController@design')->name('products.design');
+    Route::post('/attachImage', 'ProductController@attachImage')->name('products.attachImage');
+    Route::resource('/products', 'ProductController');
 });
 
 Route::prefix('orders')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
@@ -51,8 +49,9 @@ Route::prefix('design')->middleware('role:superadministrator|administrator|edito
     Route::get('/index', 'DesignController@index')->name('design.index');
     Route::get('/upload', 'DesignController@upload')->name('design.upload');
     Route::post('/store', 'DesignController@store')->name('design.store');
+});
+
+Route::prefix('summaries')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
 
 });
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/test', 'TestController@test')->name('test');

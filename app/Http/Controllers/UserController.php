@@ -18,7 +18,8 @@ class UserController extends Controller {
      */
     public function index() {
         $users = User::orderBy('id', 'desc')->paginate(10);
-        return view('manage.users.index')->withUsers($users);
+        $pageTitle = 'Overzicht Gebruikers';
+        return view('manage.users.index', compact('users', 'pageTitle'))->withUsers($users);
     }
 
     /**
@@ -27,7 +28,8 @@ class UserController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return view('manage.users.create');
+        $pageTitle = 'Nieuwe Gebruiker Aanmaken';
+        return view('manage.users.create', compact('pageTitle'));
     }
 
     /**
@@ -77,7 +79,8 @@ class UserController extends Controller {
      */
     public function show($id) {
         $user = User::findOrFail($id);
-        return view("manage.users.show")->withUser($user);
+
+        return view('manage.users.show', compact('user'));
     }
 
     /**
@@ -89,7 +92,7 @@ class UserController extends Controller {
     public function edit($id) {
         $roles = Role::all();
         $user = User::where('id', $id)->with('roles')->first();
-        return view("manage.users.edit")->withUser($user)->withRoles($roles);
+        return view( 'manage.users.edit', compact('user', 'roles'));
     }
 
     /**

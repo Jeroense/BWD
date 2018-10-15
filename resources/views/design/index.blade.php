@@ -15,7 +15,7 @@
                     <tr>
                         <td><img class="designImage" src="/designImages/{{ $image->fileName }}" alt="" width="100"></td>
                         <td><a href="#" class="button is-danger marginAuto">Delete</a></td>
-                        <td><a href="#" class="button is-success marginAuto">Show</a></td>
+                        <td><a href="#" class="button is-danger marginAuto">Show</a></td>
                     </tr>
                 @endforeach
             </tbody>

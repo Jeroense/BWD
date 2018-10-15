@@ -9,8 +9,17 @@ require('./sideBar');
 require('./upload');
 require('./showProductDetail');
 require('./customization');
+require('./getImage');
+
+import Vue from 'vue';
 
 // customization
 import Buefy from 'buefy';
-
 Vue.use(Buefy);
+
+// import VeeValidate from 'vee-validate';
+// Vue.use(VeeValidate);
+
+// const app = new Vue({
+//     el: '#app'
+// });

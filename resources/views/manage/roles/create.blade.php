@@ -1,4 +1,4 @@
-@extends('layouts.manage')
+@extends('layouts.app')
 @section('content')
 <div class="container column is-8 pull-left">
     <div class="columns m-t-5">
@@ -57,7 +57,7 @@
                         </div>
                     </article>
                 </div>
-                <button class="button is-primary">Create new User</button>
+                <button class="button is-danger">Create new User</button>
             </div>
         </div>
     </form>

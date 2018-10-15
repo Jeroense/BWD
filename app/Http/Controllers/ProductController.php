@@ -14,6 +14,7 @@ use App\Left;
 use App\LeftCustomization;
 use App\Right;
 use App\RightCustomization;
+use App\Tshirt;
 use Illuminate\Http\Request;
 use App\Http\Traits\SmakeApi;
 
@@ -29,6 +30,13 @@ class ProductController extends Controller
     public function index()
     {
         $products = $this->GetJson();
+        foreach($products as $product) {
+            foreach($product->variants as $variant){
+                $imageName = Tshirt::where('id', Variant::where('variantId', $variant->id)->pluck('mediaId')->first())->pluck('fileName')->first();
+                $variant->fileName = $imageName;
+            }
+        }
+        // $baseImages = Tshirt::All();
         // dd($products);
         return view('products.index',compact('products'));
     }
@@ -52,13 +60,15 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        $shirts = Tshirt::all();
+        $pageTitle = 'Nieuwe Variant Aanmaken';
+        return view('products.create', compact('shirts', 'pageTitle'));
     }
 
-    public function design(Request $request) {
-        $result = Attribute::where('value', 'Royal')->first()->id;  // result = variant id.
-        dd($result);
-    }
+    // public function design(Request $request) {
+    //     $result = Attribute::where('value', 'Royal')->first()->id;  // result = variant id.
+    //     dd($result);
+    // }
 
     public function download() {
         $products = $this->GetJson();
@@ -143,7 +153,7 @@ class ProductController extends Controller
             }
         }
         // dd($product);
-        return view('products.dashboard');
+        return view('manage.dashboard');
     }
 
     /**
@@ -154,25 +164,50 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // $this->validate($request, [
-        //     'designImage' => 'required|image|mimes:jpeg,jpg,png|max:9216'
-        // ]);
-
-        // $image = $request->designImage;
-        // $design = new baseProduct();
-        // $design->originalName = $image->getClientOriginalName();
-        // $design->mimeType = $image->getClientMimeType();
-        // $design->fileSize = $image->getClientSize();
-        // $design->fileName = time().md5($design->originalName).'.'.$image->getClientOriginalExtension();
-        // $design->path = public_path('baseImages');
-        // $image->move($design->path, $design->fileName);
-        // $design->save();
-
-        // return redirect()->route('products.index');
+        //
     }
 
-    public function upload() {
-        //
+    /**
+     * Create array with colors to populate a selectbox from variant->attributes->value where the key is color
+     * The purpose is to assign the imageID of a T-shirt with the correct color to base variants
+     *
+     * @return view uploadImage
+     */
+    public function uploadImage() {
+        $colors = Attribute::where('key', 'color')->groupBy('value')->pluck('value')->toArray(); // find all used colors from existing base variants
+        return view('products.uploadImage', compact('colors'));
+    }
+
+    /**
+     * Attaches a T-shirt image to base variants
+     * select all variants with the chosen color and updates the field mediaId in the variants table
+     *
+     * @param Request $request
+     * @return 'redirect uploadImage'
+     */
+    public function attachImage(Request $request) {
+
+        $this->validate($request, [
+            'imageName' => 'required|image|mimes:jpeg,jpg,png|max:9216',
+            'tShirtColor' => 'required|unique:tshirts,color'
+        ]);
+
+        $image = $request->imageName;
+        $tshirt = new Tshirt();
+        $tshirt->color = $request->tShirtColor;
+        $tshirt->fileName = time().md5($image->getClientOriginalName()).'.'.$image->getClientOriginalExtension();
+        $tshirt->filePath = public_path('tshirtImages');
+        $image->move($tshirt->filePath, $tshirt->fileName);
+        $tshirt->save();
+
+        $selection = ['key' => 'color', 'value' => $tshirt->color];
+
+        foreach(Attribute::where($selection)->get() as $id) {
+            $updatedVariant = Variant::findOrFail($id->variantId);
+            $updatedVariant->mediaId = $tshirt->id;
+            $updatedVariant->save();
+        }
+        return redirect()->route('products.uploadImage');
     }
 
     /**

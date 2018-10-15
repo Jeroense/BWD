@@ -1,4 +1,4 @@
-@extends('layouts.orders')
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -8,7 +8,7 @@
         </div> <!-- end of column -->
 
         <div class="column">
-            {{-- <a href="{{ route('system.edit', $user->id) }}" class="button is-success is-pulled-right"><i class="fa fa-user m-r-10"></i> View System info</a> --}}
+            {{-- <a href="{{ route('system.edit', $user->id) }}" class="button is-danger is-pulled-right"><i class="fa fa-user m-r-10"></i> View System info</a> --}}
         </div>
     </div>
     <hr class="m-t-0">

@@ -1,8 +1,8 @@
 <div class="is-paddingless">
-    <nav class="navbar is-success is-fixed-top">
+    <nav class="navbar has-text-white is-fixed-top">
         <div class="navbar-brand">
-            <a class="m-t-5 m-l-20 m-r-20" href="{{ route('home') }}" >
-                <img src="{{ asset('images/logo-borduurwerkdeal.png') }}" width="204" height="45" alt="bwd logo"/>
+            <a class="m-t-5 m-r-20 m-l-5" href="{{ route('home') }}" >
+                <img src="{{ asset('images/logo-borduurwerkdeal.png') }}" width="219" alt="bwd logo"/>
             </a>
 
             {{-- @if((Request::segment(1) == 'manage')|(Request::segment(1) == 'products')) --}}
@@ -11,39 +11,21 @@
                 </a>
             {{-- @endif --}}
 
-            <div class="navbar-burger burger" data-target="navMenu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+              </a>
         </div>
 
         <div id="navMenu" class="navbar-menu">
 
             <div class="navbar-start">
-                @role('superadministrator')
-                    <a class="navbar-item is-hoverable" href="{{ route('manage.dashboard') }}">
-                        Admin
-                    </a>
-                @endrole
-
-                <a class="navbar-item is-hoverable" href="{{ route('orders.dashboard') }}">
-                    Orders
-                </a>
-
-                <a class="navbar-item is-hoverable" href="{{ route('products.dashboard') }}">
-                    Producten
-                </a>
-
-                <a class="navbar-item is-hoverable" href="{{ route('design.dashboard') }}">
-                    Designs
-                </a>
-
-                <a class="navbar-item is-hoverable" href="#">
-                    Overzichten
+                <a class="navbar-item navbar-title m-l-30" href="#">
+                    @yield('pageTitle')
+                    {{-- {{ $pageTitle or '*** Undefined ***'}} --}}
                 </a>
             </div>
-
             <div class="navbar-end">
                 @if (Auth::check())
                     <div class="navbar-item has-dropdown is-hoverable">
@@ -55,7 +37,7 @@
                                 Profiel
                             </a>
                             <hr class="navbar-divider">
-                            <a class="dropdown-item" href="{{ route('logout') }}"
+                            <a class="navbar-item dropdown-item" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
