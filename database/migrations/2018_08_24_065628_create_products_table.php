@@ -23,12 +23,15 @@ class CreateProductsTable extends Migration
 
         Schema::create('variants', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('productId');
-            $table->unsignedInteger('variantId')->unique();
-            $table->decimal('price',7,2);
-            $table->decimal('tax',7,2);
-            $table->decimal('taxRate',4,2);
-            $table->integer('mediaId');
+            $table->unsignedInteger('productId')->nullable();
+            $table->unsignedInteger('variantId')->unique()->nullable();
+            $table->unsignedInteger('parentVariantId')->nullable();
+            $table->boolean('isBwdVariant')->nullable();
+            $table->decimal('price',7,2)->nullable();
+            $table->decimal('tax',7,2)->nullable();
+            $table->decimal('taxRate',4,2)->nullable();
+            $table->integer('mediaId')->nullable();
+            $table->boolean('isCustomVariant')->nullable();
             $table->boolean('isUploaded')->nullable();
             $table->boolean('isPublished')->nullable();
             $table->char('ean', 15)->unique()->nullable();

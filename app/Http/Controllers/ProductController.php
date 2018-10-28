@@ -36,8 +36,6 @@ class ProductController extends Controller
                 $variant->fileName = $imageName;
             }
         }
-        // $baseImages = Tshirt::All();
-        // dd($products);
         return view('products.index',compact('products'));
     }
 
@@ -45,7 +43,6 @@ class ProductController extends Controller
     {
         $imageId='2838736/w_200,h_223/w_200,h_223/fit_fill/fm_png';
         $media = $this->GetMedia($imageId);
-        //  dd($media);
         return view('products.media',compact('media'));
     }
 
@@ -60,15 +57,17 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $shirts = Tshirt::all();
-        $pageTitle = 'Nieuwe Variant Aanmaken';
-        return view('products.create', compact('shirts', 'pageTitle'));
+        //
     }
 
     // public function design(Request $request) {
     //     $result = Attribute::where('value', 'Royal')->first()->id;  // result = variant id.
     //     dd($result);
     // }
+    public function productDownload() {
+        // dd('productDowload function');
+        return view('products.download');
+    }
 
     public function download() {
         $products = $this->GetJson();
@@ -152,8 +151,7 @@ class ProductController extends Controller
                 }
             }
         }
-        // dd($product);
-        return view('manage.dashboard');
+        return view('products.dashboard');
     }
 
     /**
@@ -175,6 +173,8 @@ class ProductController extends Controller
      */
     public function uploadImage() {
         $colors = Attribute::where('key', 'color')->groupBy('value')->pluck('value')->toArray(); // find all used colors from existing base variants
+        // $colors = Attribute::distinct('value')->where('key', 'color')->pluck('value')->toArray();
+        // dd($colors);
         return view('products.uploadImage', compact('colors'));
     }
 

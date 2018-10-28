@@ -1,5 +1,41 @@
+var tshirtSource = '';
+var designSource = '';
 
-document.querySelector('#designVariant').addEventListener('click', function(){
+document.querySelector('#customizationStart').addEventListener('click', function(){
+    document.querySelector('.imageSelections').classList.add('is-hidden');
+    document.querySelector('.designSelection').classList.add('is-hidden');
+    document.querySelector('.designArea').classList.remove('is-hidden');
+});
+
+function setActiveImage(imageId, src) {
+    tshirtSource = src;
+    var images = document.querySelectorAll('.imageSelector');
+    for (var i = 1; i <= images.length; i++) {
+        var thisImage = document.querySelector('#a' + CSS.escape(i));
+        if(imageId === i) {
+            thisImage.classList.add('is-activeImage');
+            document.querySelector('.designSelection').classList.remove('is-hidden');
+        } else {
+            thisImage.classList.remove('is-activeImage');
+        }
+    }
+}
+
+function setActiveDesign(designId, src) {
+    designSource = src;
+    var designs = document.querySelectorAll('.designSelector');
+    for (var i = 1; i <= designs.length; i++) {
+        var thisDesign = document.querySelector('#b' + CSS.escape(i));
+        if(designId === i) {
+            thisDesign.classList.add('is-activeDesign');
+            document.querySelector('#customizationStart').disabled = false;
+        } else {
+            thisDesign.classList.remove('is-activeDesign');
+        }
+    }
+}
+
+document.querySelector('#customizationStart').addEventListener('click', function(){
     var baseWidth = 0;
     var baseHeight = 0;
     var customWidth = 0;
@@ -185,7 +221,7 @@ document.querySelector('#designVariant').addEventListener('click', function(){
     }
 
     var baseObj = new Image();
-    baseObj.src = "http://localhost:8000/images/base_products/tshirt_white_front.jpg";
+    baseObj.src = tshirtSource;
     baseObj.onload = function() {
         // this.height = 646;
         // this.width = 580;
@@ -194,7 +230,7 @@ document.querySelector('#designVariant').addEventListener('click', function(){
     };
 
     var customObj = new Image();
-    customObj.src = "http://localhost:8000/images/western_01.png";
+    customObj.src = designSource;
     customObj.onload = function() {
         ratio = this.width / this.height
         customHeight = this.height;

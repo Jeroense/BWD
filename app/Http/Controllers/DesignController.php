@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class DesignController extends Controller
 {
     public function dashboard() {
-        return view('design.dashboard');
+        return view('designs.dashboard');
     }
 
     /**
@@ -19,11 +19,11 @@ class DesignController extends Controller
     public function index() {
         $images = Design::All();
         // dd($images);
-        return view('design.index', compact('images'));
+        return view('designs.index', compact('images'));
     }
 
     public function upload() {
-        return view('design.upload');
+        return view('designs.upload');
     }
 
 
@@ -59,7 +59,7 @@ class DesignController extends Controller
         $image->move($design->path, $design->fileName);
         $design->save();
 
-        return redirect()->route('design.index');
+        return redirect()->route('designs.index');
     }
 
     /**

@@ -1,14 +1,16 @@
-body {
-    margin: 50px auto;
-    font-family: 'Lato';
-    font-weight: 300;
-    width: 600px;
-    text-align: center;
-  }
+// body {
+//     margin: 50px auto;
+//     font-family: 'Lato';
+//     font-weight: 300;
+//     width: 600px;
+//     text-align: center;
+//   }
 
-#container {
-    width: 580px;
-    height: 646px;
+#customizationContainer {
+    // width: 580px;
+    // height: 646px;
+    width: 1160px;
+    height: 1292px;
     box-shadow: 0 0 1px #ddd, 0 2px 2px #aaa;
     border-radius: 5px;
     margin: 20px 0;
@@ -19,4 +21,8 @@ body {
 
 #topLine {
     color: blue;
+}
+
+.imageSelection {
+    display: block;
 }

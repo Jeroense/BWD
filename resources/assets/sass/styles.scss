@@ -26,7 +26,7 @@
 }
 
 .productDetail {
-    width: 5rem;
+    width: 9rem;
 }
 
 #baseImage {
@@ -48,4 +48,32 @@
 
 .errors {
     background-color: red;
+}
+
+.btnLabel, .btnLabel:hover{
+    display: inline-block;
+    // border: 1px solid black;
+    width: 10rem;
+    text-align: right;
+    height: 2.25rem;
+    line-height: 2.25rem;
+    vertical-align: middle;
+
+}
+
+.is-activeImage {
+    border: 1px solid red;
+}
+
+.is-activeDesign {
+    border: 1px solid red;
+}
+
+.designArea {
+    margin: 0;
+    width: 960px;
+}
+
+#customizationContainer {
+    padding: 0;
 }

@@ -19,11 +19,9 @@
         </div>
 
         <div id="navMenu" class="navbar-menu">
-
             <div class="navbar-start">
-                <a class="navbar-item navbar-title m-l-30" href="#">
+                <a class="navbar-item navbar-title m-l-40" href="#">
                     @yield('pageTitle')
-                    {{-- {{ $pageTitle or '*** Undefined ***'}} --}}
                 </a>
             </div>
             <div class="navbar-end">

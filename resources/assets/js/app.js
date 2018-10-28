@@ -8,8 +8,9 @@ require('./bootstrap');
 require('./sideBar');
 require('./upload');
 require('./showProductDetail');
-require('./customization');
+// require('./customization');
 require('./getImage');
+// require('./setActiveImage');
 
 import Vue from 'vue';
 

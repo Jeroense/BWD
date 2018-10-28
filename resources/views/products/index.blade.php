@@ -1,14 +1,7 @@
 @extends('layouts.app')
+@section('pageTitle', 'Overzicht Standaard Smake Producten')
 @section('content')
-<div class="container column">
-    <div class="columns m-t-5">
-        <div class="column">
-            <h1 class="title">Producten</h1>
-        </div> <!-- end of column -->
-        <div class="column">
-        </div>
-    </div>
-    <hr class="m-t-0">
+<div class="container column is-9 pull-left">
     <div class="columns">
         <div class="column">
             <div class="field">
@@ -16,24 +9,23 @@
                     <table style="width:80%">
                         <tr>
                             <th><strong>{{ $product->title }}</strong></th>
+                            <th class="pull-right"><a href="javascript:void(0)" class="button is-danger productDetail">Toon Varianten</a></th>
                         </tr>
                         <tr>
                             <td>Product id: <strong>{{ $product->id }}</strong></td>
                         </tr>
                         <tr>
                             <td colspan="2">{{ $product->description }}</td>
-                            <td><a href="javascript:void(0)" class="button is-danger productDetail">Details</a></td>
                         </tr>
                         <tr class="hideDetail">
                             <td>
                                 <ul>
                                     <li><strong>Variants:</strong></li>
                                 </ul>
-                                <hr class="hrVariant">
+                                <hr class="detailSection">
                                 @foreach($product->variants as $variant)
                                     <ul>
                                         <li>Variant id: <strong>{{ $variant->id }}</strong></li>
-                                        {{-- <li><img src="{{public_path('tshirtImages')}}/{{$variant->fileName}}" width="200"></li> --}}
                                         <li><img src="{{asset('tshirtImages/').'/'.$variant->fileName}}" width='100'></li>
                                         <li>Origin code: <strong>{{ $variant->origin->code }}</strong></li>
                                         <li>Prijs: <strong>{{ $variant->price }}</strong></li>
@@ -113,7 +105,7 @@
                     </table>
                     <hr>
                 @endforeach
-                <a href="{{ route('products.download') }}"  class="button is-danger downloadProducts">Download alle Smake producten</a>
+                <a href="{{ route('products.productDownload') }}"  class="button is-danger downloadProducts">Download alle Smake producten</a>
             </div>
         </div>
     </div>

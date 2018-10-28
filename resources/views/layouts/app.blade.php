@@ -3,14 +3,19 @@
     <div id="app" class="contentArea">
         @include('_includes.nav.main')
         @include('_includes.nav.sideMenu')
-        {{-- <div class="column is-10 is-offset-3"> --}}
-                <div class="column is-12 m-l-275">
-
+            <div class="column is-12 m-l-275">
             @yield('content')
         </div>
         <script src="{{ asset('js/app.js') }}"></script>
         @yield('scripts')
     </div>
 </body>
+<script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
 </html>
 

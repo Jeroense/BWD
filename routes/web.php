@@ -31,9 +31,18 @@ Route::prefix('products')->middleware('role:superadministrator|administrator|edi
     Route::get('/', 'ProductController@index');
     Route::get('/uploadImage', 'ProductController@uploadImage')->name('products.uploadImage');
     Route::get('/download', 'ProductController@download')->name('products.download');
+    Route::get('/productDownload', 'ProductController@productDownload')->name('products.productDownload');
     Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
     Route::post('/attachImage', 'ProductController@attachImage')->name('products.attachImage');
     Route::resource('/products', 'ProductController');
+});
+
+Route::prefix('variants')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
+    Route::get('/', 'VariantController@index');
+    Route::get('/uploadImage', 'VariantController@uploadImage')->name('variants.uploadImage');
+    Route::get('/dashboard', 'VariantController@dashboard')->name('variants.dashboard');
+    Route::post('/attachImage', 'VariantController@attachImage')->name('variants.attachImage');
+    Route::resource('/variants', 'VariantController');
 });
 
 Route::prefix('orders')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
@@ -43,12 +52,12 @@ Route::prefix('orders')->middleware('role:superadministrator|administrator|edito
     Route::get('/dashboard', 'OrderController@dashboard')->name('orders.dashboard');
 });
 
-Route::prefix('design')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
+Route::prefix('designs')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
     Route::get('/', 'DesignController@index');
-    Route::get('/dashboard', 'DesignController@dashboard')->name('design.dashboard');
-    Route::get('/index', 'DesignController@index')->name('design.index');
-    Route::get('/upload', 'DesignController@upload')->name('design.upload');
-    Route::post('/store', 'DesignController@store')->name('design.store');
+    Route::get('/dashboard', 'DesignController@dashboard')->name('designs.dashboard');
+    Route::get('/index', 'DesignController@index')->name('designs.index');
+    Route::get('/upload', 'DesignController@upload')->name('designs.upload');
+    Route::post('/store', 'DesignController@store')->name('designs.store');
 });
 
 Route::prefix('summaries')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {

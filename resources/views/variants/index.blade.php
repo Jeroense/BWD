@@ -1,4 +1,6 @@
 @extends('layouts.app')
-@section('pageTitle', 'Dashboard')
+@section('pageTitle', 'Alle Varianten')
 @section('content')
+
 @endsection
+
