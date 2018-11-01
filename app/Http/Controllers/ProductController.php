@@ -187,6 +187,7 @@ class ProductController extends Controller
      */
     public function attachImage(Request $request) {
 
+        // dd($request);
         $this->validate($request, [
             'imageName' => 'required|image|mimes:jpeg,jpg,png|max:9216',
             'tShirtColor' => 'required|unique:tshirts,color'

@@ -16,10 +16,11 @@ class CreateCompositeMediaDesignsTable extends Migration
         Schema::create('composite_media_designs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('designName')->Unique();
+            $table->string('baseColor');
             $table->integer('smakeId')->nullable();
             $table->string('fileName');
-            $table->string('filePath');
-            $table->integer('fileSize');
+            $table->string('fileFolder');
+            $table->integer('fileSize')->nullable();
             $table->string('smakeFileName')->nullable();
             $table->string('smakeDowloadUrl')->nullable();
             $table->timestamps();

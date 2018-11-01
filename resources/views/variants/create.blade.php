@@ -9,7 +9,7 @@
     <div class="container m-t-20 is-pulled-left">
         <div class="imageSelection">
             @foreach($shirts as $shirt)
-            <img src="{{url('/tshirtImages')}}/{{$shirt->fileName}}" width="100" id="a{{$loop->iteration}}" class="imageSelector" onclick="setActiveImage({{$loop->iteration}}, src);">
+            <img src="{{ url('/tshirtImages') }}/{{ $shirt->fileName }}" width="100" id="a{{$loop->iteration}}" class="imageSelector" onclick="setActiveImage({{ $loop->iteration }}, src, '{{$shirt->color}}');">
             @endforeach
         </div>
     </div>
@@ -21,24 +21,26 @@
     <div class="container m-t-20 is-pulled-left">
         <div class="designSelection">
             @foreach($designs as $design)
-            <img src="{{url('/designImages')}}/{{$design->fileName}}" width="100" id="b{{$loop->iteration}}" class="designSelector" onclick="setActiveDesign({{$loop->iteration}}, src);">
+            <img src="{{ url('/designImages') }}/{{ $design->fileName }}" width="100" id="b{{ $loop->iteration }}" class="designSelector" onclick="setActiveDesign({{ $loop->iteration }}, src);">
             @endforeach
         </div>
     </div>
     <div class="container m-t-20 is-pulled-left">
-        <button id="customizationStart" class="button is-danger" disabled value="{{route('variants.store')}}">Start Customization</button>
+        <button id="customizationStart" class="button is-danger" disabled value="{{ route('variants.store') }}">Start Customization</button>
     </div>
 </div>
 
 <div class="designArea is-hidden">
     <div id="customizationContainer"></div>
     <div class="container .is-fullhd">
-        <div><a href="{{route('store')}}" id="saveImage" class="button is-danger">Custom Variant Opslaan</a></div>
+        <label for='customName'>Naam CustomDesign:</label>
+        <input type="text" name="customName" id='customName'>
+        <div><a href="{{ route('store') }}" id="saveImage" returnHref="{{ route('variants.index') }}" class="button is-danger m-b-100">Custom Variant Opslaan</a></div>
     </div>
 </div>
 
 @endsection
 @section('scripts')
-    <script src="{{asset('js/customization.js')}}"></script>
+    <script src="{{ asset('js/customization.js') }}"></script>
 @endsection
 

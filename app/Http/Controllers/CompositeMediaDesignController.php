@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use App\CompositeMediaDesign;
 
 class CompositeMediaDesignController extends Controller
@@ -35,17 +36,26 @@ class CompositeMediaDesignController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($image);
-        $image = $request->get('imgBase64');
-        $imagenaam = $request->get('naam');
-        $fileSize = getimagesize($image);
-        dd($fileSize);
-        $image = str_replace('data:image/png;base64,', '', $image);
-        $image = str_replace(' ', '+', $image);
-        // $imageName = str_random(10).'.'.'png';
-        $imageName = 'mijnNieuweImage.png';
-        \File::put(public_path(). '/customVariants/' . $imageName, base64_decode($image));
-        return view('');
+        try {
+            $compositeMediaDesign = new CompositeMediaDesign();
+
+            $image = $request->get('imgBase64');
+            $image = str_replace('data:image/png;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = time().md5($request->get('imgName')).'.'.'png';
+            $imagePath = public_path(). '\\customVariants\\';
+            File::put($imagePath . $imageName, base64_decode($image));
+
+            $compositeMediaDesign->designName = $request->get('imgName');
+            $compositeMediaDesign->fileName = $imageName;
+            $compositeMediaDesign->fileFolder = 'customVariants';
+            $compositeMediaDesign->baseColor = $request->get('baseColor');
+            $compositeMediaDesign->save();
+            return response()->json('Custom Variant succesvol opgeslagen', 201);
+        }
+        catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     /**

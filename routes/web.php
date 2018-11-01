@@ -28,25 +28,30 @@ Route::prefix('manage')->middleware('role:superadministrator|administrator|edito
 });
 
 Route::prefix('products')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
-    Route::get('/', 'ProductController@index');
+    // Route::get('/', 'ProductController@index');
+    Route::resource('/products', 'ProductController');
     Route::get('/uploadImage', 'ProductController@uploadImage')->name('products.uploadImage');
     Route::get('/download', 'ProductController@download')->name('products.download');
     Route::get('/productDownload', 'ProductController@productDownload')->name('products.productDownload');
     Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
     Route::post('/attachImage', 'ProductController@attachImage')->name('products.attachImage');
-    Route::resource('/products', 'ProductController');
+
 });
 
 Route::prefix('variants')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
-    Route::get('/', 'VariantController@index');
+    // Route::get('/', 'VariantController@index');
+    Route::resource('/variants', 'VariantController');
     Route::get('/uploadImage', 'VariantController@uploadImage')->name('variants.uploadImage');
     Route::get('/dashboard', 'VariantController@dashboard')->name('variants.dashboard');
     Route::post('/attachImage', 'VariantController@attachImage')->name('variants.attachImage');
-    Route::resource('/variants', 'VariantController');
+    // Route::get('/order/{id}', 'VariantController@order')->name('variants.order');
 });
+
 
 Route::prefix('orders')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
     Route::get('/', 'OrderController@index');
+    Route::get('/create/{id}', 'OrderController@create')->name('orders.create');
+    Route::get('/store', 'OrderController@store')->name('orders.store');
     Route::get('/index', 'OrderController@index')->name('orders.index');
     Route::get('/media', 'OrderController@media')->name('orders.media');
     Route::get('/dashboard', 'OrderController@dashboard')->name('orders.dashboard');

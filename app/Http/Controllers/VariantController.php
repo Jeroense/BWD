@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Input;
 use App\Variant;
 use App\Tshirt;
 use App\Design;
+use App\CompositeMediaDesign;
 
 class VariantController extends Controller
 {
@@ -18,9 +19,9 @@ class VariantController extends Controller
      */
     public function index()
     {
-        $variants = Variant::with('attributes')->where('isBwdVariant', '1')->get();
-        // dd($variants);
-        return view('variants.index');
+        $customVariants = CompositeMediaDesign::All();
+        // dd($customVariants);
+        return view('variants.index', compact('customVariants'));
     }
 
     /**
@@ -31,6 +32,7 @@ class VariantController extends Controller
     public function create()
     {
         $shirts = Tshirt::orderBy('color', 'asc')->get();
+        // dd($shirts);
         $designs = Design::All();
         // dd($designs);
         return view('variants.create', compact('shirts', 'designs'));
@@ -55,8 +57,10 @@ class VariantController extends Controller
      */
     public function show($id)
     {
-        //
+        return('test details');
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -89,6 +93,12 @@ class VariantController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $target = CompositeMediaDesign::find($id);
+        $targetUri = public_path().'\\'.$target->fileFolder.'\\'.$target->fileName;
+        if (file_exists($targetUri)) {
+            unlink($targetUri);
+        }
+        $target->delete();
+        return redirect()->route('variants.index', $id);
     }
 }

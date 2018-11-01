@@ -7,8 +7,9 @@ document.querySelector('#customizationStart').addEventListener('click', function
     document.querySelector('.designArea').classList.remove('is-hidden');
 });
 
-function setActiveImage(imageId, src) {
+function setActiveImage(imageId, src, color) {
     tshirtSource = src;
+    tshirtColor = color;
     var images = document.querySelectorAll('.imageSelector');
     for (var i = 1; i <= images.length; i++) {
         var thisImage = document.querySelector('#a' + CSS.escape(i));
@@ -134,8 +135,11 @@ document.querySelector('#customizationStart').addEventListener('click', function
         });
 
         linesGroup = new Konva.Group({
-
         });
+
+        stage.add(layer);
+        var ctx = baseImage.getContext('2d');
+        var x = ctx.getImageData(250, 250, 1, 1).data; // this gets the color of the tshirt. future use: to set the color of the helplines to the inverse of the tshirt color
 
         addLines(linesGroup, (baseWidth / 2), 0, (baseWidth / 2), baseHeight, 'vCenter');
         addLines(linesGroup, (baseWidth / 3), 0, (baseWidth / 3), baseHeight, 'vLeft');
@@ -153,6 +157,8 @@ document.querySelector('#customizationStart').addEventListener('click', function
             linesGroup.destroy();
             stage.find('Transformer').destroy();
             layer.draw();
+            var customName = document.querySelector('#customName').value;
+            var returnUrl = this.getAttribute("returnHref");
             var destination = this.getAttribute("href");
             var dataURL = stage.toDataURL();
 
@@ -163,12 +169,13 @@ document.querySelector('#customizationStart').addEventListener('click', function
                 dataType: "json",
                 data: {
                     imgBase64: dataURL,
-                    naam: 'deze naam'
+                    imgName: customName,
+                    baseColor: tshirtColor
                 }
             }).done(function(o) {
                 console.log('saved');
                 var x = 0;
-
+                window.location.href = returnUrl;
                 // Do here whatever you want.
             });
         });

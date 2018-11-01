@@ -71,9 +71,48 @@
 
 .designArea {
     margin: 0;
-    width: 960px;
+    // width: 960px;
 }
 
 #customizationContainer {
     padding: 0;
 }
+
+div.fixed {
+    display:    inline-block;
+    max-width: 100px;
+}
+
+
+p.imageHead
+{
+    max-width: 200px;
+}
+
+// .sizeSelect {
+//     display: inline-block;
+
+// }
+
+.orderSize {
+    width: 5rem;
+    display: inline-block;
+}
+
+
+input[id*='orderAmount'] {
+    padding: 0;
+}
+
+input[type=checkbox]
+{
+    margin-top: 12px;
+    color: #99a1a7;
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(3); /* IE */
+  -moz-transform: scale(3); /* FF */
+  -webkit-transform: scale(2.5); /* Safari and Chrome */
+  -o-transform: scale(3); /* Opera */
+  padding: 10px;
+}
+

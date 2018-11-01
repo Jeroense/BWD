@@ -31,7 +31,6 @@
                 <div class="field">
                     <div class="file is-info has-name">
                     <label class="file-label">
-                        {{-- <input class="file-input" type="file" name="imageName"> --}}
                         <input class="file-input is-danger" type='file' name="imageName" onchange='getImage(this);' width="48" accept=".jpg, .jpeg, .png" />
                         <span class="file-cta">
                             <span class="file-icon">
@@ -47,22 +46,6 @@
                     </label>
                     </div>
                 </div>
-
-
-
-
-                {{-- <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">Kies Afbeelding:</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <input class="input is-danger" type='file' name="imageName" onchange='getImage(this);' width="48" accept=".jpg, .jpeg, .png" />
-                            </p>
-                        </div>
-                    </div>
-                </div> --}}
                 <div class="field">
                     <img class="hideDetail" id="uploadedImage" src="#" alt="tshirt" />
                 </div>
