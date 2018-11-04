@@ -36,6 +36,7 @@ class CompositeMediaDesignController extends Controller
      */
     public function store(Request $request)
     {
+        return dd($request);
         try {
             $compositeMediaDesign = new CompositeMediaDesign();
 

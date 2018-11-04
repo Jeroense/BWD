@@ -10,15 +10,24 @@
                             <img src="{{url('/customVariants')}}/{{$customVariant->fileName}}" width="250">
                         </td>
                         <td width='700'>
-                            <form action="{{ route('orders.store')}}" method="POST">
+                            <form action="{{ route('orders.checkOrder') }}" method="POST">
                                 {{csrf_field()}}
                                 <div class="column is-offset-2">
                                     <label for="roles" class="label is-size-5 has-text-weight-bold">Beschikbare maten:</label>
                                     @foreach ($AvailableSizesWithVariantIds as $key => $value)
+                                        <input name="numberOfSizes"
+                                               value="{{$loop->iteration}}"
+                                               type="hidden">
+                                        <input name="parentVariantIdAndSize{{$loop->iteration}}"
+                                               value="{{ $key }},{{ $value }}"
+                                               type="hidden">
                                         <div class="field">
                                             <div class="field has-addons inline">
                                                 <div class="sizeSelect orderSize">
-                                                    <input class='checkbox' type="checkbox" id="checkBox{{$loop->iteration}}"> <span class="is-size-6 has-text-weight-bold">&nbsp;&nbsp;{{ $value }}</span>
+                                                    <input class='checkbox'
+                                                           type="checkbox"
+                                                           id="checkBox{{$loop->iteration}}">
+                                                           <span class="is-size-6 has-text-weight-bold">&nbsp;&nbsp;{{ $value }}</span>
                                                 </div>
                                                 <div class="control">
                                                     <a class="button is-danger" onclick="AmountMin('{{ $loop->iteration }}')">
@@ -26,7 +35,12 @@
                                                     </a>
                                                 </div>
                                                 <div class="control">
-                                                    <input class="input is-size-6 has-text-centered has-text-weight-bold" id="orderAmount{{$loop->iteration}}" type="text" placeholder="Aantal" value="0">
+                                                    <input class="input is-size-6 has-text-centered has-text-weight-bold"
+                                                           id="orderAmount{{$loop->iteration}}"
+                                                           name="orderAmount{{ $loop->iteration }}"
+                                                           type="text"
+                                                           placeholder="Aantal"
+                                                           value="0">
                                                 </div>
                                                 <div class="control">
                                                     <a class="button is-danger" onclick="AmountPlus('{{ $loop->iteration }}')">
@@ -36,13 +50,16 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                    <input name="designId"
+                                           value="{{ $customVariant->id}}"
+                                           type="hidden">
                                 </div>
+                                <button disabled id="bestelButton" class="button is-danger">Bestellen!!</button>
                             </form>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <button href="{{ route('orders.store') }}" disabled id="bestelButton" type="submit" class="button is-danger">Bestellen!!</button>
         </div>
     </div>
 @endsection
@@ -57,6 +74,5 @@
     });
 
 </script> --}}
-
 @endsection
 

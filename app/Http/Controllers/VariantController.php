@@ -32,9 +32,7 @@ class VariantController extends Controller
     public function create()
     {
         $shirts = Tshirt::orderBy('color', 'asc')->get();
-        // dd($shirts);
         $designs = Design::All();
-        // dd($designs);
         return view('variants.create', compact('shirts', 'designs'));
     }
 
@@ -47,6 +45,27 @@ class VariantController extends Controller
     public function store(Request $request)
     {
         //
+        // **** create Guzzle object to upload a custom Variant
+            // $app = app();
+            // $dimensions = $app->make('stdClass');
+            // $dimensions->width = "myWidth";
+            // $dimensions->height = "myHight";
+
+            // $customizations = $app->make('stdClass');
+            // $customizations->type = "dtg";
+            // $customizations->production_media_id = "myProductionMediaId";
+            // $customizations->dimensions = $dimensions;
+
+            // $front = $app->make('stdClass');
+            // $front->composite_media_id = "myCompositeMediaId";
+            // $front->customizations = $customizations;
+
+            // $views = $app->make('stdClass');
+            // $views->front = $front;
+            // $newVariant = $app->make('stdClass');
+            // $newVariant->views = $views;
+
+            // dd(json_encode((array)$newVariant));
     }
 
     /**

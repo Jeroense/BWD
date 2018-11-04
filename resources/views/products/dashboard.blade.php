@@ -9,7 +9,7 @@
                     <p>Producten Downloaden</p>
                 </div>
                 <div class="message-body">
-                    <p>Alle Smake producten zijn succesvol gedownload.
+                    <p>{{ $message }}</p>
                 </div>
             </article>
 

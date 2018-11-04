@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Design;
 use Illuminate\Http\Request;
+use App\Http\Traits\SmakeApi;
 
 class DesignController extends Controller
 {
+    use SmakeApi;
+
     public function dashboard() {
         return view('designs.dashboard');
     }
@@ -57,8 +60,14 @@ class DesignController extends Controller
         $design->fileName = time().md5($design->originalName).'.'.$image->getClientOriginalExtension();
         $design->path = public_path('designImages');
         $image->move($design->path, $design->fileName);
-        $design->save();
 
+        $designPath = env('DESIGN_PATH', '');
+
+        $designResponse = $this->UploadMedia($designPath, $design->fileName, $design->fileSize, 'media');
+        $design->smakeId = $designResponse->id;
+        $design->smakeFileName = $designResponse->file_name;
+        $design->downloadUrl = $designResponse->download_url;
+        $design->save();
         return redirect()->route('designs.index');
     }
 

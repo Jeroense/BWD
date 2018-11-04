@@ -70,88 +70,96 @@ class ProductController extends Controller
     }
 
     public function download() {
-        $products = $this->GetJson();
-        foreach($products as $product) {
-            $newProduct = new Product();
-            $localProduct = Product::where('smakeId', $product->id)->first();
-            if($localProduct == null){
-                $newProduct->productName = $product->title;
-                $newProduct->productDescription = $product->description;
-                $newProduct->smakeId = $product->id;
-                $newProduct->save();
-            } else {
-                $newProduct->id = $localProduct->id;
-            }
-            foreach($product->variants as $variant){
-                $newVariant = new Variant();
-                $localVariant = Variant::where('variantId', $variant->id)->first();
-                if($localVariant == null){
-                    $newVariant->variantId = $variant->id;
-                    $newVariant->productId = $newProduct->id;
-                    $newVariant->price = $variant->price;
-                    $newVariant->tax = $variant->tax;
-                    $newVariant->taxRate = $variant->tax_rate;
-                    $newVariant->mediaId = $variant->media_id;
-                    $newVariant->save();
-                    foreach($variant->attributes as $attribute){
-                        $newAttribute = new Attribute();
-                        $localAttribute = Attribute::where('variantId', $variant->id)->first();
-                        $newAttribute->variantId = $newVariant->id;
-                        $newAttribute->key = $attribute->name;
-                        $newAttribute->value = $attribute->value;
-                        $newAttribute->save();
-                    }
-                    $newView = new View();
-                    $newView->variantId = $newVariant->id;
-                    $newView->save();
-                    $newFront = new Front();
-                    $newFront->viewId = $newView->id;
-                    $newFront->compositeMediaId = $variant->views->front->composite_media_id;
-                    $newFront->save();
-                    foreach($variant->views->front->customizations as $customization){
-                        $newCustomization = new FrontCustomization();
-                        $newCustomization->frontId = $newFront->id;
-                        $newCustomization->type = $customization->type;
-                        $newCustomization->productionMediaId = $customization->production_media_id;
-                        $newCustomization->previewMediaId = $customization->preview_media_id;
-                        $newCustomization->width = $customization->dimension->width;
-                        $newCustomization->height = $customization->dimension->height;
-                        $newCustomization->save();
-                    }
-                    foreach($variant->views->back->customizations as $customization){
-                        $newCustomization = new BackCustomization();
-                        $newCustomization->backId = $newBack->id;
-                        $newCustomization->type = $customization->type;
-                        $newCustomization->productionMediaId = $customization->production_media_id;
-                        $newCustomization->previewMediaId = $customization->preview_media_id;
-                        $newCustomization->width = $customization->dimension->width;
-                        $newCustomization->height = $customization->dimension->height;
-                        $newCustomization->save();
-                    }
-                    foreach($variant->views->left->customizations as $customization){
-                        $newCustomization = new LeftCustomization();
-                        $newCustomization->leftId = $newLeft->id;
-                        $newCustomization->type = $customization->type;
-                        $newCustomization->productionMediaId = $customization->production_media_id;
-                        $newCustomization->previewMediaId = $customization->preview_media_id;
-                        $newCustomization->width = $customization->dimension->width;
-                        $newCustomization->height = $customization->dimension->height;
-                        $newCustomization->save();
-                    }
-                    foreach($variant->views->right->customizations as $customization){
-                        $newCustomization = new RightCustomization();
-                        $newCustomization->rightId = $newRight->id;
-                        $newCustomization->type = $customization->type;
-                        $newCustomization->productionMediaId = $customization->production_media_id;
-                        $newCustomization->previewMediaId = $customization->preview_media_id;
-                        $newCustomization->width = $customization->dimension->width;
-                        $newCustomization->height = $customization->dimension->height;
-                        $newCustomization->save();
+        $response = $this->GetJson();
+        if ($response->getStatusCode() === 200) {
+            $products = json_decode($response->getBody())->data;
+            foreach($products as $product) {
+                $newProduct = new Product();
+                $localProduct = Product::where('smakeId', $product->id)->first();
+                if($localProduct == null){
+                    $newProduct->productName = $product->title;
+                    $newProduct->productDescription = $product->description;
+                    $newProduct->smakeId = $product->id;
+                    $newProduct->save();
+                } else {
+                    $newProduct->id = $localProduct->id;
+                }
+                foreach($product->variants as $variant){
+                    $newVariant = new Variant();
+                    $localVariant = Variant::where('variantId', $variant->id)->first();
+                    if($localVariant == null){
+                        $newVariant->variantId = $variant->id;
+                        $newVariant->productId = $newProduct->id;
+                        $newVariant->price = $variant->price;
+                        $newVariant->tax = $variant->tax;
+                        $newVariant->taxRate = $variant->tax_rate;
+                        $newVariant->mediaId = $variant->media_id;
+                        $newVariant->save();
+                        foreach($variant->attributes as $attribute){
+                            $newAttribute = new Attribute();
+                            $localAttribute = Attribute::where('variantId', $variant->id)->first();
+                            $newAttribute->variantId = $newVariant->id;
+                            $newAttribute->key = $attribute->name;
+                            $newAttribute->value = $attribute->value;
+                            $newAttribute->save();
+                        }
+                        $newView = new View();
+                        $newView->variantId = $newVariant->id;
+                        $newView->save();
+                        $newFront = new Front();
+                        $newFront->viewId = $newView->id;
+                        $newFront->compositeMediaId = $variant->views->front->composite_media_id;
+                        $newFront->save();
+                        foreach($variant->views->front->customizations as $customization){
+                            $newCustomization = new FrontCustomization();
+                            $newCustomization->frontId = $newFront->id;
+                            $newCustomization->type = $customization->type;
+                            $newCustomization->productionMediaId = $customization->production_media_id;
+                            $newCustomization->previewMediaId = $customization->preview_media_id;
+                            $newCustomization->width = $customization->dimension->width;
+                            $newCustomization->height = $customization->dimension->height;
+                            $newCustomization->save();
+                        }
+                        foreach($variant->views->back->customizations as $customization){
+                            $newCustomization = new BackCustomization();
+                            $newCustomization->backId = $newBack->id;
+                            $newCustomization->type = $customization->type;
+                            $newCustomization->productionMediaId = $customization->production_media_id;
+                            $newCustomization->previewMediaId = $customization->preview_media_id;
+                            $newCustomization->width = $customization->dimension->width;
+                            $newCustomization->height = $customization->dimension->height;
+                            $newCustomization->save();
+                        }
+                        foreach($variant->views->left->customizations as $customization){
+                            $newCustomization = new LeftCustomization();
+                            $newCustomization->leftId = $newLeft->id;
+                            $newCustomization->type = $customization->type;
+                            $newCustomization->productionMediaId = $customization->production_media_id;
+                            $newCustomization->previewMediaId = $customization->preview_media_id;
+                            $newCustomization->width = $customization->dimension->width;
+                            $newCustomization->height = $customization->dimension->height;
+                            $newCustomization->save();
+                        }
+                        foreach($variant->views->right->customizations as $customization){
+                            $newCustomization = new RightCustomization();
+                            $newCustomization->rightId = $newRight->id;
+                            $newCustomization->type = $customization->type;
+                            $newCustomization->productionMediaId = $customization->production_media_id;
+                            $newCustomization->previewMediaId = $customization->preview_media_id;
+                            $newCustomization->width = $customization->dimension->width;
+                            $newCustomization->height = $customization->dimension->height;
+                            $newCustomization->save();
+                        }
                     }
                 }
             }
+            $message = 'Alle Smake producten zijn succesvol gedownload.';
+            return view('products.dashboard', compact('message'));
+        } else {
+            $message = 'Er is een probleem opgetreden bij het downloaden van alle producten. Neem contact op met de systeembeheerder.';
+            return view('products.dashboard', compact('message'));
         }
-        return view('products.dashboard');
+
     }
 
     /**
