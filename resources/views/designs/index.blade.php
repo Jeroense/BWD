@@ -5,6 +5,11 @@
     <div class="columns m-t-5">
     </div>
     <div>
+        <div class="container">
+            @if(Session::has('flash_message'))
+                <div class="alert is-danger">{{ Session::get('flash_message') }}</div>
+            @endif
+        </div>
         <table class="table is-narrow">
             <tbody>
                 @foreach ($images as $image)

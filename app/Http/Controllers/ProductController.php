@@ -60,17 +60,12 @@ class ProductController extends Controller
         //
     }
 
-    // public function design(Request $request) {
-    //     $result = Attribute::where('value', 'Royal')->first()->id;  // result = variant id.
-    //     dd($result);
-    // }
     public function productDownload() {
-        // dd('productDowload function');
         return view('products.download');
     }
 
     public function download() {
-        $response = $this->GetJson();
+        $response = $this->GetProducts();
         if ($response->getStatusCode() === 200) {
             $products = json_decode($response->getBody())->data;
             foreach($products as $product) {

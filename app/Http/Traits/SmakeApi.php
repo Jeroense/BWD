@@ -9,7 +9,7 @@ use App\Variant;
 
 trait SmakeApi {
 
-    public function GetJson($method = 'GET', $url = 'products') {
+    public function GetProducts($method = 'GET', $url = 'products') {
 
         $headers = [
             'Authorization' => 'Bearer ' . env('SMAKE_KEY',''),
@@ -18,13 +18,17 @@ trait SmakeApi {
             'Accept-Language' => 'nl'
         ];
 
-        $client = new Client([
-            'base_uri' => env('SMAKE_URI', '')
-        ]);
-
-        $products = $client->request($method, $url, [
-            'headers' => $headers
+        try {
+            $client = new Client([
+                'base_uri' => env('SMAKE_URI', '')
             ]);
+
+            $products = $client->request($method, $url, [
+                'headers' => $headers
+            ]);
+        } catch (\Exception $e) {
+            return $e->getResponse();
+        }
         return $products;
     }
 
@@ -59,12 +63,18 @@ trait SmakeApi {
             'Accept-Language' => 'nl'
         ];
 
-        $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
-        $response = json_decode($client->request('POST', $destinationUrl, [
-            'headers' => $headers,
-            'body' => $body
-        ])->getBody());
+        try {
+            $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
+            $response = $client->request('POST', $destinationUrl, [
+                'headers' => $headers,
+                'body' => $body
+            ]);
+        } catch (\Exception $e) {
+            return $e->getResponse();
+        }
         return $response;
+
+
 
         // ***** Actual response *****
         // {#385 ▼

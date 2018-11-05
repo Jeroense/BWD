@@ -63,12 +63,19 @@ class DesignController extends Controller
 
         $designPath = env('DESIGN_PATH', '');
 
-        $designResponse = $this->UploadMedia($designPath, $design->fileName, $design->fileSize, 'media');
-        $design->smakeId = $designResponse->id;
-        $design->smakeFileName = $designResponse->file_name;
-        $design->downloadUrl = $designResponse->download_url;
-        $design->save();
+        $response = $this->UploadMedia($designPath, $design->fileName, $design->fileSize, 'medias');
+        if ($response->getStatusCode() === 201) {
+            $designResponse = json_decode($response->getBody());
+            $design->smakeId = $designResponse->id;
+            $design->smakeFileName = $designResponse->file_name;
+            $design->downloadUrl = $designResponse->download_url;
+            $design->save();
+
+        } else {
+            \Session::flash('flash_message', 'Er is iets fout gegaan met het opslaan van het design, neem contact op met de systeembeheerder');
+        }
         return redirect()->route('designs.index');
+
     }
 
     /**
