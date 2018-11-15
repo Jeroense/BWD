@@ -9,7 +9,7 @@ use App\FrontCustomization;
 use App\Order;
 use App\Customer;
 use App\Variant;
-use App\customVariant;
+use App\CustomVariant;
 use App\Attribute;
 use App\Front;
 use App\View;

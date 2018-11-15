@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->string('smakeId');
             $table->string('productName');
-            $table->string('productDescription');
+            $table->mediumText('productDescription');
             $table->timestamps();
         });
 
