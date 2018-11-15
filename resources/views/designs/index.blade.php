@@ -6,8 +6,11 @@
     </div>
     <div>
         <div class="container">
+            @if ($images->count() === 0)
+                <div class="notification is-danger">Er zijn nog geen designs ge-upload</div>
+            @endif
             @if(Session::has('flash_message'))
-                <div class="alert is-danger">{{ Session::get('flash_message') }}</div>
+                <div class="notification is-danger">{{ Session::get('flash_message') }}</div>
             @endif
         </div>
         <table class="table is-narrow">
@@ -15,8 +18,14 @@
                 @foreach ($images as $image)
                     <tr>
                         <td><img class="designImage" src="/designImages/{{ $image->fileName }}" alt="" width="100"></td>
-                        <td><a href="#" class="button is-danger marginAuto">Delete</a></td>
-                        <td><a href="#" class="button is-danger marginAuto">Show</a></td>
+                        <td>
+                            <form method="post" action="{{ route('designs.destroy', $image->id) }}">
+                                {!! csrf_field() !!}
+                                {!! method_field('delete') !!}
+                                <button class="button is-danger marginAuto">Delete</button>
+                            </form>
+                        </td>
+                        <td><a href="" class="button is-danger marginAuto">Show</a></td>
                     </tr>
                 @endforeach
             </tbody>

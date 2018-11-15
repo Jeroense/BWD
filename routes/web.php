@@ -38,20 +38,29 @@ Route::prefix('products')->middleware('role:superadministrator|administrator|edi
 
 });
 
+Route::prefix('customvariants')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
+    Route::resource('/customvariants', 'CustomVariantController');
+    Route::post('/orderVariant/{id}','CustomVariantController@orderVariant')->name('customvariants.orderVariant');
+});
+
+Route::post('/createVariant','CustomVariantController@createVariant')->name('customVariants.createVariant');
+
+
 Route::prefix('variants')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
     // Route::get('/', 'VariantController@index');
     Route::resource('/variants', 'VariantController');
     Route::get('/uploadImage', 'VariantController@uploadImage')->name('variants.uploadImage');
     Route::get('/dashboard', 'VariantController@dashboard')->name('variants.dashboard');
     Route::post('/attachImage', 'VariantController@attachImage')->name('variants.attachImage');
+    Route::get('/selectSizes/{id}', 'VariantController@selectSizes')->name('variants.selectSizes');
     // Route::get('/order/{id}', 'VariantController@order')->name('variants.order');
 });
-
 
 Route::prefix('orders')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {
     Route::get('/', 'OrderController@index');
     Route::get('/create/{id}', 'OrderController@create')->name('orders.create');
-    Route::post('/checkOrder', 'OrderController@checkOrder')->name('orders.checkOrder');
+    // Route::post('/checkOrder', 'OrderController@checkOrder')->name('orders.checkOrder');
+    Route::post('checkoutOrder/{id}', 'OrderController@checkoutOrder')->name('checkoutOrder');
     Route::get('/index', 'OrderController@index')->name('orders.index');
     Route::get('/media', 'OrderController@media')->name('orders.media');
     Route::get('/dashboard', 'OrderController@dashboard')->name('orders.dashboard');
@@ -63,6 +72,7 @@ Route::prefix('designs')->middleware('role:superadministrator|administrator|edit
     Route::get('/index', 'DesignController@index')->name('designs.index');
     Route::get('/upload', 'DesignController@upload')->name('designs.upload');
     Route::post('/store', 'DesignController@store')->name('designs.store');
+    Route::delete('/destroy/{id}', 'DesignController@destroy')->name('designs.destroy');
 });
 
 Route::prefix('summaries')->middleware('role:superadministrator|administrator|editor|author|contributor')->group(function() {

@@ -62,20 +62,22 @@ class DesignController extends Controller
         $image->move($design->path, $design->fileName);
 
         $designPath = env('DESIGN_PATH', '');
-
-        $response = $this->UploadMedia($designPath, $design->fileName, $design->fileSize, 'medias');
+        $response = $this->UploadMedia($designPath, $design->fileName, $design->fileSize, 'media');
         if ($response->getStatusCode() === 201) {
             $designResponse = json_decode($response->getBody());
             $design->smakeId = $designResponse->id;
             $design->smakeFileName = $designResponse->file_name;
             $design->downloadUrl = $designResponse->download_url;
             $design->save();
-
         } else {
+            unset($response);
+            gc_collect_cycles();
+            if (file_exists(public_path('designImages').'\\'.$design->fileName)) {
+                unlink(public_path('designImages').'\\'.$design->fileName);
+            }
             \Session::flash('flash_message', 'Er is iets fout gegaan met het opslaan van het design, neem contact op met de systeembeheerder');
         }
         return redirect()->route('designs.index');
-
     }
 
     /**
@@ -118,8 +120,14 @@ class DesignController extends Controller
      * @param  \App\Design  $design
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Design $design)
+    public function destroy($id)
     {
-        //
+        $image = Design::find($id);
+        // dd($image);
+        if (file_exists(public_path('designImages').'\\'.$image->fileName)) {
+            unlink(public_path('designImages').'\\'.$image->fileName);
+        }
+        $image->delete();
+        return redirect()->route('designs.index');
     }
 }

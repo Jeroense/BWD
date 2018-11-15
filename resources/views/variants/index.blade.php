@@ -3,10 +3,13 @@
 @section('content')
     <div class="card column is-5">
         <div class="card-content">
+            @if(Session::has('flash_message'))
+                <div class="notification is-danger">{{ Session::get('flash_message') }}</div>
+            @endif
             <table class="table">
                 <tbody>
-                    @if ($customVariants->count() !== 0)
-                        @foreach ($customVariants as $customVariant)
+                    @if ($compositeMediaDesigns->count() !== 0)
+                        @foreach ($compositeMediaDesigns as $customVariant)
                             <tr>
                                 <td><p style="max-width: 250px;" class="imageHead is-size-5 has-text-centered has-text-weight-bold m-t-10 m-b-10">{{$customVariant->designName}}</p>
                                     <img src="{{url('/customVariants')}}/{{$customVariant->fileName}}" width="250"></td>
@@ -19,7 +22,7 @@
                                         <p><button type="submit" class="button is-danger is-outlined is-pulled-left m-b-5 m-l-50 is-fullwidth">Verwijderen</button></p>
                                     </form>
                                     <p><a class="button is-danger is-outlined is-pulled-left m-b-5 m-l-50 is-fullwidth"
-                                        href="{{route('orders.create', $customVariant->id)}}">Bestellen</a></p>
+                                        href="{{route('variants.selectSizes', $customVariant->id)}}">Maten selecteren</a></p>
                                 </td>
                             </tr>
                         @endforeach

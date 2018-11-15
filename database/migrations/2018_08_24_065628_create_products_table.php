@@ -122,8 +122,8 @@ class CreateProductsTable extends Migration
             $table->string('type')->nullable();
             $table->string('productionMediaId')->nullable();
             $table->string('previewMediaId')->nullable();
-            $table->string('width')->nullable();
-            $table->string('height')->nullable();
+            $table->float('width', 8, 2)->nullable();
+            $table->float('height', 8, 2)->nullable();
 
             $table->foreign('frontId')
                     ->references('id')
@@ -138,8 +138,8 @@ class CreateProductsTable extends Migration
             $table->string('type')->nullable();
             $table->string('productionMediaId')->nullable();
             $table->string('previewMediaId')->nullable();
-            $table->string('width')->nullable();
-            $table->string('height')->nullable();
+            $table->float('width', 8, 2)->nullable();
+            $table->float('height', 8, 2)->nullable();
 
             $table->foreign('backId')
                     ->references('id')
@@ -154,8 +154,8 @@ class CreateProductsTable extends Migration
             $table->string('type')->nullable();
             $table->string('productionMediaId')->nullable();
             $table->string('previewMediaId')->nullable();
-            $table->string('width')->nullable();
-            $table->string('height')->nullable();
+            $table->float('width', 8, 2)->nullable();
+            $table->float('height', 8, 2)->nullable();
 
             $table->foreign('leftId')
                     ->references('id')
@@ -170,8 +170,8 @@ class CreateProductsTable extends Migration
             $table->string('type')->nullable();
             $table->string('productionMediaId')->nullable();
             $table->string('previewMediaId')->nullable();
-            $table->string('width')->nullable();
-            $table->string('height')->nullable();
+            $table->float('width', 8, 2)->nullable();
+            $table->float('height', 8, 2)->nullable();
 
             $table->foreign('rightId')
                     ->references('id')

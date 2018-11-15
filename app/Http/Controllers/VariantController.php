@@ -9,6 +9,7 @@ use App\Variant;
 use App\Tshirt;
 use App\Design;
 use App\CompositeMediaDesign;
+use App\Attribute;
 
 class VariantController extends Controller
 {
@@ -19,9 +20,18 @@ class VariantController extends Controller
      */
     public function index()
     {
-        $customVariants = CompositeMediaDesign::All();
+        $compositeMediaDesigns = CompositeMediaDesign::All();
         // dd($customVariants);
-        return view('variants.index', compact('customVariants'));
+        return view('variants.index', compact('compositeMediaDesigns'));
+    }
+
+    public function selectSizes($id) {
+        $customVariant = CompositeMediaDesign::find($id);
+        $shirtsOfColor = Attribute::where('value', $customVariant->baseColor)->pluck('variantId');
+        $AvailableSizesWithVariantIds = Attribute::whereIn('variantId', $shirtsOfColor)->where('key', 'size')->get()->pluck('value','variantId')->Unique();
+        $variants = Variant::where('mediaId', $customVariant)->pluck('id');
+        // dd($variants);
+        return view('variants.sizeSelect', compact('AvailableSizesWithVariantIds', 'customVariant'));
     }
 
     /**
@@ -44,6 +54,7 @@ class VariantController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         //
         // **** create Guzzle object to upload a custom Variant
             // $app = app();

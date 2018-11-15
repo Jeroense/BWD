@@ -32,18 +32,27 @@
                         <li class="{{ Nav::isRoute('products.uploadImage') }}"><a href="{{route('products.uploadImage')}}">Upload Basis Afbeelding</a></li>
                     </ul>
                 </li>
-                <li class="{{ Nav::isResource('variants') }}">
-                    <h3><span class="far fa-edit"></span>Varianten</h3>
-                    <ul>
-                        <li class="{{ Nav::isRoute('variants.index') }}"><a href="{{route('variants.index')}}">Variant Index</a></li>
-                        <li class="{{ Nav::isRoute('variants.create') }}"><a href="{{route('variants.create')}}">Nieuwe Variant</a></li>
-                    </ul>
-                </li>
+
                 <li class="{{ Nav::isResource('designs') }}">
                     <h3><span class="far fa-edit"></span>Designs</h3>
                     <ul>
                         <li class="{{ Nav::isRoute('designs.index') }}"><a href="{{route('designs.index')}}">Design Index</a></li>
                         <li class="{{ Nav::isRoute('designs.upload') }}"><a href="{{route('designs.upload')}}">Upload Designs</a></li>
+                    </ul>
+                </li>
+                <li class="{{ Nav::isResource('variants', 'variants') }}">
+                    <h3><span class="far fa-edit"></span>T-shirt Designs</h3>
+                    <ul>
+                        <li class="{{ Nav::isRoute('variants.index') }}"><a href="{{route('variants.index')}}">Design Index</a></li>
+                        <li class="{{ Nav::isRoute('variants.create') }}"><a href="{{route('variants.create')}}">Nieuwe Variant</a></li>
+                    </ul>
+                </li>
+                <li class="{{ Nav::isResource('customvariants', 'customvariants') }}">
+                    <h3><span class="far fa-edit"></span>Custom Varianten</h3>
+                    <ul>
+                        <li class="{{ Nav::isRoute('customvariants.index') }}"><a href="{{route('customvariants.index')}}">Custom Variant Index</a></li>
+                        {{-- <li class="{{ Nav::isRoute('customVariants.bol') }}"><a href="{{route('variants.create')}}">Custom Varianten op Bol.com</a></li>
+                        <li class="{{ Nav::isRoute('variants.create') }}"><a href="{{route('variants.create')}}">Variant Bestellen</a></li> --}}
                     </ul>
                 </li>
                 <li class="{{ Nav::isResource('orders') }}">

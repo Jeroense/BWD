@@ -17,12 +17,15 @@ class CreateCompositeMediaDesignsTable extends Migration
             $table->increments('id');
             $table->string('designName')->Unique();
             $table->string('baseColor');
+            $table->integer('designId');
             $table->integer('smakeId')->nullable();
             $table->string('fileName');
             $table->string('fileFolder');
             $table->integer('fileSize')->nullable();
             $table->string('smakeFileName')->nullable();
-            $table->string('smakeDowloadUrl')->nullable();
+            $table->string('smakeDownloadUrl')->nullable();
+            $table->double('width_px',5,0);
+            $table->double('height_px',5,0);
             $table->timestamps();
         });
     }

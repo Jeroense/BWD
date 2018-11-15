@@ -1,5 +1,6 @@
 var tshirtSource = '';
 var designSource = '';
+var imageId = '';
 
 document.querySelector('#customizationStart').addEventListener('click', function(){
     document.querySelector('.imageSelections').classList.add('is-hidden');
@@ -22,8 +23,9 @@ function setActiveImage(imageId, src, color) {
     }
 }
 
-function setActiveDesign(designId, src) {
+function setActiveDesign(designId, src, id) {
     designSource = src;
+    imageId = id;
     var designs = document.querySelectorAll('.designSelector');
     for (var i = 1; i <= designs.length; i++) {
         var thisDesign = document.querySelector('#b' + CSS.escape(i));
@@ -158,9 +160,11 @@ document.querySelector('#customizationStart').addEventListener('click', function
             stage.find('Transformer').destroy();
             layer.draw();
             var customName = document.querySelector('#customName').value;
-            var returnUrl = this.getAttribute("returnHref");
+            var returnUrl = this.getAttribute("returnUrl");
             var destination = this.getAttribute("href");
             var dataURL = stage.toDataURL();
+            // var w = customImage.getWidth();
+            // var x = customImage.scaleX();
 
             e.preventDefault();
             $.ajax({
@@ -170,7 +174,10 @@ document.querySelector('#customizationStart').addEventListener('click', function
                 data: {
                     imgBase64: dataURL,
                     imgName: customName,
-                    baseColor: tshirtColor
+                    designId: imageId,
+                    baseColor: tshirtColor,
+                    width: customImage.getWidth() * customImage.scaleX(),
+                    height: customImage.getHeight() * customImage.scaleY(),
                 }
             }).done(function(o) {
                 console.log('saved');
