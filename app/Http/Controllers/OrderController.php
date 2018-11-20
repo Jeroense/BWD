@@ -7,6 +7,7 @@ use App\Http\Traits\SmakeApi;
 use App\CompositeMediaDesign;
 use App\FrontCustomization;
 use App\Order;
+use App\OrderItem;
 use App\Customer;
 use App\Variant;
 use App\Attribute;
@@ -24,24 +25,40 @@ class OrderController extends Controller
 
     public function create($id)
     {
-        // $customVariant = CompositeMediaDesign::find($id);
-        // $shirtsOfColor = Attribute::where('value', $customVariant->baseColor)->pluck('variantId');
-        // $AvailableSizesWithVariantIds = Attribute::whereIn('variantId', $shirtsOfColor)->where('key', 'size')->get()->pluck('value','variantId')->Unique();
-        // return view('orders.create', compact('AvailableSizesWithVariantIds', 'customVariant'));
+        return view('orders.create');
     }
 
     public function store(Request $request)
     {
+        ini_set("log_errors", 1);
+        ini_set("error_log", "logs/errors.log");
+        $orderItems = json_decode($request->get('orderItems'));
+        error_log($request->get('orderItems'));
         // dd($request);
-        return ('storing Order');
+        try {
+            $newOrder = new Order();
+            $newOrder->shippingMethod = 'Versand';
+            $newOrder->save();
+
+            $orderItems = json_decode($request->get('orderItems'));
+            foreach($orderItems as $orderItem) {
+                $newItem = new OrderItem();
+                $newItem->orderId = $newOrder->id;
+                $newItem->qty = $orderItem->items->qty;
+                $newItem->variantId = $orderItem->items->variantId;
+                $newItem->save();
+            }
+        }
+        catch (\Exception $e) {
+            return response()->json('Er is iets fout gegaan bij het aanmaken van de order', 500);
+        }
+        return response()->json($newOrder->id, 200);
     }
 
     public function checkOrder(Request $request)
     {
-        
+        return('checOrder');
     }
-
-
 }
 
 

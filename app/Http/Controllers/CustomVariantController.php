@@ -7,6 +7,7 @@ use App\Http\Traits\SmakeApi;
 use App\CompositeMediaDesign;
 use App\FrontCustomization;
 use App\Order;
+use App\OrderItem;
 use App\Customer;
 use App\Variant;
 use App\CustomVariant;
@@ -28,10 +29,11 @@ class CustomVariantController extends Controller
 
     public function createVariant(Request $request) {
         $compositeMediaDesign = CompositeMediaDesign::find($request->compositeMediaId);
+        // dd($request);
         if($compositeMediaDesign->smakeId === null){
             $uploadResult = $this->uploadCompositeMediaDesignToSmake($compositeMediaDesign);
             if($uploadResult = 'error'){
-                \Session::flash("flash_message", "Er is iets fout gegaan met het opslaan van de 'custom variant', neem contact op met de systeembeheerder");
+                \Session::flash("flash_message", "Er is iets fout gegaan met het uploaden van het 'Design', neem contact op met de systeembeheerder");
                 return redirect()->route('variants.index');
             }
         }
@@ -44,22 +46,27 @@ class CustomVariantController extends Controller
                 $pixelSize = $shirtLength / 1250;
                 $newCustomVariant = new CustomVariant();
                 $newCustomVariant->parentVariantId = $request->$currentParentVariantId;
+                $newCustomVariant->variantName = $compositeMediaDesign->designName;
                 $newCustomVariant->ean = $request->$currentEan;
                 $newCustomVariant->size = $request->$currentSize;
-                $newCustomVariant->width_mm = $compositeMediaDesign->width_px * $pixelSize;
-                $newCustomVariant->height_mm = $compositeMediaDesign->height_px * $pixelSize;
+                $newCustomVariant->width_mm = round($compositeMediaDesign->width_px * $pixelSize, 2);
+                $newCustomVariant->height_mm = round($compositeMediaDesign->height_px * $pixelSize, 2);
                 $newCustomVariant->fileName = $compositeMediaDesign->fileName;
-                $newCustomVariant->compositeMediaId = $request->compositeMediaId;
+                $newCustomVariant->compositeMediaId = (int)$request->compositeMediaId;
                 $newCustomVariant->productionMediaId = $compositeMediaDesign->designId;
                 $newCustomVariant->smakeProductionMediaId = Design::select('smakeId')->find($newCustomVariant->productionMediaId)->get()[0]->smakeId;
                 $newCustomVariant->smakeCompositeMediaId = CompositeMediaDesign::select('smakeId')->find($request->compositeMediaId)->get()[0]->smakeId;
                 $uploadCustomVariantBody = $this->buildVariantObject($newCustomVariant);
+                // dd($uploadCustomVariantBody);
                 $newSmakeCustomVariant = $this->uploadCustomVariantToSmake($newCustomVariant, $uploadCustomVariantBody);
-                $newCustomVariant->smakeVariantId  = $newSmakeCustomVariant->id;
+                // dd($newSmakeCustomVariant->id);
+                $smakeId = $newSmakeCustomVariant->id;
+                $newCustomVariant->smakeVariantId = $smakeId;
                 $newCustomVariant->price = $newSmakeCustomVariant->price;
                 $newCustomVariant->tax = $newSmakeCustomVariant->tax;
                 $newCustomVariant->taxRate = $newSmakeCustomVariant->tax_rate;
                 $newCustomVariant->total = $newSmakeCustomVariant->total;
+                // dd($newCustomVariant);
                 $newCustomVariant->save();
             }
         }
@@ -67,6 +74,7 @@ class CustomVariantController extends Controller
     }
 
     public function buildVariantObject($newCustomVariant){
+        // dd($newCustomVariant);
         $app = app();
         $dimensions = $app->make('stdClass');
         $dimensions->width = $newCustomVariant->width_mm;
@@ -90,7 +98,10 @@ class CustomVariantController extends Controller
     }
 
     public function uploadCustomVariantToSmake($newCustomVariant, $uploadCustomVariantBody){
+        // ini_set("log_errors", 1);
+        // ini_set("error_log", "logs/errors.log");
         $parentVariant = $newCustomVariant->parentVariantId;
+
         $smakeVariantId = Variant::find($parentVariant);
         $url = 'variants/'.$smakeVariantId->variantId.'/design';
         $response = $this->UploadCustomVariant($uploadCustomVariantBody, $url);
@@ -99,6 +110,7 @@ class CustomVariantController extends Controller
             for($i = 0; $i < 100; $i++) {
                 usleep(100000);
                 $pollResult = $this->Poll($pollUrl);
+                error_log($pollResult->getStatusCode());
                 if($pollResult->getStatusCode() === 200){
                     $designedVariantId = json_decode($pollResult->getBody())->resource_url;
                     $smakeNewCustomVariant = json_decode($this->GetCustomVariant(substr(strrchr($designedVariantId, '/'), 1))->getBody());
@@ -106,7 +118,7 @@ class CustomVariantController extends Controller
                 }
             }
         } else {
-            \Session::flash('flash_message', 'Er is iets fout gegaan met het opslaan van de custom variant, neem contact op met de systeembeheerder');
+            \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de custom variant naar Smake, neem contact op met de systeembeheerder');
             return redirect()->route('variants.index');
         }
         return $smakeNewCustomVariant;
@@ -131,7 +143,8 @@ class CustomVariantController extends Controller
         return $status;
     }
 
-    public function buildOrderObject($variantId) {
+    public function buildOrderObject($orderedItems) {
+        // dd($orderedItems);
         $app = app();
         $shippingAddress = $app->make('stdClass');
         $shippingAddress->first_name = 'Barry';
@@ -143,23 +156,223 @@ class CustomVariantController extends Controller
         $shippingAddress->province_code = 'GLD';
         $shippingAddress->phone = '0314653130';
         $shippingAddress->email = 'info@internetsport.nl';
-        $items = $app->make('stdClass');
-        $items->variant_id = $variantId;
-        $items->quantity = 1;
         $checkout = $app->make('stdClass');
         $checkout->email = 'info@internetsport.nl';
-        $checkout->items = [$items];
+        $items = array();
+        foreach($orderedItems as $item) {
+            $itemObject = $app->make('stdClass');
+            $itemObject->variant_id = $item->variantId;
+            $itemObject->quantity = $item->qty;
+            array_push($items, $itemObject);
+        }
+        $checkout->items = $items;
         $checkout->shipping_address = $shippingAddress;
         return json_encode((array)$checkout);
     }
 
-    public function orderVariant($id) {
+    public function orderVariant($orderId) {
+        $variantId = Order::where('id', $orderId)->pluck('id')[0];
+        $orderedItems = OrderItem::where('orderId', $variantId)->get();
         $path = env('CHECKOUT_PATH','');
-        $variant = CustomVariant::find($id);
-        $checkoutBody = $this->buildOrderObject($variant->smakeVariantId);
+
+        $checkoutBody = $this->buildOrderObject($orderedItems);
+        dd($checkoutBody);
         $checkoutResponse = $this->CheckoutOrder($checkoutBody, $path);
-        // start update shipping_line here
+
+
+/*      response ****
+        {
+            "id": 1,                                        -----> orders->smakeOrderId
+            "is_test": true,
+            "external_identifier": null,
+            "project_name": null,
+            "state": "incompleted",
+            "customer_locale": "en",
+            "currency": "EUR",
+            "total": 123.75,
+            "subtotal": 103.99,
+            "total_tax": 19.76,
+            "total_items_price": 123.75,
+            "shipping_line": [],
+            "created_at": "2017-09-29T09:14:11+00:00",
+            "updated_at": "2017-09-29T09:14:11+00:00",
+            "cancelled_at": null,
+            "items": [
+                {
+                    "id": 75,
+                    "quantity": 1,
+                    "total": 123.75,
+                    "price": 103.99,
+                    "total_tax": 19.76,
+                    "tax_rate": 19,
+                    "variant": {
+                        "id": 1,
+                        "total": 123.75,
+                        "price": 103.99,
+                        "tax": 19.76,
+                        "tax_rate": 19,
+                        "attributes": [
+                            {
+                                "name": "color",
+                                "value": "LightPink"
+                            },
+                            {
+                                "name": "size",
+                                "value": "M"
+                            }
+                        ],
+                        "origin": {
+                            "code": "2032095419441"
+                        },
+                        "media_id": 81,
+                        "views": [],
+                        "state": "finished",
+                        "created_at": "2017-09-27T10:10:33+00:00",
+                        "updated_at": "2017-09-27T10:10:34+00:00"
+                    },
+                    "created_at": "2017-09-29T09:14:11+00:00",
+                    "updated_at": "2017-09-29T09:14:11+00:00",
+                    "cancelled_at": null
+                }
+            ],
+            "customer": {
+                "id": 98,                                   -----> customers->smakeCustomerId
+                "first_name": null,
+                "last_name": null,
+                "email": "customer@example.com",
+                "phone": null,
+                "addresses": [],
+                "default_address": null,
+                "created_at": "2017-09-29T09:14:11+00:00",
+                "updated_at": "2017-09-29T09:14:11+00:00"
+            },
+            "shipping_address": {
+                "id": 190,
+                "default": true,
+                "company": null,
+                "first_name": "John",
+                "last_name": "Doe",
+                "city": "Anytown",
+                "street1": "123 Main St",
+                "street2": null,
+                "street3": null,
+                "zip": "12345",
+                "phone": "12345 67890",
+                "email": "shipping@example.com",
+                "province_code": "NW",
+                "country_code": "DE",
+                "vat_in": null,
+                "created_at": "2017-09-29T09:14:11+00:00",
+                "updated_at": "2017-09-29T09:14:11+00:00"
+            },
+            "billing_address": {
+                "id": 191,
+                "default": true,
+                "company": null,
+                "first_name": "John",
+                "last_name": "Doe",
+                "city": "Anytown",
+                "street1": "123 Main St",
+                "street2": null,
+                "street3": null,
+                "zip": "12345",
+                "phone": "12345 67890",
+                "email": "shipping@example.com",
+                "province_code": "NW",
+                "country_code": "DE",
+                "vat_in": null,
+                "created_at": "2017-09-29T09:14:11+00:00",
+                "updated_at": "2017-09-29T09:14:11+00:00"
+            },
+            "whitelabel_address": null,
+            "transactions": [],
+            "fulfillments": [],
+            "id_tags": []
+        }
+
+        *************  GET /checkouts/1/shipping-rates
+
+        Response ***
+        HTTP/1.1 202 Accepted
+        Location https://api.smake.io/jobs/1
+
+        *** poll this location until 200 OK and following response
+
+        HTTP/1.1 200 OK
+        {
+            "data": [
+                {
+                    "is_test": true,
+                    "handle": "pickup",
+                    "title": "Abholung",
+                    "price": 22                             -----> orders->shippingRate  ?????????????????
+                }
+            ],
+            "links": {
+                "first": "/?page=1",
+                "last": "/?page=1",
+                "prev": null,
+                "next": null
+            },
+            "meta": {
+                "current_page": 1,
+                "from": 1,
+                "last_page": 1,
+                "path": "/",
+                "per_page": 15,
+                "to": 1,
+                "total": 1
+            }
+        }
+
+        **** Update shipping_line
+
+        PUT /checkouts/1
+        {
+        "shipping": {
+            "handle": "versand"
+        }
+
+        ***** response 200 OK
+        {
+            ...
+            "shipping_line": {
+                "title": "Pickup",
+                "price": 22.06,                             -----> orders->shippingRate   ?????????????????????
+                "total": 26.25,
+                "tax": 4.19
+            },
+            ...
+        }
+
+        **** Complete Checkout
+        PUT /checkouts/1/complete
+
+        {
+            "payment": {
+            "handle": "invoice",
+            "amount": 150.0                                 -----> total price (without shipping costs???)
+            }
+        }
+    }
+*/
+
+
+
+
+
+
+
+
+
+
+
         return redirect()->route('customvariants.index');
+    }
+
+    public function addToCart()
+    {
+        //
     }
 
     public function create()

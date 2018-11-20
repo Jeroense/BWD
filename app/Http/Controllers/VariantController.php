@@ -30,7 +30,6 @@ class VariantController extends Controller
         $shirtsOfColor = Attribute::where('value', $customVariant->baseColor)->pluck('variantId');
         $AvailableSizesWithVariantIds = Attribute::whereIn('variantId', $shirtsOfColor)->where('key', 'size')->get()->pluck('value','variantId')->Unique();
         $variants = Variant::where('mediaId', $customVariant)->pluck('id');
-        // dd($variants);
         return view('variants.sizeSelect', compact('AvailableSizesWithVariantIds', 'customVariant'));
     }
 

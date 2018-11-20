@@ -163,8 +163,6 @@ document.querySelector('#customizationStart').addEventListener('click', function
             var returnUrl = this.getAttribute("returnUrl");
             var destination = this.getAttribute("href");
             var dataURL = stage.toDataURL();
-            // var w = customImage.getWidth();
-            // var x = customImage.scaleX();
 
             e.preventDefault();
             $.ajax({
@@ -180,10 +178,7 @@ document.querySelector('#customizationStart').addEventListener('click', function
                     height: customImage.getHeight() * customImage.scaleY(),
                 }
             }).done(function(o) {
-                console.log('saved');
-                var x = 0;
                 window.location.href = returnUrl;
-                // Do here whatever you want.
             });
         });
 

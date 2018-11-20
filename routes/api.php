@@ -22,4 +22,5 @@ Route::prefix('v1')->group(function() {
     // Route::resource('/', 'VariantController');
     Route::resource('/', 'CompositeMediaDesignController');
     // Route::Post('/store', 'VariantController@test')->name('saveImage');
+    Route::post('/store', 'OrderController@store')->name('orders.store');
 });

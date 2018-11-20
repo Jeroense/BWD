@@ -162,4 +162,14 @@ class SystemController extends Controller
     {
         //
     }
+
+    public function restore(System $system)
+    {
+        //
+    }
+
+    public function backup(System $system)
+    {
+        //
+    }
 }

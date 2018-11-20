@@ -15,7 +15,7 @@ class CreateDesignsTable extends Migration
     {
         Schema::create('designs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('smakeId')->nullable();
+            $table->integer('smakeId')->nullable();
             $table->string('smakeFileName')->nullable();
             $table->string('fileName');
             $table->string('originalName');

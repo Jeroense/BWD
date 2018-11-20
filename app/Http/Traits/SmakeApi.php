@@ -134,6 +134,7 @@ trait SmakeApi {
     }
 
     public function CheckoutOrder($body, $url) {
+        dd($body);
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
             'Content-Type'    => 'application/json',

@@ -24,6 +24,11 @@
                     @yield('pageTitle')
                 </a>
             </div>
+            <div class="navbar-item is-pulled-right is-invisible" id="shoppingCart">
+                <span><i class="fas fa-cart-plus"></i></span>&nbsp;&nbsp;
+                <span class="button is-small is-light" id="shoppingCartValue">0</span>&nbsp;&nbsp;
+                <a class="button is-danger is-small" onclick='finalizeOrder()'>Bestelling afronden</a>
+            </div>
             <div class="navbar-end">
                 @if (Auth::check())
                     <div class="navbar-item has-dropdown is-hoverable">

@@ -48,7 +48,8 @@
         <div><a href="{{ route('store') }}"
                 id="saveImage"
                 returnUrl="{{ route('variants.index') }}"
-                class="button is-danger m-b-100">Custom Variant Opslaan</a></div>
+                class="button is-danger m-b-100">Custom Variant Opslaan</a>
+        </div>
     </div>
 </div>
 

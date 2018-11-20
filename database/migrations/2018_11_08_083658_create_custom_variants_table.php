@@ -16,7 +16,8 @@ class CreateCustomVariantsTable extends Migration
         Schema::create('customVariants', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parentVariantId')->unsigned()->nullable();
-            $table->integer('smakeVariantId')->nullable();
+            $table->integer('smakeVariantId')->unsigned()->nullable();
+            $table->string('variantName');
             $table->string('ean');
             $table->string('size');
             $table->double('price',8,2)->nullable();

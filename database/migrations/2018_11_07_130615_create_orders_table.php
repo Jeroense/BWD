@@ -19,8 +19,7 @@ class CreateOrdersTable extends Migration
             $table->string('bolOrderNr')->nullable();
             $table->string('orderStatus')->nullable();
             $table->string('deliveryDate')->nullable();
-            $table->string('variantId')->nullable();
-            $table->integer('qty')->nullable();
+            $table->string('shippingMethod')->nullable();
             $table->timestamps();
         });
     }

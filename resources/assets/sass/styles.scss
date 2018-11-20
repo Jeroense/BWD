@@ -116,3 +116,35 @@ input[type=checkbox]
   padding: 10px;
 }
 
+.plus-minus-input {
+    align-items: center;
+    display: inline;
+
+    .input-group-field {
+      text-align: center;
+      margin-left: 5px;
+      margin-right: 5px;
+      padding: 0;
+      height: 2rem;
+      margin-top: 1px;
+      margin-bottom: 0;
+
+      &::-webkit-inner-spin-button,
+      ::-webkit-outer-spin-button {
+        appearance: none;
+      }
+    }
+
+    .input-group-button {
+      .circle {
+        border-radius: 50%;
+        padding: 0.25em 0.8em;
+      }
+    }
+  }
+
+.icon-color {
+    color: $danger;
+    // background-color: #777;
+}
+
