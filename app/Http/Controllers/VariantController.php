@@ -21,7 +21,6 @@ class VariantController extends Controller
     public function index()
     {
         $compositeMediaDesigns = CompositeMediaDesign::All();
-        // dd($customVariants);
         return view('variants.index', compact('compositeMediaDesigns'));
     }
 
@@ -40,7 +39,8 @@ class VariantController extends Controller
      */
     public function create()
     {
-        $shirts = Tshirt::orderBy('color', 'asc')->get();
+        // $shirts = Tshirt::orderBy('color', 'asc')->get();
+        $shirts = Variant::groupBy('color')->orderBy('color', 'desc')->get();
         $designs = Design::All();
         return view('variants.create', compact('shirts', 'designs'));
     }

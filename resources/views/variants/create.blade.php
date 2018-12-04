@@ -9,11 +9,18 @@
     <div class="container m-t-20 is-pulled-left">
         <div class="imageSelection">
             @foreach($shirts as $shirt)
-            <img src="{{ url('/tshirtImages') }}/{{ $shirt->fileName }}"
-                 width="100"
-                 id="a{{$loop->iteration}}"
-                 class="imageSelector"
-                 onclick="setActiveImage({{ $loop->iteration }}, src, '{{$shirt->color}}');">
+                <div class="imageBox is-half is-pulled-left">
+                    <div>
+                        <img src="{{ url('/tshirtImages') }}/{{ $shirt->smallfilename }}"
+                            width="100"
+                            id="a{{$loop->iteration}}"
+                            class="imageSelector"
+                            onclick="setActiveImage({{ $loop->iteration }}, src, '{{$shirt->color}}');">
+                    </div>
+                    <div>
+                        {{ $shirt->color }}
+                    </div>
+                </div>
             @endforeach
         </div>
     </div>
@@ -34,9 +41,11 @@
         </div>
     </div>
     <div class="container m-t-20 is-pulled-left">
-        <button id="customizationStart"
-                class="button is-danger"
-                disabled value="{{ route('variants.store') }}">Start Customization</button>
+        <button
+            id="customizationStart"
+            class="button is-danger"
+            disabled value="{{ route('variants.store') }}">Start Customization
+        </button>
     </div>
 </div>
 
@@ -45,10 +54,13 @@
     <div class="container .is-fullhd">
         <label for='customName'>Naam CustomDesign:</label>
         <input type="text" name="customName" id='customName'>
-        <div><a href="{{ route('store') }}"
+        <div>
+            <a href="{{ route('store') }}"
                 id="saveImage"
                 returnUrl="{{ route('variants.index') }}"
-                class="button is-danger m-b-100">Custom Variant Opslaan</a>
+                class="button is-danger m-b-100">
+                Custom Variant Opslaan
+            </a>
         </div>
     </div>
 </div>

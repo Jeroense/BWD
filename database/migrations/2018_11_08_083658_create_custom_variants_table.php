@@ -26,7 +26,7 @@ class CreateCustomVariantsTable extends Migration
             $table->double('total',8,2)->nullable();
             $table->string('filename');
             $table->integer('compositeMediaId')->unsigned();
-            $table->integer('smakeId')->unsigned()->nullable();
+            $table->integer('smakeCompositeMediaId')->unsigned()->nullable();
             $table->integer('productionMediaId')->unsigned();
             $table->integer('smakeProductionMediaId')->unsigned()->nullable();
             $table->double('width_mm',5,1);

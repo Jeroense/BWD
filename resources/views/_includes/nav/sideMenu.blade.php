@@ -35,10 +35,10 @@
                 <li class="{{ Nav::isResource('products') }}">
                     <h3><span class="icon-color fas fa-industry"></span>Smake</h3>
                     <ul>
-                        <li class="{{ Nav::isRoute('products.index') }}"><a href="{{route('products.index')}}">Standaard Producten</a></li>
+                        {{-- <li class="{{ Nav::isRoute('products.index') }}"><a href="{{route('products.index')}}">Standaard Producten</a></li> --}}
                         <li class="{{ Nav::isRoute('products.productDownload') }}
                                    {{ Nav::isRoute('products.download') }}"><a href="{{route('products.productDownload')}}">Producten Downloaden</a></li>
-                        <li class="{{ Nav::isRoute('products.uploadImage') }}"><a href="{{route('products.uploadImage')}}">Basis Afbeeldingen Toevoegen</a></li>
+                        {{-- <li class="{{ Nav::isRoute('products.uploadImage') }}"><a href="{{route('products.uploadImage')}}">Basis Afbeeldingen Toevoegen</a></li> --}}
                     </ul>
                 </li>
 
@@ -52,7 +52,7 @@
                 <li class="{{ Nav::isResource('variants', 'variants') }}">
                     <h3><span class="icon-color fas fa-fill-drip"></span>Custom Varianten</h3>
                     <ul>
-                        <li class="{{ Nav::isRoute('variants.index') }}"><a href="{{route('variants.index')}}">Overzicht Samengestelde Designs</a></li>
+                        <li class="{{ Nav::isRoute('variants.index') }}"><a href="{{route('variants.index')}}">Overzicht Custom Varianten</a></li>
                         <li class="{{ Nav::isRoute('variants.create') }}"><a href="{{route('variants.create')}}">Nieuwe Variant</a></li>
                     </ul>
                 </li>

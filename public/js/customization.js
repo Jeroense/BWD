@@ -232,10 +232,10 @@ document.querySelector('#customizationStart').addEventListener('click', function
     var baseObj = new Image();
     baseObj.src = tshirtSource;
     baseObj.onload = function() {
-        // this.height = 646;
-        // this.width = 580;
-        this.height = 1292;
-        this.width = 1160;
+        this.height = 1160;
+        this.width = 1040;
+        // this.height = 1292;
+        // this.width = 1160;
     };
 
     var customObj = new Image();

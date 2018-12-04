@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('pageTitle', 'Overzicht Standaard Smake Producten')
 @section('content')
-<div class="container column is-9 pull-left">
+{{-- <div class="container column is-9 pull-left">
     <div class="columns">
         <div class="column">
             <div class="field">
@@ -23,10 +23,10 @@
                                     <li><strong>Variants:</strong></li>
                                 </ul>
                                 <hr class="detailSection">
-                                @foreach($product->variants as $variant)
+                                @foreach($variants as $variant)
                                     <ul>
                                         <li>Variant id: <strong>{{ $variant->id }}</strong></li>
-                                        <li><img src="{{asset('tshirtImages/').'/'.$variant->fileName}}" width='100'></li>
+                                        <li><img src="{{asset('tshirtImages/').'/'.$variant->smallfilename}}" width='100'></li>
                                         <li>Origin code: <strong>{{ $variant->origin->code }}</strong></li>
                                         <li>Prijs: <strong>{{ $variant->price }}</strong></li>
                                         <li>BTW: <strong>{{ $variant->tax }}</strong></li>
@@ -109,5 +109,5 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection

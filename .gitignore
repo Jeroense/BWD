@@ -1,6 +1,11 @@
 /node_modules
 /public/hot
 /public/storage
+/public/customVariants
+/public/designImages
+/public/tshirtImages
+/public/productImages
+/public/logs
 /storage/*.key
 /vendor
 /.idea

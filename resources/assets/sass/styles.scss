@@ -145,6 +145,13 @@ input[type=checkbox]
 
 .icon-color {
     color: $danger;
-    // background-color: #777;
+    display: inline-block;
+    width: 1.2rem;
 }
 
+.imageBox {
+    width: 150px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: bold;
+}

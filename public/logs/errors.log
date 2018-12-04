@@ -1,63 +1,25 @@
-[19-Nov-2018 05:40:35 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}},{"items":{"variantId":"24","qty":"2"}}]
-[19-Nov-2018 05:41:29 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 05:43:42 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"2"}}]
-[19-Nov-2018 05:44:38 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 05:45:51 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 05:46:25 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"3"}}]
-[19-Nov-2018 05:48:33 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"3"}}]
-[19-Nov-2018 05:54:52 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}},{"items":{"variantId":"24","qty":"2"}},{"items":{"variantId":"25","qty":"3"}},{"items":{"variantId":"26","qty":"4"}}]
-[19-Nov-2018 05:56:00 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"1"}}]
-[19-Nov-2018 05:56:35 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"1"}}]
-[19-Nov-2018 05:56:45 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"2"}}]
-[19-Nov-2018 09:35:06 Europe/Amsterdam] POST /api/v1/store HTTP/1.1
-Accept:           application/json, text/javascript, */*; q=0.01
-Accept-Encoding:  gzip, deflate, br
-Accept-Language:  en-US,en;q=0.9,nl-NL;q=0.8,nl;q=0.7
-Cache-Control:    no-cache
-Connection:       keep-alive
-Content-Length:   234
-Content-Type:     application/x-www-form-urlencoded
-Cookie:           XSRF-TOKEN=eyJpdiI6ImdhdWJTY1ZLTGNaV3hmbDdnTkFWaUE9PSIsInZhbHVlIjoiUE44b0tKVTBncVJ5SXU2cktYZDNYRzZVVEE4bmVzVGUzREI2VzY0blAxbUErM0V6NnVDemRQVU1uOWpxTytpaiIsIm1hYyI6IjkyMzRkMmQ2MGUxMjNkYmZhYTU0MjhmYWZhMTUxYWQyZTY3MjU0OTZkNjUxN2M1MTdjODhhNTk0YjZlYjI0ZDkifQ%3D%3D; bwd_session=eyJpdiI6IjFoSThxaVlKdHlKak1CR1ZqOFwvTGpnPT0iLCJ2YWx1ZSI6IkVmcFpPanZzZjBHUGVcL2NJZVpvS1Fqb2hTS0tKNlBwek5zUHI0RGVUXC8wdDg3SjVXSjBPZ3paVG5XMmdFQ1V6UiIsIm1hYyI6ImQ1OTE4MTEzOGU0ZDVjOGYwZjZhMWUxNjljOTI0MTBjODJlODEzN2U1NTljY2FjYjU5MWVkMmQyMDE2NGEwNDAifQ%3D%3D
-Host:             localhost:8000
-Origin:           http://localhost:8000
-Pragma:           no-cache
-Referer:          http://localhost:8000/customvariants/customvariants
-User-Agent:       Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36
-X-Csrf-Token:     hJtbPI8uHx5bX4geWWYcPhPyxPGbiJ4RDhRaZHyT
-X-Requested-With: XMLHttpRequest
-Cookie: XSRF-TOKEN=eyJpdiI6ImdhdWJTY1ZLTGNaV3hmbDdnTkFWaUE9PSIsInZhbHVlIjoiUE44b0tKVTBncVJ5SXU2cktYZDNYRzZVVEE4bmVzVGUzREI2VzY0blAxbUErM0V6NnVDemRQVU1uOWpxTytpaiIsIm1hYyI6IjkyMzRkMmQ2MGUxMjNkYmZhYTU0MjhmYWZhMTUxYWQyZTY3MjU0OTZkNjUxN2M1MTdjODhhNTk0YjZlYjI0ZDkifQ==; bwd_session=eyJpdiI6IjFoSThxaVlKdHlKak1CR1ZqOFwvTGpnPT0iLCJ2YWx1ZSI6IkVmcFpPanZzZjBHUGVcL2NJZVpvS1Fqb2hTS0tKNlBwek5zUHI0RGVUXC8wdDg3SjVXSjBPZ3paVG5XMmdFQ1V6UiIsIm1hYyI6ImQ1OTE4MTEzOGU0ZDVjOGYwZjZhMWUxNjljOTI0MTBjODJlODEzN2U1NTljY2FjYjU5MWVkMmQyMDE2NGEwNDAifQ==
-
-orderItems=%5B%7B%22items%22%3A%7B%22variantId%22%3A%2224%22%2C%22qty%22%3A%222%22%7D%7D%2C%7B%22orderKey%22%3A%222%22%7D%2C%7B%22items%22%3A%7B%22variantId%22%3A%2225%22%2C%22qty%22%3A%222%22%7D%7D%2C%7B%22orderKey%22%3A%222%22%7D%5D
-[19-Nov-2018 09:37:24 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"3"}},{"orderKey":"3"},{"items":{"variantId":"25","qty":"4"}},{"orderKey":"4"}]
-[19-Nov-2018 09:39:29 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"1"}},{"items":{"variantId":"25","qty":"2"}},{"items":{"variantId":"26","qty":"3"}}]
-[19-Nov-2018 09:43:26 Europe/Amsterdam] [{"x":"24:1"},{"x":"25:2"}]
-[19-Nov-2018 10:49:36 Europe/Amsterdam] 
-[19-Nov-2018 10:52:14 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"3"}},{"items":{"variantId":"25","qty":"4"}}]
-[19-Nov-2018 10:52:25 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"3"}},{"items":{"variantId":"25","qty":"4"}}]
-[19-Nov-2018 10:53:02 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"3"}},{"items":{"variantId":"25","qty":"4"}}]
-[19-Nov-2018 10:53:29 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"1"}}]
-[19-Nov-2018 10:53:41 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"1"}}]
-[19-Nov-2018 10:53:42 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"1"}}]
-[19-Nov-2018 10:54:25 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"1"}}]
-[19-Nov-2018 10:54:44 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"1"}}]
-[19-Nov-2018 10:57:47 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"3"}}]
-[19-Nov-2018 10:58:39 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"3"}}]
-[19-Nov-2018 11:00:43 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"1"}}]
-[19-Nov-2018 11:12:40 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 11:16:17 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 11:17:00 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 11:17:44 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 11:18:53 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 11:28:54 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 11:29:24 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"3"}}]
-[19-Nov-2018 11:32:00 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 11:33:06 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 11:33:28 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 11:33:48 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"2"}}]
-[19-Nov-2018 11:39:45 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 13:30:30 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 13:34:06 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"2"}}]
-[19-Nov-2018 13:36:17 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 13:38:11 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 13:40:08 Europe/Amsterdam] [{"items":{"variantId":"23","qty":"1"}}]
-[19-Nov-2018 14:17:42 Europe/Amsterdam] [{"items":{"variantId":"24","qty":"2"}},{"items":{"variantId":"26","qty":"3"}}]
+[23-Nov-2018 13:13:28 Europe/Amsterdam] (149) compositeMediaResponseid :4366789
+[23-Nov-2018 13:13:28 Europe/Amsterdam] (151) file name :6132a133f48a4755a6faaecd40534e41.png
+[23-Nov-2018 13:13:28 Europe/Amsterdam] https://api.smake.io/v2/apps/10036/media/4366789/download
+[23-Nov-2018 13:13:28 Europe/Amsterdam] (37) uploadresult :
+[23-Nov-2018 13:13:28 Europe/Amsterdam] (39) in createVariant :error
+[23-Nov-2018 13:59:06 Europe/Amsterdam] (149) compositeMediaResponseid :4366921
+[23-Nov-2018 13:59:06 Europe/Amsterdam] (151) file name :3b4ccb1ce08e46e29acdd981071268e0.png
+[23-Nov-2018 13:59:06 Europe/Amsterdam] https://api.smake.io/v2/apps/10036/media/4366921/download
+[23-Nov-2018 13:59:06 Europe/Amsterdam] (37) uploadresult :
+[23-Nov-2018 13:59:06 Europe/Amsterdam] 119) pollResult :202
+[23-Nov-2018 13:59:07 Europe/Amsterdam] 119) pollResult :202
+[23-Nov-2018 13:59:07 Europe/Amsterdam] 119) pollResult :202
+[23-Nov-2018 13:59:07 Europe/Amsterdam] 119) pollResult :200
+[23-Nov-2018 13:59:08 Europe/Amsterdam] 119) pollResult :202
+[23-Nov-2018 13:59:09 Europe/Amsterdam] 119) pollResult :202
+[23-Nov-2018 13:59:09 Europe/Amsterdam] 119) pollResult :200
+[23-Nov-2018 13:59:33 Europe/Amsterdam] [{"items":{"variantId":"8","qty":"1"}},{"items":{"variantId":"9","qty":"1"}}]
+[23-Nov-2018 21:28:10 Europe/Amsterdam] [{"items":{"variantId":"8","qty":"1"}},{"items":{"variantId":"9","qty":"2"}}]
+[23-Nov-2018 21:29:00 Europe/Amsterdam] [{"items":{"variantId":"8","qty":"1"}}]
+[23-Nov-2018 21:31:56 Europe/Amsterdam] [{"items":{"variantId":"8","qty":"1"}}]
+[23-Nov-2018 21:46:43 Europe/Amsterdam] [{"items":{"variantId":"8","qty":"2"}}]
+[30-Nov-2018 04:55:11 Europe/Amsterdam] (37) uploadresult :
+[30-Nov-2018 06:12:24 Europe/Amsterdam] (37) uploadresult :
+[30-Nov-2018 06:15:31 Europe/Amsterdam] [{"items":{"variantId":"10","qty":"1"}},{"items":{"variantId":"11","qty":"1"}}]
+[30-Nov-2018 08:15:12 Europe/Amsterdam] (37) uploadresult :

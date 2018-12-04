@@ -21,7 +21,6 @@ class DesignController extends Controller
      */
     public function index() {
         $images = Design::All();
-        // dd($images);
         return view('designs.index', compact('images'));
     }
 
@@ -123,7 +122,6 @@ class DesignController extends Controller
     public function destroy($id)
     {
         $image = Design::find($id);
-        // dd($image);
         if (file_exists(public_path('designImages').'\\'.$image->fileName)) {
             unlink(public_path('designImages').'\\'.$image->fileName);
         }

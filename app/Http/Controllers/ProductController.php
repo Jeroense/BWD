@@ -29,14 +29,26 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = $this->GetJson();
-        foreach($products as $product) {
-            foreach($product->variants as $variant){
-                $imageName = Tshirt::where('id', Variant::where('variantId', $variant->id)->pluck('mediaId')->first())->pluck('fileName')->first();
-                $variant->fileName = $imageName;
-            }
-        }
-        return view('products.index',compact('products'));
+        // $response = $this->GetProducts();
+        // $products = json_decode($response->getBody())->data;
+        // // dd($products);
+        // foreach($products as $product) {
+
+        //     if($product->id == 8186)  {
+        //         dd($product);
+        //         foreach($product->variants as $variant){
+        //             $imageName = Tshirt::where('id', Variant::where('variantId', $variant->id)->pluck('mediaId')->first())->pluck('fileName')->first();
+        //             $variant->fileName = $imageName;
+        //         }
+        //     }
+        // }
+        $variants = Variant::all();
+//         foreach ($variants as $variant) {
+// dd($variant);
+//         }
+
+
+        return view('products.index',compact('variants'));
     }
 
     public function media()
@@ -65,12 +77,16 @@ class ProductController extends Controller
     }
 
     public function download() {
+        ini_set('max_execution_time', 60000);
         $response = $this->GetProducts();
         if ($response->getStatusCode() === 200) {
             $products = json_decode($response->getBody())->data;
             foreach($products as $product) {
                 $newProduct = new Product();
                 $localProduct = Product::where('smakeId', $product->id)->first();
+                if($product->id != 8186)  {
+                    continue;
+                }
                 if($localProduct == null){
                     $newProduct->productName = $product->title;
                     $newProduct->productDescription = $product->description;
@@ -89,6 +105,11 @@ class ProductController extends Controller
                         $newVariant->tax = $variant->tax;
                         $newVariant->taxRate = $variant->tax_rate;
                         $newVariant->mediaId = $variant->media_id;
+                        $fileName = time().md5($variant->media_id);
+                        $shirtImageDownloaded = $this->getBaseTshirtImage($variant->media_id, $fileName);
+                        $newVariant->localMediaFileName = $shirtImageDownloaded;
+                        $smallImageDownloaded = $this->getBaseTshirtImage($variant->media_id . "/w_470,h_524/w_470,h_524/fit_fill/fm_png", "sm_" . $fileName);
+                        $newVariant->smallFileName = $smallImageDownloaded;
                         $newVariant->save();
                         foreach($variant->attributes as $attribute){
                             $newAttribute = new Attribute();
@@ -148,6 +169,14 @@ class ProductController extends Controller
                     }
                 }
             }
+            $variants = Variant::with('attributes')->get();
+            foreach($variants as $variant) {
+                $color = $variant->attributes[0]->value;
+                $size = $variant->attributes[1]->value;
+                $variant->color = $variant->attributes[0]->value;
+                $variant->size = $variant->attributes[1]->value;
+                $variant->save();
+            }
             $message = 'Alle Smake producten zijn succesvol gedownload.';
             return view('products.dashboard', compact('message'));
         } else {
@@ -190,12 +219,14 @@ class ProductController extends Controller
      */
     public function attachImage(Request $request) {
 
+        $fileName = time().md5(2984016);
+        $shirtImageDownloaded = $this->getBaseTshirtImage(2984016, $fileName);
         // dd($request);
         $this->validate($request, [
             'imageName' => 'required|image|mimes:jpeg,jpg,png|max:9216',
             'tShirtColor' => 'required|unique:tshirts,color'
         ]);
-
+dd($shirtImageDownloaded);
         $image = $request->imageName;
         $tshirt = new Tshirt();
         $tshirt->color = $request->tShirtColor;

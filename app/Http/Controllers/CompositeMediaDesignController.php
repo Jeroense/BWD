@@ -22,7 +22,6 @@ class CompositeMediaDesignController extends Controller
     {
         // ini_set("log_errors", 1);
         // ini_set("error_log", "logs/errors.log");
-        // error_log($request);
         try {
             $compositeMediaDesign = new CompositeMediaDesign();
 

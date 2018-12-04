@@ -28,11 +28,12 @@ class CustomVariantController extends Controller
     }
 
     public function createVariant(Request $request) {
+        // ini_set("log_errors", 1);
+        // ini_set("error_log", "logs/errors.log");
         $compositeMediaDesign = CompositeMediaDesign::find($request->compositeMediaId);
-        // dd($request);
         if($compositeMediaDesign->smakeId === null){
             $uploadResult = $this->uploadCompositeMediaDesignToSmake($compositeMediaDesign);
-            if($uploadResult = 'error'){
+            if($uploadResult == 'error'){
                 \Session::flash("flash_message", "Er is iets fout gegaan met het uploaden van het 'Design', neem contact op met de systeembeheerder");
                 return redirect()->route('variants.index');
             }
@@ -43,7 +44,7 @@ class CustomVariantController extends Controller
             $currentParentVariantId = 'parentVariantId'.$i;
             if($request->has($currentEan)){
                 $shirtLength = TshirtSizes::select('length_mm')->where('size', $request->$currentSize)->get()[0]->length_mm;
-                $pixelSize = $shirtLength / 1250;
+                $pixelSize = $shirtLength / 1325;
                 $newCustomVariant = new CustomVariant();
                 $newCustomVariant->parentVariantId = $request->$currentParentVariantId;
                 $newCustomVariant->variantName = $compositeMediaDesign->designName;
@@ -57,16 +58,13 @@ class CustomVariantController extends Controller
                 $newCustomVariant->smakeProductionMediaId = Design::select('smakeId')->find($newCustomVariant->productionMediaId)->get()[0]->smakeId;
                 $newCustomVariant->smakeCompositeMediaId = CompositeMediaDesign::select('smakeId')->find($request->compositeMediaId)->get()[0]->smakeId;
                 $uploadCustomVariantBody = $this->buildVariantObject($newCustomVariant);
-                // dd($uploadCustomVariantBody);
                 $newSmakeCustomVariant = $this->uploadCustomVariantToSmake($newCustomVariant, $uploadCustomVariantBody);
-                // dd($newSmakeCustomVariant->id);
                 $smakeId = $newSmakeCustomVariant->id;
                 $newCustomVariant->smakeVariantId = $smakeId;
                 $newCustomVariant->price = $newSmakeCustomVariant->price;
                 $newCustomVariant->tax = $newSmakeCustomVariant->tax;
                 $newCustomVariant->taxRate = $newSmakeCustomVariant->tax_rate;
                 $newCustomVariant->total = $newSmakeCustomVariant->total;
-                // dd($newCustomVariant);
                 $newCustomVariant->save();
             }
         }
@@ -74,7 +72,6 @@ class CustomVariantController extends Controller
     }
 
     public function buildVariantObject($newCustomVariant){
-        // dd($newCustomVariant);
         $app = app();
         $dimensions = $app->make('stdClass');
         $dimensions->width = $newCustomVariant->width_mm;
@@ -101,7 +98,6 @@ class CustomVariantController extends Controller
         // ini_set("log_errors", 1);
         // ini_set("error_log", "logs/errors.log");
         $parentVariant = $newCustomVariant->parentVariantId;
-
         $smakeVariantId = Variant::find($parentVariant);
         $url = 'variants/'.$smakeVariantId->variantId.'/design';
         $response = $this->UploadCustomVariant($uploadCustomVariantBody, $url);
@@ -110,7 +106,6 @@ class CustomVariantController extends Controller
             for($i = 0; $i < 100; $i++) {
                 usleep(100000);
                 $pollResult = $this->Poll($pollUrl);
-                error_log($pollResult->getStatusCode());
                 if($pollResult->getStatusCode() === 200){
                     $designedVariantId = json_decode($pollResult->getBody())->resource_url;
                     $smakeNewCustomVariant = json_decode($this->GetCustomVariant(substr(strrchr($designedVariantId, '/'), 1))->getBody());
@@ -125,6 +120,8 @@ class CustomVariantController extends Controller
     }
 
     public function uploadCompositeMediaDesignToSmake($compositeMediaDesign) {
+        // ini_set("log_errors", 1);
+        // ini_set("error_log", "logs/errors.log");
         $status='';
         $path = env('COMPOSITE_MEDIA_PATH','');
         $fileSize = filesize($path.$compositeMediaDesign->fileName);
@@ -144,7 +141,6 @@ class CustomVariantController extends Controller
     }
 
     public function buildOrderObject($orderedItems) {
-        // dd($orderedItems);
         $app = app();
         $shippingAddress = $app->make('stdClass');
         $shippingAddress->first_name = 'Barry';
@@ -152,8 +148,8 @@ class CustomVariantController extends Controller
         $shippingAddress->street1 = 'Ulenpasweg 2F4';
         $shippingAddress->zip = '7041 GB';
         $shippingAddress->city = "'s-Heerenberg";
-        $shippingAddress->country_code = 'NL';
-        $shippingAddress->province_code = 'GLD';
+        $shippingAddress->country_code = 'DE';
+        $shippingAddress->province_code = 'GD';
         $shippingAddress->phone = '0314653130';
         $shippingAddress->email = 'info@internetsport.nl';
         $checkout = $app->make('stdClass');
@@ -161,7 +157,8 @@ class CustomVariantController extends Controller
         $items = array();
         foreach($orderedItems as $item) {
             $itemObject = $app->make('stdClass');
-            $itemObject->variant_id = $item->variantId;
+            $smakeVariantId = CustomVariant::where('id', $item->variantId)->value('smakeVariantId');
+            $itemObject->variant_id = $smakeVariantId;
             $itemObject->quantity = $item->qty;
             array_push($items, $itemObject);
         }
@@ -171,14 +168,44 @@ class CustomVariantController extends Controller
     }
 
     public function orderVariant($orderId) {
-        $variantId = Order::where('id', $orderId)->pluck('id')[0];
+        $variantId = Order::where('id', $orderId)->value('id');
         $orderedItems = OrderItem::where('orderId', $variantId)->get();
         $path = env('CHECKOUT_PATH','');
-
         $checkoutBody = $this->buildOrderObject($orderedItems);
-        dd($checkoutBody);
+        // dd($checkoutBody);
         $checkoutResponse = $this->CheckoutOrder($checkoutBody, $path);
+        // dd($pollUrl);
+        if ($checkoutResponse->getStatusCode() === 201) {
+            $checkedoutOrder = json_decode($checkoutResponse->getBody());
+            $order = Order::find($variantId);
+            $order->smakeOrderId = $checkedoutOrder->id;
+            $order->orderStatus = $checkedoutOrder->state;
+            $order->orderAmount = $checkedoutOrder->subtotal;
+            $order->totalTax = $checkedoutOrder->total_tax;
+            $order->save();
 
+            $url = 'checkouts/'.$checkedoutOrder->id.'/shipping-rates';
+            // dd($url);
+            $response = $this->getCheckout($url);
+            // dd($);
+            if ($response->getStatusCode() === 202) {    // reasonPhrase = "Accepted"
+                $pollUrl = $response->getHeaders()['Location'][0];
+                for($i = 0; $i < 100; $i++) {
+                    usleep(100000);
+                    $pollResult = $this->Poll($pollUrl);
+                    if($pollResult->getStatusCode() === 200){
+                        // $designedVariantId = json_decode($pollResult->getBody())->resource_url;
+                        // $smakeNewCustomVariant = json_decode($this->GetCustomVariant(substr(strrchr($designedVariantId, '/'), 1))->getBody());
+                        dd($pollResult);
+                        return json_decode($pollResult->getBody());
+                    }
+                }
+            }
+            dd($response);
+            \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de order naar Smake, neem contact op met de systeembeheerder');
+            return redirect()->route('variants.index');
+
+        }
 
 /*      response ****
         {

@@ -49,10 +49,30 @@ trait SmakeApi {
         return $pollResult;
     }
 
+    public function getCheckout($url) {
+        $headers = [
+            'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
+            'Content-Type'    => 'application/json',
+            'Accept'          => 'application/json',
+            'Accept-Language' => 'nl'
+        ];
+
+        try {
+            $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
+
+            $checkoutResult = $client->request('GET', $url, [
+                'headers' => $headers
+            ]);
+        } catch (\Exception $e) {
+            return $e->getResponse();
+        }
+        return $checkoutResult;
+    }
+
     public function GetCustomVariant($url) {
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
-    'Content-Type'            => 'application/json',
+            'Content-Type'    => 'application/json',
             'Accept'          => 'application/json',
             'Accept-Language' => 'nl'
         ];
@@ -134,7 +154,7 @@ trait SmakeApi {
     }
 
     public function CheckoutOrder($body, $url) {
-        dd($body);
+        // dd($body);
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
             'Content-Type'    => 'application/json',
@@ -152,5 +172,24 @@ trait SmakeApi {
             return $e->getResponse();
         }
         return $response;
+    }
+
+    public function getBaseTshirtImage($id, $fileName) {
+        $resource = fopen('tshirtImages/' . $fileName . '.png', 'w');
+        $headers = [
+            'Accept' => 'image/png',
+        ];
+        $options = [
+            'sink' => $resource,
+            'http_errors' => false
+        ];
+
+        $client = new Client([
+            'base_uri' => env('BASE_TSHIRT_URL', '')
+        ]);
+
+        $tshirtImage = $client->get((string)$id, $options);
+        fclose($resource);
+        return $fileName . '.png';
     }
 }
