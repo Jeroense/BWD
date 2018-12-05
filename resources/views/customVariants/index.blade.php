@@ -22,7 +22,7 @@
                         @foreach ($customVariants as $customVariant)
                             <tr>
                                 <td><p style="max-width: 350px;" class="imageHead is-size-6 has-text-centered has-text-weight-bold m-t-10 m-b-10">{{$customVariant->designName}}
-                                    <img src="{{url('/customVariants')}}/{{ $customVariant->fileName }}" width="250"></p>
+                                    <img src="{{url('/customVariants')}}/{{ $customVariant->filename }}" width="250"></p>
                                     <div class="has-text-centered has-text-weight-bold is-size-5 m-b-20">{{ $customVariant->variantName }}</div>
                                 </td>
                                 <td>

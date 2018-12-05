@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTshirtsTable extends Migration
+class CreateTshirtmetricsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,16 @@ class CreateTshirtsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tshirts', function (Blueprint $table) {
+        Schema::create('tshirtmetrics', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('color')->unique();
-            $table->string('fileName');
-            $table->string('filePath');
-            $table->timestamps();
+            $table->string('size');
+            $table->string('length_mm');
+
+            $table->index('size');
         });
+
+        $seeder = new tshirtmetrics();
+        $seeder->run();
     }
 
     /**
@@ -29,6 +32,6 @@ class CreateTshirtsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tshirts');
+        Schema::dropIfExists('tshirtmetrics');
     }
 }

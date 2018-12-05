@@ -6,7 +6,6 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Variant;
-use App\Tshirt;
 use App\Design;
 use App\CompositeMediaDesign;
 use App\Attribute;
@@ -39,7 +38,6 @@ class VariantController extends Controller
      */
     public function create()
     {
-        // $shirts = Tshirt::orderBy('color', 'asc')->get();
         $shirts = Variant::groupBy('color')->orderBy('color', 'desc')->get();
         $designs = Design::All();
         return view('variants.create', compact('shirts', 'designs'));

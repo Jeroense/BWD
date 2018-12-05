@@ -5,17 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Traits\SmakeApi;
 use App\CompositeMediaDesign;
-use App\FrontCustomization;
 use App\Order;
 use App\OrderItem;
 use App\Customer;
 use App\Variant;
 use App\CustomVariant;
 use App\Attribute;
-use App\Front;
-use App\View;
 use App\Design;
-use App\TshirtSizes;
+use App\TshirtMetric;
 
 class CustomVariantController extends Controller
 {
@@ -43,7 +40,7 @@ class CustomVariantController extends Controller
             $currentSize = 'Size'.$i;
             $currentParentVariantId = 'parentVariantId'.$i;
             if($request->has($currentEan)){
-                $shirtLength = TshirtSizes::select('length_mm')->where('size', $request->$currentSize)->get()[0]->length_mm;
+                $shirtLength = TshirtMetric::select('length_mm')->where('size', $request->$currentSize)->get()[0]->length_mm;
                 $pixelSize = $shirtLength / 1325;
                 $newCustomVariant = new CustomVariant();
                 $newCustomVariant->parentVariantId = $request->$currentParentVariantId;
@@ -172,9 +169,7 @@ class CustomVariantController extends Controller
         $orderedItems = OrderItem::where('orderId', $variantId)->get();
         $path = env('CHECKOUT_PATH','');
         $checkoutBody = $this->buildOrderObject($orderedItems);
-        // dd($checkoutBody);
         $checkoutResponse = $this->CheckoutOrder($checkoutBody, $path);
-        // dd($pollUrl);
         if ($checkoutResponse->getStatusCode() === 201) {
             $checkedoutOrder = json_decode($checkoutResponse->getBody());
             $order = Order::find($variantId);
@@ -185,9 +180,7 @@ class CustomVariantController extends Controller
             $order->save();
 
             $url = 'checkouts/'.$checkedoutOrder->id.'/shipping-rates';
-            // dd($url);
             $response = $this->getCheckout($url);
-            // dd($);
             if ($response->getStatusCode() === 202) {    // reasonPhrase = "Accepted"
                 $pollUrl = $response->getHeaders()['Location'][0];
                 for($i = 0; $i < 100; $i++) {

@@ -12,7 +12,7 @@ use App\Customer;
 use App\Variant;
 use App\Attribute;
 use App\Front;
-use App\View;
+// use App\View;
 use App\Design;
 
 class OrderController extends Controller

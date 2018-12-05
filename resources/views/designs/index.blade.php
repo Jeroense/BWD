@@ -2,8 +2,8 @@
 @section('pageTitle', 'Overzicht Beschikbare Designs')
 @section('content')
 <div class="container column is-6 pull-left">
-    <div class="columns m-t-5">
-    </div>
+    {{-- <div class="columns m-t-5">
+    </div> --}}
     <div>
         <div class="container">
             @if ($images->count() === 0)

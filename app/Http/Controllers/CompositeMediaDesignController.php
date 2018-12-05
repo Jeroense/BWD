@@ -30,7 +30,7 @@ class CompositeMediaDesignController extends Controller
             $image = str_replace(' ', '+', $image);
             $imageName = time().md5($request->get('imgName')).'.'.'png';
             $imagePath = public_path('customVariants/');
-            error_log($imagePath);
+            // error_log($imagePath);
             File::put($imagePath . $imageName, base64_decode($image));
 
             $compositeMediaDesign->designName = $request->get('imgName');

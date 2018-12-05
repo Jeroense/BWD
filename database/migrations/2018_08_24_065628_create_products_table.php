@@ -27,14 +27,18 @@ class CreateProductsTable extends Migration
             $table->unsignedInteger('variantId')->unique()->nullable();
             $table->unsignedInteger('parentVariantId')->nullable();
             $table->boolean('isBwdVariant')->nullable();
+            $table->char('ean', 15)->unique()->nullable();
             $table->decimal('price',7,2)->nullable();
             $table->decimal('tax',7,2)->nullable();
             $table->decimal('taxRate',4,2)->nullable();
+            $table->string('size', 5)->nullable();
+            $table->string('color', 25)->nullable();
             $table->integer('mediaId')->nullable();
+            $table->string('localMediaFileName')->nullable();
+            $table->string('smallFileName')->nullable();
             $table->boolean('isCustomVariant')->nullable();
             $table->boolean('isUploaded')->nullable();
             $table->boolean('isPublished')->nullable();
-            $table->char('ean', 15)->unique()->nullable();
             $table->timestamps();
 
             $table->foreign('productId')
@@ -57,128 +61,128 @@ class CreateProductsTable extends Migration
                     ->onDelete('cascade');
         });
 
-        Schema::create('views', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('variantId');
+        // Schema::create('views', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->unsignedInteger('variantId');
 
-            $table->foreign('variantId')
-                    ->references('id')
-                    ->on('variants')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
+        //     $table->foreign('variantId')
+        //             ->references('id')
+        //             ->on('variants')
+        //             ->onUpdate('cascade')
+        //             ->onDelete('cascade');
+        // });
 
-        Schema::create('front', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('viewId');
-            $table->string('compositeMediaId');
+        // Schema::create('front', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->unsignedInteger('viewId');
+        //     $table->string('compositeMediaId');
 
-            $table->foreign('viewId')
-                    ->references('id')
-                    ->on('views')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
+        //     $table->foreign('viewId')
+        //             ->references('id')
+        //             ->on('views')
+        //             ->onUpdate('cascade')
+        //             ->onDelete('cascade');
+        // });
 
-        Schema::create('back', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('viewId');
-            $table->string('compositeMediaId');
+        // Schema::create('back', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->unsignedInteger('viewId');
+        //     $table->string('compositeMediaId');
 
-            $table->foreign('viewId')
-                    ->references('id')
-                    ->on('views')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
+        //     $table->foreign('viewId')
+        //             ->references('id')
+        //             ->on('views')
+        //             ->onUpdate('cascade')
+        //             ->onDelete('cascade');
+        // });
 
-        Schema::create('left', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('viewId');
-            $table->string('compositeMediaId');
+        // Schema::create('left', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->unsignedInteger('viewId');
+        //     $table->string('compositeMediaId');
 
-            $table->foreign('viewId')
-                    ->references('id')
-                    ->on('views')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
+        //     $table->foreign('viewId')
+        //             ->references('id')
+        //             ->on('views')
+        //             ->onUpdate('cascade')
+        //             ->onDelete('cascade');
+        // });
 
-        Schema::create('right', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('viewId');
-            $table->string('compositeMediaId');
+        // Schema::create('right', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->unsignedInteger('viewId');
+        //     $table->string('compositeMediaId');
 
-            $table->foreign('viewId')
-                    ->references('id')
-                    ->on('views')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
+        //     $table->foreign('viewId')
+        //             ->references('id')
+        //             ->on('views')
+        //             ->onUpdate('cascade')
+        //             ->onDelete('cascade');
+        // });
 
-        Schema::create('frontCustomizations', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('frontId');
-            $table->string('type')->nullable();
-            $table->string('productionMediaId')->nullable();
-            $table->string('previewMediaId')->nullable();
-            $table->float('width', 8, 2)->nullable();
-            $table->float('height', 8, 2)->nullable();
+        // Schema::create('frontCustomizations', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->unsignedInteger('frontId');
+        //     $table->string('type')->nullable();
+        //     $table->string('productionMediaId')->nullable();
+        //     $table->string('previewMediaId')->nullable();
+        //     $table->float('width', 8, 2)->nullable();
+        //     $table->float('height', 8, 2)->nullable();
 
-            $table->foreign('frontId')
-                    ->references('id')
-                    ->on('front')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
+        //     $table->foreign('frontId')
+        //             ->references('id')
+        //             ->on('front')
+        //             ->onUpdate('cascade')
+        //             ->onDelete('cascade');
+        // });
 
-        Schema::create('backCustomizations', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('backId');
-            $table->string('type')->nullable();
-            $table->string('productionMediaId')->nullable();
-            $table->string('previewMediaId')->nullable();
-            $table->float('width', 8, 2)->nullable();
-            $table->float('height', 8, 2)->nullable();
+        // Schema::create('backCustomizations', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->unsignedInteger('backId');
+        //     $table->string('type')->nullable();
+        //     $table->string('productionMediaId')->nullable();
+        //     $table->string('previewMediaId')->nullable();
+        //     $table->float('width', 8, 2)->nullable();
+        //     $table->float('height', 8, 2)->nullable();
 
-            $table->foreign('backId')
-                    ->references('id')
-                    ->on('back')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
+        //     $table->foreign('backId')
+        //             ->references('id')
+        //             ->on('back')
+        //             ->onUpdate('cascade')
+        //             ->onDelete('cascade');
+        // });
 
-        Schema::create('leftCustomizations', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('leftId');
-            $table->string('type')->nullable();
-            $table->string('productionMediaId')->nullable();
-            $table->string('previewMediaId')->nullable();
-            $table->float('width', 8, 2)->nullable();
-            $table->float('height', 8, 2)->nullable();
+        // Schema::create('leftCustomizations', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->unsignedInteger('leftId');
+        //     $table->string('type')->nullable();
+        //     $table->string('productionMediaId')->nullable();
+        //     $table->string('previewMediaId')->nullable();
+        //     $table->float('width', 8, 2)->nullable();
+        //     $table->float('height', 8, 2)->nullable();
 
-            $table->foreign('leftId')
-                    ->references('id')
-                    ->on('left')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
+        //     $table->foreign('leftId')
+        //             ->references('id')
+        //             ->on('left')
+        //             ->onUpdate('cascade')
+        //             ->onDelete('cascade');
+        // });
 
-        Schema::create('rightCustomizations', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('rightId');
-            $table->string('type')->nullable();
-            $table->string('productionMediaId')->nullable();
-            $table->string('previewMediaId')->nullable();
-            $table->float('width', 8, 2)->nullable();
-            $table->float('height', 8, 2)->nullable();
+        // Schema::create('rightCustomizations', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->unsignedInteger('rightId');
+        //     $table->string('type')->nullable();
+        //     $table->string('productionMediaId')->nullable();
+        //     $table->string('previewMediaId')->nullable();
+        //     $table->float('width', 8, 2)->nullable();
+        //     $table->float('height', 8, 2)->nullable();
 
-            $table->foreign('rightId')
-                    ->references('id')
-                    ->on('right')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-        });
+        //     $table->foreign('rightId')
+        //             ->references('id')
+        //             ->on('right')
+        //             ->onUpdate('cascade')
+        //             ->onDelete('cascade');
+        // });
 }
 
     /**
@@ -188,17 +192,16 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rightCustomizations');
-        Schema::dropIfExists('frontCustomizations');
-        Schema::dropIfExists('leftCustomizations');
-        Schema::dropIfExists('backCustomizations');
-        Schema::dropIfExists('right');
-        Schema::dropIfExists('front');
-        Schema::dropIfExists('left');
-        Schema::dropIfExists('back');
-        Schema::dropIfExists('views');
+        // Schema::dropIfExists('rightCustomizations');
+        // Schema::dropIfExists('frontCustomizations');
+        // Schema::dropIfExists('leftCustomizations');
+        // Schema::dropIfExists('backCustomizations');
+        // Schema::dropIfExists('right');
+        // Schema::dropIfExists('front');
+        // Schema::dropIfExists('left');
+        // Schema::dropIfExists('back');
+        // Schema::dropIfExists('views');
         Schema::dropIfExists('attributes');
-        Schema::dropIfExists('products');
         Schema::dropIfExists('products');
     }
 }

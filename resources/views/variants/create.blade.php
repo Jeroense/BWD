@@ -11,7 +11,7 @@
             @foreach($shirts as $shirt)
                 <div class="imageBox is-half is-pulled-left">
                     <div>
-                        <img src="{{ url('/tshirtImages') }}/{{ $shirt->smallfilename }}"
+                        <img src="{{ url('/tshirtImages') }}/{{ $shirt->smallFileName }}"
                             width="100"
                             id="a{{$loop->iteration}}"
                             class="imageSelector"
