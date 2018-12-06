@@ -155,3 +155,9 @@ input[type=checkbox]
     text-align: center;
     font-weight: bold;
 }
+
+.is-hovered:hover {
+    border-color: $danger;
+
+
+}

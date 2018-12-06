@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\TshirtMetric;
 
 class TshirtMetricController extends Controller
 {
@@ -13,7 +14,8 @@ class TshirtMetricController extends Controller
      */
     public function index()
     {
-        //
+        $tshirtMetrics = TshirtMetric::all();
+        return view('manage.metrics.index', compact('tshirtMetrics'));
     }
 
     /**
@@ -23,7 +25,7 @@ class TshirtMetricController extends Controller
      */
     public function create()
     {
-        //
+        return view('manage.metrics.create');
     }
 
     /**
@@ -34,7 +36,16 @@ class TshirtMetricController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'size' => 'required|max:5',
+            'length' => 'required|numeric'
+        ]);
+
+        $tshirtMetric = new TshirtMetric();
+        $tshirtMetric->size = strtoupper($request->size);
+        $tshirtMetric->length_mm = $request->length;
+        $tshirtMetric->save();
+        return redirect()->route('metrics.index');
     }
 
     /**
@@ -56,7 +67,8 @@ class TshirtMetricController extends Controller
      */
     public function edit($id)
     {
-        //
+        $tshirtMetric = TshirtMetric::where('id', $id)->first();
+        return view( 'manage.metrics.edit', compact('tshirtMetric'));
     }
 
     /**
@@ -68,7 +80,16 @@ class TshirtMetricController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'size' => 'required|max:5',
+            'length' => 'required|numeric'
+        ]);
+
+        $tshirtMetric = TshirtMetric::findOrFail($id);
+        $tshirtMetric->size = strtoupper($request->size);
+        $tshirtMetric->length_mm = $request->length;
+        $tshirtMetric->save();
+        return redirect()->route('metrics.index');
     }
 
     /**
@@ -79,6 +100,8 @@ class TshirtMetricController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $tshirtMetric = TshirtMetric::findOrFail($id);
+        $tshirtMetric->delete();
+        return redirect()->route('metrics.index');
     }
 }

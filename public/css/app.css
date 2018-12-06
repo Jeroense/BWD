@@ -19146,6 +19146,10 @@ input[type=checkbox] {
   font-weight: bold;
 }
 
+.is-hovered:hover {
+  border-color: #E90478;
+}
+
 #side-menu {
   position: fixed;
   top: 7px;

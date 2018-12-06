@@ -19,7 +19,6 @@
                             <th></th>
                         </tr>
                     </thead>
-
                     <tbody>
                         @foreach ($permissions as $permission)
                         <tr>
@@ -27,14 +26,14 @@
                             <td>{{$permission->name}}</td>
                             <td>{{$permission->description}}</td>
                             <td class="has-text-right">
-                                <a class="button is-outlined is-small m-r-5" href="{{route('permissions.show', $permission->id)}}">View</a>
-                                <a class="button is-outlined is-small" href="{{route('permissions.edit', $permission->id)}}">Edit</a>
+                                <a class="button is-hovered is-small m-r-5" href="{{route('permissions.show', $permission->id)}}">View</a>
+                                <a class="button is-hovered is-small" href="{{route('permissions.edit', $permission->id)}}">Edit</a>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-        </div> <!-- end of .card -->
+        </div>
     </div>
 @endsection

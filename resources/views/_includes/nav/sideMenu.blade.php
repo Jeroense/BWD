@@ -23,6 +23,10 @@
                         </li>
                         <li class="{{ Nav::isRoute('manage.backup') }}"><a href="{{route('manage.backup')}}">Backup</a></li>
                         <li class="{{ Nav::isRoute('manage.restore') }}"><a href="{{route('manage.restore')}}">Restore</a></li>
+                        <li class="{{ Nav::isRoute('metrics.index') }}
+                                   {{ Nav::isRoute('metrics.create') }}
+                                   {{ Nav::isRoute('metrics.edit') }}
+                                   {{ Nav::isRoute('metrics.destroy') }}"><a href="{{route('metrics.index')}}">T-shirt Afmetingen</a></li>
                     </ul>
                 </li>
                 <li class="{{ Nav::isResource('customers') }}">

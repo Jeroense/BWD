@@ -25,6 +25,7 @@ Route::prefix('manage')->middleware('role:superadministrator|administrator')->gr
     Route::get('/restore', 'ManageController@restore')->name('manage.restore');
     Route::resource('/permissions', 'PermissionController', ['except' => 'destroy']);
     Route::resource('/roles', 'RoleController', ['except' => 'destroy']);
+    Route::resource('/metrics', 'TshirtMetricController');
 });
 
 Route::prefix('products')->middleware('role:superadministrator|administrator')->group(function() {

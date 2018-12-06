@@ -20,7 +20,6 @@ class CustomVariantController extends Controller
 
     public function index() {
         $customVariants = CustomVariant::All();
-        // dd($customVariants);
         return view('customVariants.index', compact('customVariants'));
     }
 
