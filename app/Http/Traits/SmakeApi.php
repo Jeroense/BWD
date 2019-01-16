@@ -9,7 +9,27 @@ use App\Variant;
 
 trait SmakeApi {
 
-    public function UploadCustomVariant($body, $destinationUrl) {
+    // public function UploadCustomVariant($body, $destinationUrl) {
+    //     $headers = [
+    //         'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
+    //         'Content-Type'    => 'application/json',
+    //         'Accept'          => 'application/json',
+    //         'Accept-Language' => 'nl'
+    //     ];
+
+    //     try {
+    //         $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
+    //         $response = $client->request('POST', $destinationUrl, [
+    //             'headers' => $headers,
+    //             'body' => $body
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return $e->getResponse();
+    //     }
+    //     return $response;
+    // }
+
+    public function PostSmakeData($body, $destinationUrl) {
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
             'Content-Type'    => 'application/json',
@@ -67,6 +87,26 @@ trait SmakeApi {
             return $e->getResponse();
         }
         return $checkoutResult;
+    }
+
+    public function getSmakeData($url) {
+        $headers = [
+            'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
+            'Content-Type'    => 'application/json',
+            'Accept'          => 'application/json',
+            'Accept-Language' => 'nl'
+        ];
+
+        try {
+            $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
+
+            $response = $client->request('GET', $url, [
+                'headers' => $headers
+            ]);
+        } catch (\Exception $e) {
+            return $e->getResponse();
+        }
+        return $response;
     }
 
     public function GetCustomVariant($url) {
@@ -154,7 +194,6 @@ trait SmakeApi {
     }
 
     public function CheckoutOrder($body, $url) {
-        // dd($body);
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
             'Content-Type'    => 'application/json',
@@ -191,5 +230,28 @@ trait SmakeApi {
         $tshirtImage = $client->get((string)$id, $options);
         fclose($resource);
         return $fileName . '.png';
+    }
+
+    public function ListOrders() {
+        $headers = [
+            'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
+            'Content-Type'    => 'application/json',
+            'Accept'          => 'application/json',
+            'Accept-Language' => 'nl'
+        ];
+
+        try {
+            $client = new Client([
+                'base_uri' => env('SMAKE_URI', '')
+            ]);
+            $url = 'orders/82316';
+
+            $response = $client->request('GET', $url, [
+                'headers' => $headers
+            ]);
+        } catch (\Exception $e) {
+            return $e->getResponse();
+        }
+        return $response;
     }
 }

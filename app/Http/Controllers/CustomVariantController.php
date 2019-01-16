@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Traits\SmakeApi;
+use App\Http\Traits\DebugLog;
 use App\CompositeMediaDesign;
 use App\Order;
 use App\OrderItem;
@@ -17,15 +18,21 @@ use App\TshirtMetric;
 class CustomVariantController extends Controller
 {
     use SmakeApi;
+    use DebugLog;
+
+
+
 
     public function index() {
+        if (env('APP_DEBUG') == true) {
+            $this->log_item('*** key', 'debug = false');
+        }
         $customVariants = CustomVariant::All();
         return view('customVariants.index', compact('customVariants'));
     }
 
     public function createVariant(Request $request) {
-        // ini_set("log_errors", 1);
-        // ini_set("error_log", "logs/errors.log");
+
         $compositeMediaDesign = CompositeMediaDesign::find($request->compositeMediaId);
         if($compositeMediaDesign->smakeId === null){
             $uploadResult = $this->uploadCompositeMediaDesignToSmake($compositeMediaDesign);
@@ -51,8 +58,8 @@ class CustomVariantController extends Controller
                 $newCustomVariant->fileName = $compositeMediaDesign->fileName;
                 $newCustomVariant->compositeMediaId = (int)$request->compositeMediaId;
                 $newCustomVariant->productionMediaId = $compositeMediaDesign->designId;
-                $newCustomVariant->smakeProductionMediaId = Design::select('smakeId')->find($newCustomVariant->productionMediaId)->get()[0]->smakeId;
-                $newCustomVariant->smakeCompositeMediaId = CompositeMediaDesign::select('smakeId')->find($request->compositeMediaId)->get()[0]->smakeId;
+                $newCustomVariant->smakeProductionMediaId = Design::select('smakeId')->where('id', $newCustomVariant->productionMediaId)->first()->smakeId;
+                $newCustomVariant->smakeCompositeMediaId = CompositeMediaDesign::select('smakeId')->where('id' ,$request->compositeMediaId)->first()->smakeId;
                 $uploadCustomVariantBody = $this->buildVariantObject($newCustomVariant);
                 $newSmakeCustomVariant = $this->uploadCustomVariantToSmake($newCustomVariant, $uploadCustomVariantBody);
                 $smakeId = $newSmakeCustomVariant->id;
@@ -91,12 +98,10 @@ class CustomVariantController extends Controller
     }
 
     public function uploadCustomVariantToSmake($newCustomVariant, $uploadCustomVariantBody){
-        // ini_set("log_errors", 1);
-        // ini_set("error_log", "logs/errors.log");
         $parentVariant = $newCustomVariant->parentVariantId;
         $smakeVariantId = Variant::find($parentVariant);
         $url = 'variants/'.$smakeVariantId->variantId.'/design';
-        $response = $this->UploadCustomVariant($uploadCustomVariantBody, $url);
+        $response = $this->PostSmakeData($uploadCustomVariantBody, $url);
         if ($response->getStatusCode() === 202) {    // reasonPhrase = "Accepted"
             $pollUrl = $response->getHeaders()['Location'][0];
             for($i = 0; $i < 100; $i++) {
@@ -116,8 +121,6 @@ class CustomVariantController extends Controller
     }
 
     public function uploadCompositeMediaDesignToSmake($compositeMediaDesign) {
-        // ini_set("log_errors", 1);
-        // ini_set("error_log", "logs/errors.log");
         $status='';
         $path = env('COMPOSITE_MEDIA_PATH','');
         $fileSize = filesize($path.$compositeMediaDesign->fileName);
@@ -144,7 +147,7 @@ class CustomVariantController extends Controller
         $shippingAddress->street1 = 'Ulenpasweg 2F4';
         $shippingAddress->zip = '7041 GB';
         $shippingAddress->city = "'s-Heerenberg";
-        $shippingAddress->country_code = 'DE';
+        $shippingAddress->country_code = 'NL';
         $shippingAddress->province_code = 'GD';
         $shippingAddress->phone = '0314653130';
         $shippingAddress->email = 'info@internetsport.nl';
@@ -167,225 +170,104 @@ class CustomVariantController extends Controller
         $variantId = Order::where('id', $orderId)->value('id');
         $orderedItems = OrderItem::where('orderId', $variantId)->get();
         $path = env('CHECKOUT_PATH','');
-        $checkoutBody = $this->buildOrderObject($orderedItems);
-        $checkoutResponse = $this->CheckoutOrder($checkoutBody, $path);
-        if ($checkoutResponse->getStatusCode() === 201) {
-            $checkedoutOrder = json_decode($checkoutResponse->getBody());
-            $order = Order::find($variantId);
-            $order->smakeOrderId = $checkedoutOrder->id;
-            $order->orderStatus = $checkedoutOrder->state;
-            $order->orderAmount = $checkedoutOrder->subtotal;
-            $order->totalTax = $checkedoutOrder->total_tax;
-            $order->save();
+        $checkoutBody = $this->buildOrderObject($orderedItems);  // build order JSON Object
+        $checkoutResponse = $this->CheckoutOrder($checkoutBody, $path);  // Send order to Smake
+        //*** Debug only
+                $command = $checkoutBody.' '.$path;
+                $this->log_response($command, 'checkoutOrder', $checkoutResponse);  // End debug
 
-            $url = 'checkouts/'.$checkedoutOrder->id.'/shipping-rates';
-            $response = $this->getCheckout($url);
-            if ($response->getStatusCode() === 202) {    // reasonPhrase = "Accepted"
-                $pollUrl = $response->getHeaders()['Location'][0];
-                for($i = 0; $i < 100; $i++) {
-                    usleep(100000);
-                    $pollResult = $this->Poll($pollUrl);
-                    if($pollResult->getStatusCode() === 200){
-                        // $designedVariantId = json_decode($pollResult->getBody())->resource_url;
-                        // $smakeNewCustomVariant = json_decode($this->GetCustomVariant(substr(strrchr($designedVariantId, '/'), 1))->getBody());
-                        dd($pollResult);
-                        return json_decode($pollResult->getBody());
-                    }
-                }
-            }
-            dd($response);
+        if ($checkoutResponse->getStatusCode() != 201) {  // check if order is accepted and get the data
+            \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de order naar Smake, neem contact op met de systeembeheerder');
+                return redirect()->route('variants.index');
+        }
+        $thisOrder = json_decode($checkoutResponse->getBody());
+        $order = Order::find($variantId);  // update database
+        $order->smakeOrderId = $thisOrder->id;
+        $order->orderStatus = $thisOrder->state;
+        $order->orderAmount = $thisOrder->subtotal;  // *** needs to be updated after 'Complete Checkout'
+        $order->totalTax = $thisOrder->total_tax;  // *** needs to be updated after 'Complete Checkout'
+        $order->save();
+
+        // Get shipping options poll url
+        $url = 'checkouts/'.$thisOrder->id.'/shipping-rates';
+        $response = $this->getCheckout($url);
+        $this->log_response($url, 'getCheckout', $response);
+        if ($response->getStatusCode() != 202 || $response->getStatusCode() != 200) {    // reasonPhrase = "Accepted"
             \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de order naar Smake, neem contact op met de systeembeheerder');
             return redirect()->route('variants.index');
-
         }
-
-/*      response ****
-        {
-            "id": 1,                                        -----> orders->smakeOrderId
-            "is_test": true,
-            "external_identifier": null,
-            "project_name": null,
-            "state": "incompleted",
-            "customer_locale": "en",
-            "currency": "EUR",
-            "total": 123.75,
-            "subtotal": 103.99,
-            "total_tax": 19.76,
-            "total_items_price": 123.75,
-            "shipping_line": [],
-            "created_at": "2017-09-29T09:14:11+00:00",
-            "updated_at": "2017-09-29T09:14:11+00:00",
-            "cancelled_at": null,
-            "items": [
-                {
-                    "id": 75,
-                    "quantity": 1,
-                    "total": 123.75,
-                    "price": 103.99,
-                    "total_tax": 19.76,
-                    "tax_rate": 19,
-                    "variant": {
-                        "id": 1,
-                        "total": 123.75,
-                        "price": 103.99,
-                        "tax": 19.76,
-                        "tax_rate": 19,
-                        "attributes": [
-                            {
-                                "name": "color",
-                                "value": "LightPink"
-                            },
-                            {
-                                "name": "size",
-                                "value": "M"
-                            }
-                        ],
-                        "origin": {
-                            "code": "2032095419441"
-                        },
-                        "media_id": 81,
-                        "views": [],
-                        "state": "finished",
-                        "created_at": "2017-09-27T10:10:33+00:00",
-                        "updated_at": "2017-09-27T10:10:34+00:00"
-                    },
-                    "created_at": "2017-09-29T09:14:11+00:00",
-                    "updated_at": "2017-09-29T09:14:11+00:00",
-                    "cancelled_at": null
-                }
-            ],
-            "customer": {
-                "id": 98,                                   -----> customers->smakeCustomerId
-                "first_name": null,
-                "last_name": null,
-                "email": "customer@example.com",
-                "phone": null,
-                "addresses": [],
-                "default_address": null,
-                "created_at": "2017-09-29T09:14:11+00:00",
-                "updated_at": "2017-09-29T09:14:11+00:00"
-            },
-            "shipping_address": {
-                "id": 190,
-                "default": true,
-                "company": null,
-                "first_name": "John",
-                "last_name": "Doe",
-                "city": "Anytown",
-                "street1": "123 Main St",
-                "street2": null,
-                "street3": null,
-                "zip": "12345",
-                "phone": "12345 67890",
-                "email": "shipping@example.com",
-                "province_code": "NW",
-                "country_code": "DE",
-                "vat_in": null,
-                "created_at": "2017-09-29T09:14:11+00:00",
-                "updated_at": "2017-09-29T09:14:11+00:00"
-            },
-            "billing_address": {
-                "id": 191,
-                "default": true,
-                "company": null,
-                "first_name": "John",
-                "last_name": "Doe",
-                "city": "Anytown",
-                "street1": "123 Main St",
-                "street2": null,
-                "street3": null,
-                "zip": "12345",
-                "phone": "12345 67890",
-                "email": "shipping@example.com",
-                "province_code": "NW",
-                "country_code": "DE",
-                "vat_in": null,
-                "created_at": "2017-09-29T09:14:11+00:00",
-                "updated_at": "2017-09-29T09:14:11+00:00"
-            },
-            "whitelabel_address": null,
-            "transactions": [],
-            "fulfillments": [],
-            "id_tags": []
-        }
-
-        *************  GET /checkouts/1/shipping-rates
-
-        Response ***
-        HTTP/1.1 202 Accepted
-        Location https://api.smake.io/jobs/1
-
-        *** poll this location until 200 OK and following response
-
-        HTTP/1.1 200 OK
-        {
-            "data": [
-                {
-                    "is_test": true,
-                    "handle": "pickup",
-                    "title": "Abholung",
-                    "price": 22                             -----> orders->shippingRate  ?????????????????
-                }
-            ],
-            "links": {
-                "first": "/?page=1",
-                "last": "/?page=1",
-                "prev": null,
-                "next": null
-            },
-            "meta": {
-                "current_page": 1,
-                "from": 1,
-                "last_page": 1,
-                "path": "/",
-                "per_page": 15,
-                "to": 1,
-                "total": 1
+        $pollUrl = $response->getHeaders()['Location'][0];  // retrieve poll url
+        for($i = 0; $i < 100; $i++) {
+            usleep(100000);
+            $pollResult = $this->Poll($pollUrl);
+            if($pollResult->getStatusCode() === 200){  // test for order to be completed before continuing to shipping details
+                //*** Debug only
+                        $this->log_response($pollUrl,'poll checkout', $pollResult);  // Log checkout response -- End of debug
+                break;
             }
         }
 
-        **** Update shipping_line
+        // Get shipping options
+        $url = 'checkouts/'.$thisOrder->id.'shipping-rates';
+        $response = $this->getSmakeData($url);
+        //*** Debug only
+                $command = 'GET checkouts/'.$thisOrder->id.'shipping-rates';
+                $this->log_response($command, 'Get shipping options', $response); // End debug
 
-        PUT /checkouts/1
-        {
-        "shipping": {
-            "handle": "versand"
+        $shippingOptions = json_decode($response->getBody())->data;
+        $shippingHandles = [];
+        foreach($options as $option) {  // build array of available shipping 'handle' options
+            array_push($shippingHandles, $option->handle);
+            //*** Debug only
+                    $this->log_item('handle: ', $option->handle); // End debug
+        }
+        $defaultHandle = env('SHIPPING_HANDLE', '');
+        if (!in_array($defaultHandle, $shippingHandles)) {
+            \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de order naar Smake, neem contact op met de systeembeheerder');
+            return redirect()->route('variants.index');
         }
 
-        ***** response 200 OK
-        {
-            ...
-            "shipping_line": {
-                "title": "Pickup",
-                "price": 22.06,                             -----> orders->shippingRate   ?????????????????????
-                "total": 26.25,
-                "tax": 4.19
-            },
-            ...
+        // build and send update shipping_line object
+        $app = app();
+        $shippingHandle = $app->make('stdClass'); // build JSON shipping handle Object
+        $shippingHandle->handle = $defaultHandle;
+        $shippingLine = $app->make('stdClass');
+        $shippingLine->shipping = $shippingHandle;
+        //*** Debug only
+                $command = 'POST Update Shipping handle';
+                $this->log_response($command, 'Created Object', $shippingHandle); // End debug
+        $shippingResponse = $this->PostSmakeData(json_encode($shippingLine), 'checkouts/'.$thisOrder);
+        //*** Debug only
+                $command = 'response update shipping_line';
+                $this->log_response($command, 'response from update ShippingLine', $shippingHandle); // End debug
+        // check the result
+        if ($shippingResponse->getStatusCode() != 200) {
+            \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de order naar Smake, neem contact op met de systeembeheerder');
+            return redirect()->route('variants.index');
         }
+        $shippingLine = json_decode($shippingResponse->getBody());
+        $order->shippingRate =  $shippingLine->shipping_line->price;
+        $order->orderAmount = $shippingLine->subtotal;
+        $order->totalTax = $shippingLine->total_tax;
+        $order->save();
 
-        **** Complete Checkout
-        PUT /checkouts/1/complete
-
-        {
-            "payment": {
-            "handle": "invoice",
-            "amount": 150.0                                 -----> total price (without shipping costs???)
-            }
+        // complete Checkout
+        $payment = $app->make('stdClass');
+        $payment->handle = "invoice";
+        $payment->amount = $shippingLine->total;
+        $completeCheckout = $app->make('stdClass');
+        $completeCheckout->payment = $payment;
+        //*** Debug only
+                $command = 'POST Complete Checkout';
+                $this->log_response($command, 'Created Object', $completeCheckout); // End debug
+        $checkoutResponse = $this->PostSmakeData(json_encode($completeCheckout), 'checkouts/'.$thisOrder.'/complete');
+        if ($checkoutResponse->getStatusCode() != 200) {
+            \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de order naar Smake, neem contact op met de systeembeheerder');
+            return redirect()->route('variants.index');
         }
-    }
-*/
-
-
-
-
-
-
-
-
-
-
-
+        //*** Debug only
+                $command = 'response Complete Checkout';
+                $this->log_response($command, 'Returned Object', $completeCheckout); // End debug
         return redirect()->route('customvariants.index');
     }
 

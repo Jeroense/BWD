@@ -32,12 +32,13 @@ class OrderController extends Controller
     {
         ini_set("log_errors", 1);
         ini_set("error_log", "logs/errors.log");
+        
         $orderItems = json_decode($request->get('orderItems'));
         error_log($request->get('orderItems'));
         // dd($request);
         try {
             $newOrder = new Order();
-            $newOrder->shippingMethod = 'Versand';
+            $newOrder->shippingMethod = 'versand-niederlade-69';
             $newOrder->save();
 
             $orderItems = json_decode($request->get('orderItems'));
@@ -56,6 +57,11 @@ class OrderController extends Controller
     }
 
     public function checkOrder(Request $request)
+    {
+        return('checOrder');
+    }
+
+    public function listOrder()
     {
         return('checOrder');
     }

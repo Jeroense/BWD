@@ -5,15 +5,6 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\Variant;
 use App\Attribute;
-// use App\View;
-// use App\Front;
-// use App\FrontCustomization;
-// use App\Back;
-// use App\BackCustomization;
-// use App\Left;
-// use App\LeftCustomization;
-// use App\Right;
-// use App\RightCustomization;
 use Illuminate\Http\Request;
 use App\Http\Traits\SmakeApi;
 
@@ -42,11 +33,6 @@ class ProductController extends Controller
         //     }
         // }
         $variants = Variant::all();
-//         foreach ($variants as $variant) {
-// dd($variant);
-//         }
-
-
         return view('products.index',compact('variants'));
     }
 
@@ -118,53 +104,6 @@ class ProductController extends Controller
                             $newAttribute->value = $attribute->value;
                             $newAttribute->save();
                         }
-                        // $newView = new View();
-                        // $newView->variantId = $newVariant->id;
-                        // $newView->save();
-                        // $newFront = new Front();
-                        // $newFront->viewId = $newView->id;
-                        // $newFront->compositeMediaId = $variant->views->front->composite_media_id;
-                        // $newFront->save();
-                        // foreach($variant->views->front->customizations as $customization){
-                        //     $newCustomization = new FrontCustomization();
-                        //     $newCustomization->frontId = $newFront->id;
-                        //     $newCustomization->type = $customization->type;
-                        //     $newCustomization->productionMediaId = $customization->production_media_id;
-                        //     $newCustomization->previewMediaId = $customization->preview_media_id;
-                        //     $newCustomization->width = $customization->dimension->width;
-                        //     $newCustomization->height = $customization->dimension->height;
-                        //     $newCustomization->save();
-                        // }
-                        // foreach($variant->views->back->customizations as $customization){
-                        //     $newCustomization = new BackCustomization();
-                        //     $newCustomization->backId = $newBack->id;
-                        //     $newCustomization->type = $customization->type;
-                        //     $newCustomization->productionMediaId = $customization->production_media_id;
-                        //     $newCustomization->previewMediaId = $customization->preview_media_id;
-                        //     $newCustomization->width = $customization->dimension->width;
-                        //     $newCustomization->height = $customization->dimension->height;
-                        //     $newCustomization->save();
-                        // }
-                        // foreach($variant->views->left->customizations as $customization){
-                        //     $newCustomization = new LeftCustomization();
-                        //     $newCustomization->leftId = $newLeft->id;
-                        //     $newCustomization->type = $customization->type;
-                        //     $newCustomization->productionMediaId = $customization->production_media_id;
-                        //     $newCustomization->previewMediaId = $customization->preview_media_id;
-                        //     $newCustomization->width = $customization->dimension->width;
-                        //     $newCustomization->height = $customization->dimension->height;
-                        //     $newCustomization->save();
-                        // }
-                        // foreach($variant->views->right->customizations as $customization){
-                        //     $newCustomization = new RightCustomization();
-                        //     $newCustomization->rightId = $newRight->id;
-                        //     $newCustomization->type = $customization->type;
-                        //     $newCustomization->productionMediaId = $customization->production_media_id;
-                        //     $newCustomization->previewMediaId = $customization->preview_media_id;
-                        //     $newCustomization->width = $customization->dimension->width;
-                        //     $newCustomization->height = $customization->dimension->height;
-                        //     $newCustomization->save();
-                        // }
                     }
                 }
             }
@@ -182,7 +121,6 @@ class ProductController extends Controller
             $message = 'Er is een probleem opgetreden bij het downloaden van alle producten. Neem contact op met de systeembeheerder.';
             return view('products.dashboard', compact('message'));
         }
-
     }
 
     /**
