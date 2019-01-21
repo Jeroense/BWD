@@ -62,10 +62,13 @@ class ProductController extends Controller
     }
 
     public function download() {
-        ini_set('max_execution_time', 60000);
+        ini_set('max_execution_time', 600000);
         $response = $this->GetProducts();
         if ($response->getStatusCode() === 200) {
-            $products = json_decode($response->getBody())->data;
+            // $products = json_decode($response->getBody())->data;
+            $strProducts = strval($response->getBody());
+// $products = json_decode($strProducts)->data;
+    dd($strProducts);
             foreach($products as $product) {
                 $newProduct = new Product();
                 $localProduct = Product::where('smakeId', $product->id)->first();

@@ -109,10 +109,10 @@ input[type=checkbox]
     margin-top: 12px;
     color: #99a1a7;
   /* Double-sized Checkboxes */
-  -ms-transform: scale(3); /* IE */
-  -moz-transform: scale(3); /* FF */
-  -webkit-transform: scale(2.5); /* Safari and Chrome */
-  -o-transform: scale(3); /* Opera */
+//   -ms-transform: scale(3); /* IE */
+//   -moz-transform: scale(3); /* FF */
+//   -webkit-transform: scale(2.5); /* Safari and Chrome */
+//   -o-transform: scale(3); /* Opera */
   padding: 10px;
 }
 
@@ -158,6 +158,19 @@ input[type=checkbox]
 
 .is-hovered:hover {
     border-color: $danger;
+}
 
+.formInput {
+    font-size: 90%;
+    height: 1.8rem;
+}
 
+.inputError {
+    border: 1px solid red;
+    color: red;
+}
+
+.inputValid {
+    border: 1px solid green;
+    color: black;
 }

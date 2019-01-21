@@ -131,10 +131,10 @@ trait SmakeApi {
         return $response;
     }
 
-    public function GetProducts($method = 'GET', $url = 'products') {
+    public function GetProducts($method = 'GET', $url = 'products?filter[id]=8186') {
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
-            'Content-Type'    => 'application/json',
+            'Content-Type'    => 'application/json; charset=utf-8',
             'Accept'          => 'application/json',
             'Accept-Language' => 'nl'
         ];
