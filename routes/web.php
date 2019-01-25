@@ -62,7 +62,6 @@ Route::prefix('variants')->middleware('role:superadministrator|administrator')->
 Route::prefix('orders')->middleware('role:superadministrator|administrator')->group(function() {
     Route::get('/', 'OrderController@index');
     Route::get('/create/{id}', 'OrderController@create')->name('orders.create');
-    // Route::post('/checkOrder', 'OrderController@checkOrder')->name('orders.checkOrder');
     Route::post('checkoutOrder/{id}', 'OrderController@checkoutOrder')->name('checkoutOrder');
     Route::get('/index', 'OrderController@index')->name('orders.index');
     Route::get('/media', 'OrderController@media')->name('orders.media');

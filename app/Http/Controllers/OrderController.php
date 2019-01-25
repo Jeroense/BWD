@@ -23,6 +23,10 @@ class OrderController extends Controller
         return view('orders.dashboard');
     }
 
+    public function index() {
+        return view('orders.index');
+    }
+
     public function create($id)
     {
         return view('orders.create');
@@ -32,7 +36,7 @@ class OrderController extends Controller
     {
         ini_set("log_errors", 1);
         ini_set("error_log", "logs/errors.log");
-        
+
         $orderItems = json_decode($request->get('orderItems'));
         error_log($request->get('orderItems'));
         // dd($request);

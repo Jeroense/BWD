@@ -24,17 +24,18 @@
                                         <input name="Size{{$loop->iteration}}"
                                                value="{{ $value }}"
                                                type="hidden">
-                                        <div class="field">
+                                        <div class="">
                                             <div class="field has-addons inline">
                                                 <div class="sizeSelect orderSize">
-                                                    <input class='checkbox'
+                                                    <label class="checkboxLabel">
+                                                    <input class=''
                                                            type="checkbox"
                                                            id="checkBox{{$loop->iteration}}"
                                                            onclick="ToggleDisabled('{{ $loop->iteration }}')">
-                                                           <span class="is-size-6 has-text-weight-bold">&nbsp;&nbsp;{{ $value }}</span>
+                                                           &nbsp;{{ $value }}</label>
                                                 </div>
                                                 <div class="control">
-                                                    <input class="input ean is-size-6 has-text-centered has-text-weight-bold p-r-15" disabled
+                                                    <input class="input ean has-text-centered has-text-weight-bold p-t-0 p-r-15" disabled
                                                             id="ean{{$loop->iteration}}"
                                                             name="ean{{ $loop->iteration }}"
                                                             type="text"

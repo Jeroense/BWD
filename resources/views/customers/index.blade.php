@@ -24,7 +24,7 @@
                                 <td>{{ $customer->lastName }}, {{ $customer->lnPrefix }}</td>
                                 <td class="has-text-right">
                                     <a class="button is-hovered is-small m-r-5" href="{{ route('customers.show', $customer->id) }}">View</a>
-                                    <a class="button is-hovered is-small" href="#">Edit</a>
+                                    <a class="button is-hovered is-small" href="{{ route('customers.edit', $customer->id) }}">Edit</a>
                                 </td>
                             </tr>
                         @endforeach

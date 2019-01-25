@@ -4,15 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class PostAddress extends Model
 {
-    public function postAddress() {
-        {
-            return $this->hasOne('App\PostAddress', 'customerId');
-        }
+    public function customers() {
+        return $this->belongsTo('App\Customer');
     }
 
     protected $fillable = [
+        'customerId',
         'firstName',
         'lnPrefix',
         'lastName',
@@ -25,7 +24,5 @@ class Customer extends Model
         'countryCode',
         'phone',
         'email',
-        'hasDeliveryAddress',
-        'hasBillingAddress',
     ];
 }

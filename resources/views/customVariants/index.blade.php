@@ -6,19 +6,13 @@
             @if(Session::has('flash_message'))
                 <div class="notification is-danger">{{ Session::get('flash_message') }}</div>
             @endif
-            <div><a href="{{ route('orders.store') }}" id="orderRoute" returnUrl="{{ route('customvariants.orderVariant', '') }}"></a>
-                {{-- id="orderRoute" --}}
-                {{-- returnUrl="{{ route('orders.create', '') }}" --}}
-
-
-
-
-                {{-- customvariants.buildOrderObject --}}
-                {{-- class="button is-danger m-b-100">Custom Variant Opslaan</a> --}}
-        </div>
+            <div>
+                <a href="{{ route('orders.store') }}" id="orderRoute" returnUrl="{{ route('customvariants.orderVariant', '') }}"></a>
+            </div>
             <table class="table">
                 <tbody>
                     @if ($customVariants->count() !== 0)
+                        // klant hier selecteren
                         @foreach ($customVariants as $customVariant)
                             <tr>
                                 <td><p style="max-width: 350px;" class="imageHead is-size-6 has-text-centered has-text-weight-bold m-t-10 m-b-10">{{$customVariant->designName}}
@@ -77,7 +71,7 @@
                             </tr>
                         @endforeach
                     @else
-                        <p class="is-size-3 has-text-danger has-text-centered has-text-weight-semibold">Nog geen nieuwe varianten aangemaakt!!</p>
+                        <p class="notification is-danger">Nog geen varianten aangemaakt!!</p>
                     @endif
                 </tbody>
             </table>

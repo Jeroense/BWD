@@ -34,6 +34,7 @@
                     <ul>
                         <li class="{{ Nav::isRoute('customers.index') }}"><a href="{{route('customers.index')}}">Klant Index</a></li>
                         <li class="{{ Nav::isRoute('customers.create') }}"><a href="{{route('customers.create')}}">Klant Toevoegen</a></li>
+                        {{-- <li class="{{ Nav::isRoute('customers.edit') }}"><a href="{{route('customers.edit',)}}">Klant Wijzigen</a></li> --}}
                     </ul>
                 </li>
                 <li class="{{ Nav::isResource('products') }}">
@@ -70,17 +71,17 @@
                 <li class="{{ Nav::isResource('orders') }}">
                     <h3><span class="icon-color fas fa-cart-plus"></span>Orders</h3>
                     <ul>
-                        <li><a href="#">Order Index</a></li>
+                        <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Order Index</a></li>
                         <li><a href="#">Nieuwe Order</a></li>
                     </ul>
                 </li>
                 <li class="{{ Nav::isResource('summaries') }}">
                     <h3><span class="icon-color far fa-chart-bar"></span>Overzichten</h3>
                     <ul>
-                        <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Openstaande Orders</a></li>
-                        <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Orders per Periode</a></li>
-                        <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Orders per Klanr</a></li>
-                        <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Orders per Variant</a></li>
+                        <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Openstaande Bestellingen</a></li>
+                        <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Bestellingen per Periode</a></li>
+                        <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Bestellingen per Klanr</a></li>
+                        <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Bestellingen per Variant</a></li>
                         <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Gebruikte EAN nummers</a></li>
                     </ul>
                 </li>

@@ -21,6 +21,10 @@
     display: none;
 }
 
+.showBlock {
+    display: block;
+}
+
 .showDetail {
     display: inline;
 }
@@ -174,3 +178,34 @@ input[type=checkbox]
     border: 1px solid green;
     color: black;
 }
+
+input[type="checkbox"]{
+    width: 20px; /*Desired width*/
+    height: 20px; /*Desired height*/
+    padding: 0;
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+    *overflow: hidden;
+}
+input {
+        padding: 0;
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+}
+
+.checkboxLabel {
+    display: block;
+    padding-left: 15px;
+    text-indent: -15px;
+    font-weight: 600;
+}
+
+.title
+ {
+     color: #E90478;
+     text-decoration:  underline;
+ }

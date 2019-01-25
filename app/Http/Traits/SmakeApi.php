@@ -150,6 +150,8 @@ trait SmakeApi {
         } catch (\Exception $e) {
             return $e->getResponse();
         }
+        $response = json_decode($products->getBody())->data;
+        dd($response);
         return $products;
     }
 

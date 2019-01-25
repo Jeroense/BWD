@@ -47,7 +47,7 @@ class CustomVariantController extends Controller
             $currentParentVariantId = 'parentVariantId'.$i;
             if($request->has($currentEan)){
                 $shirtLength = TshirtMetric::select('length_mm')->where('size', $request->$currentSize)->get()[0]->length_mm;
-                $pixelSize = $shirtLength / 1325;
+                $pixelSize = $shirtLength / 1125;  //was 1325 at first test order
                 $newCustomVariant = new CustomVariant();
                 $newCustomVariant->parentVariantId = $request->$currentParentVariantId;
                 $newCustomVariant->variantName = $compositeMediaDesign->designName;
