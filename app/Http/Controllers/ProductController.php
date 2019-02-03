@@ -66,9 +66,7 @@ class ProductController extends Controller
         $response = $this->GetProducts();
         if ($response->getStatusCode() === 200) {
             $products = json_decode($response->getBody())->data;
-            // $strProducts = strval($response->getBody());
-            // $products = json_decode($strProducts)->data;
-    dd($products);
+    // dd($products);
             foreach($products as $product) {
                 $newProduct = new Product();
                 $localProduct = Product::where('smakeId', $product->id)->first();

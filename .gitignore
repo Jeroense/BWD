@@ -6,6 +6,7 @@
 /public/tshirtImages
 /public/productImages
 /public/logs
+/storage/logs
 /storage/*.key
 /vendor
 /.idea

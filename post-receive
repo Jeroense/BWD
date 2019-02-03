@@ -1,3 +1,0 @@
-#!/bin/sh
-git --work-tree=/var/www/bwd --git-dir=/var/repo/site.git checkout -f
-

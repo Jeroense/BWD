@@ -12,11 +12,16 @@ use App\Customer;
 use App\Variant;
 use App\Attribute;
 use App\Front;
-// use App\View;
 use App\Design;
+use App\Services\OrderService;
 
 class OrderController extends Controller
 {
+    protected $orders;
+    public function __construct(OrderService $service) {
+        $this->orders = $service;
+    }
+
     use SmakeApi;
 
     public function dashboard() {
@@ -40,23 +45,27 @@ class OrderController extends Controller
         $orderItems = json_decode($request->get('orderItems'));
         error_log($request->get('orderItems'));
         // dd($request);
-        try {
-            $newOrder = new Order();
-            $newOrder->shippingMethod = 'versand-niederlade-69';
-            $newOrder->save();
+        $orderItems = json_decode($request->get('orderItems'));
 
-            $orderItems = json_decode($request->get('orderItems'));
-            foreach($orderItems as $orderItem) {
-                $newItem = new OrderItem();
-                $newItem->orderId = $newOrder->id;
-                $newItem->qty = $orderItem->items->qty;
-                $newItem->variantId = $orderItem->items->variantId;
-                $newItem->save();
-            }
-        }
-        catch (\Exception $e) {
-            return response()->json('Er is iets fout gegaan bij het aanmaken van de order', 500);
-        }
+        $this->orders->makeOrder($orderItems);
+
+        // try {
+        //     $newOrder = new Order();
+        //     $newOrder->shippingMethod = 'versand-niederlade-69';
+        //     $newOrder->save();
+
+
+        //     foreach($orderItems as $orderItem) {
+        //         $newItem = new OrderItem();
+        //         $newItem->orderId = $newOrder->id;
+        //         $newItem->qty = $orderItem->items->qty;
+        //         $newItem->variantId = $orderItem->items->variantId;
+        //         $newItem->save();
+        //     }
+        // }
+        // catch (\Exception $e) {
+        //     return response()->json('Er is iets fout gegaan bij het aanmaken van de order', 500);
+        // }
         return response()->json($newOrder->id, 200);
     }
 

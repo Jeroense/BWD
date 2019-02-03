@@ -4,9 +4,12 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Http\Traits\RoundRobin;
 
 class Kernel extends ConsoleKernel
 {
+    use RoundRobin;
+
     /**
      * The Artisan commands provided by your application.
      *
@@ -26,6 +29,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        // $schedule->command('CronJob:cronjob')->everyMinute();
+        $schedule->call('App\Http\Controllers\RobotController@changeName')->everyMinute();
     }
 
     /**

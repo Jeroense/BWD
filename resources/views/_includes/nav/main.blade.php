@@ -2,7 +2,7 @@
     <nav class="navbar has-text-white is-fixed-top">
         <div class="navbar-brand">
             <a class="m-t-5 m-r-20 m-l-5" href="{{ route('home') }}" >
-                <img src="{{ asset('images/logo-borduurwerkdeal.png') }}" width="219" alt="bwd logo"/>
+                <img src="{{ asset('systemImages/logo-borduurwerkdeal.png') }}" width="219" alt="bwd logo"/>
             </a>
 
             {{-- @if((Request::segment(1) == 'manage')|(Request::segment(1) == 'products')) --}}
