@@ -1,0 +1,15 @@
+#!/bin/sh
+chown -R :nginx /var/www/bwd
+chmod -R 775 /var/www/bwd/storage
+chmod -R 775 /var/www/bwd/public/customVariants
+chmod -R 775 /var/www/bwd/public/designImages
+chmod -R 775 /var/www/bwd/public/tshirtImages
+chcon -R -t httpd_sys_rw_content_t /var/www/bwd/storage
+if [ ! -f /var/www/bwd/.env ]; then
+    cp /root/bwdconfig/.env /var/www/bwd/.env
+fi
+systemctl restart nginx
+php artisan migrate
+php artisan db:seed
+
+

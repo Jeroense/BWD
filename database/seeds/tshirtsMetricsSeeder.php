@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class tshirtmetrics extends Seeder
+class tshirtMetricsSeeder extends Seeder
 {
     /**
      * Run the database seeds.

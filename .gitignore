@@ -1,10 +1,9 @@
 /node_modules
 /public/hot
 /public/storage
-/public/customVariants
-/public/designImages
-/public/tshirtImages
-/public/productImages
+/public/customVariants/*.*
+/public/designImages/*.*
+/public/tshirtImages/*.*
 /public/logs
 /storage/logs
 /storage/*.key

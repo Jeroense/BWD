@@ -21,7 +21,7 @@ class CreateTshirtmetricsTable extends Migration
             $table->index('size');
         });
 
-        $seeder = new tshirtmetrics();
+        $seeder = new tshirtMetricsSeeder();
         $seeder->run();
     }
 
