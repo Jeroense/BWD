@@ -91,11 +91,10 @@ class ProductController extends Controller
                         $newVariant->tax = $variant->tax;
                         $newVariant->taxRate = $variant->tax_rate;
                         $newVariant->mediaId = $variant->media_id;
-                        $fileName = time().md5($variant->media_id);
-                        $shirtImageDownloaded = $this->getBaseTshirtImage($variant->media_id, $fileName);
-                        $newVariant->localMediaFileName = $shirtImageDownloaded;
-                        $smallImageDownloaded = $this->getBaseTshirtImage($variant->media_id . "/w_470,h_524/w_470,h_524/fit_fill/fm_png", "sm_" . $fileName);
-                        $newVariant->smallFileName = $smallImageDownloaded;
+                        $fileName = 'lg_' . $variant->media_id;
+                        file_exists('tshirtImages/' . $fileName . '.png') ? $newVariant->localMediaFileName = $fileName .'.png' : $newVariant->localMediaFileName = $this->getBaseTshirtImage($variant->media_id, $fileName);
+                        $fileName = 'sm_' . $variant->media_id;
+                        file_exists('tshirtImages/' . $fileName . '.png') ? $newVariant->smallFileName = $fileName . '.png' : $newVariant->smallFileName = $this->getBaseTshirtImage($variant->media_id, $fileName);
                         $newVariant->save();
                         foreach($variant->attributes as $attribute){
                             $newAttribute = new Attribute();
