@@ -31,7 +31,7 @@ class CreateCustomVariantsTable extends Migration
             $table->integer('smakeProductionMediaId')->unsigned()->nullable();
             $table->double('width_mm',5,1);
             $table->double('height_mm',5,1);
-            $table->boolean('isPublishedAtBol')->nullable();
+            $table->string('isPublishedAtBol')->nullable(); // initiated, pending, published, Failure
             $table->timestamps();
         });
     }

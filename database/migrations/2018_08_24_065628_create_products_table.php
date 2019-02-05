@@ -38,7 +38,7 @@ class CreateProductsTable extends Migration
             $table->string('smallFileName')->nullable();
             $table->boolean('isCustomVariant')->nullable();
             $table->boolean('isUploaded')->nullable();
-            $table->boolean('isPublished')->nullable();
+            $table->boolean('isPublished')->nullable();  // can be deleted
             $table->timestamps();
 
             $table->foreign('productId')

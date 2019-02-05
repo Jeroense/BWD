@@ -47,11 +47,13 @@ class DesignController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'designImage' => 'required|image|mimes:jpeg,jpg,png|max:9216'
-        ]);
-
-        $image = $request->designImage;
+        // ini_set("log_errors", 1);
+        // ini_set("error_log", "logs/errors.log");
+        // error_log('made it up to here');
+        // $this->validate($request, [
+        //     'designImage' => 'required|image|mimes:jpeg,jpg,png|max:9216'
+        // ]);
+        $image = $request->file('file');
         $design = new Design();
         $design->originalName = $image->getClientOriginalName();
         $design->mimeType = $image->getClientMimeType();
@@ -74,9 +76,11 @@ class DesignController extends Controller
             if (file_exists(public_path('designImages').'\\'.$design->fileName)) {
                 unlink(public_path('designImages').'\\'.$design->fileName);
             }
-            \Session::flash('flash_message', 'Er is iets fout gegaan met het opslaan van het design, neem contact op met de systeembeheerder');
+            // \Session::flash('flash_message', 'Er is iets fout gegaan met het opslaan van het design, neem contact op met de systeembeheerder');
+            return response()->json('Er is iets fout gegaan met het uploaden van designs', 400);
         }
-        return redirect()->route('designs.index');
+        return response()->json('Custom Variant succesvol opgeslagen', 201);
+        // return redirect()->route('designs.index');
     }
 
     /**

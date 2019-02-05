@@ -4,21 +4,19 @@
 <div class="container column is-6 pull-left">
     <div class="columns m-t-5">
         <div class="column">
-            {{-- <form action="{{ route('designs.store') }}" method="POST" enctype="multipart/form-data">
-                {{csrf_field()}}
-                <div class="field">
-                    <label for="designImage"></label>
-                    <input type="file" name="designImage" accept=".jpg, .jpeg, .png">
+            <form action="{{ url('/designs/store') }}" enctype="multipart/form-data" class="dropzone" id="my-dropzone">
+                {{ csrf_field() }}
+                <div class="dz-message">
+                    <div class="col-xs-8">
+                        <div class="message">
+                            <p>Sleep afbeelding(en) naar hier of klik om folder te openen</p>
+                        </div>
+                    </div>
                 </div>
-                <button type="submit" id="uploadFile" class="button is-danger">Save</button>
-            </form> --}}
-
-            <form action="{{ route('designs.store') }}"
-                  class="dropzone"
-                  id="my-awesome-dropzone">
-                {{-- <input type="file" name="file" /> --}}
+                <div class="fallback">
+                    <input type="file" name="file" multiple>
+                </div>
             </form>
-
         </div>
     </div>
 </div>
