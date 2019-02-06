@@ -42,8 +42,6 @@ Route::prefix('customvariants')->middleware('role:superadministrator|administrat
     Route::resource('/customvariants', 'CustomVariantController');
     Route::post('/orderVariant/{id}','CustomVariantController@orderVariant')->name('customvariants.orderVariant');
     Route::get('/orderVariant/{id}','CustomVariantController@orderVariant')->name('customvariants.orderVariant');
-    // public function buildOrderObject($variantId) {
-
 });
 
 Route::post('/createVariant','CustomVariantController@createVariant')->name('customVariants.createVariant');

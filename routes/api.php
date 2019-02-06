@@ -18,14 +18,7 @@ use Illuminate\Http\Request;
 // });
 
 Route::prefix('v1')->group(function() {
-    // dd('test');
-    // Route::resource('/', 'VariantController');
     Route::resource('/', 'CompositeMediaDesignController');
-    // Route::Post('/store', 'VariantController@test')->name('saveImage');
     Route::post('/store', 'OrderController@store')->name('orders.store');
 });
 
-
-Route::prefix('designs')->middleware('role:superadministrator|administrator')->group(function() {
-    Route::post('store', 'DesignController@store')->name('designs.store');
-});
