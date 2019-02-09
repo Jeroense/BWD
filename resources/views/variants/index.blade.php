@@ -7,8 +7,8 @@
     @else
         <div class="card">
             <div class="containercard-content">
-                @if(Session::has('flash_message'))
-                    <div class="notification is-danger">{{ Session::get('flash_message') }}</div>
+                @if (session('status'))
+                    <div class="notification is-danger">{{ session('status') }}</div>
                 @endif
                 <table class="table">
                     <tbody>

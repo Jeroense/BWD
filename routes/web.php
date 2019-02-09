@@ -1,16 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', 'WelcomeController@login');
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -30,12 +19,9 @@ Route::prefix('manage')->middleware('role:superadministrator|administrator')->gr
 
 Route::prefix('products')->middleware('role:superadministrator|administrator')->group(function() {
     Route::resource('/products', 'ProductController');
-    Route::get('/uploadImage', 'ProductController@uploadImage')->name('products.uploadImage');
     Route::get('/download', 'ProductController@download')->name('products.download');
     Route::get('/productDownload', 'ProductController@productDownload')->name('products.productDownload');
     Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
-    Route::post('/attachImage', 'ProductController@attachImage')->name('products.attachImage');
-
 });
 
 Route::prefix('customvariants')->middleware('role:superadministrator|administrator')->group(function() {
@@ -48,13 +34,9 @@ Route::post('/createVariant','CustomVariantController@createVariant')->name('cus
 
 
 Route::prefix('variants')->middleware('role:superadministrator|administrator')->group(function() {
-    // Route::get('/', 'VariantController@index');
     Route::resource('/variants', 'VariantController');
-    Route::get('/uploadImage', 'VariantController@uploadImage')->name('variants.uploadImage');
     Route::get('/dashboard', 'VariantController@dashboard')->name('variants.dashboard');
-    Route::post('/attachImage', 'VariantController@attachImage')->name('variants.attachImage');
     Route::get('/selectSizes/{id}', 'VariantController@selectSizes')->name('variants.selectSizes');
-    // Route::get('/order/{id}', 'VariantController@order')->name('variants.order');
 });
 
 Route::prefix('orders')->middleware('role:superadministrator|administrator')->group(function() {

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Traits\DebugLog;
 use Illuminate\Http\Request;
 use App\User;
 use App\Role;
@@ -11,6 +11,11 @@ use Hash;
 use Input;
 
 class UserController extends Controller {
+
+    public $logFile = 'logs/message.txt';
+    use DebugLog;
+
+
     /**
      * Display a listing of the resource.
      *
@@ -79,7 +84,6 @@ class UserController extends Controller {
      */
     public function show($id) {
         $user = User::findOrFail($id);
-
         return view('manage.users.show', compact('user'));
     }
 

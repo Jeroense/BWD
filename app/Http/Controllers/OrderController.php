@@ -47,7 +47,7 @@ class OrderController extends Controller
         // dd($request);
         $orderItems = json_decode($request->get('orderItems'));
 
-        $this->orders->makeOrder($orderItems);
+        $this->orders->createOrder($orderItems);
 
         // try {
         //     $newOrder = new Order();

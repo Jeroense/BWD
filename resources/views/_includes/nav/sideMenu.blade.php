@@ -34,16 +34,13 @@
                     <ul>
                         <li class="{{ Nav::isRoute('customers.index') }}"><a href="{{route('customers.index')}}">Klant Index</a></li>
                         <li class="{{ Nav::isRoute('customers.create') }}"><a href="{{route('customers.create')}}">Klant Toevoegen</a></li>
-                        {{-- <li class="{{ Nav::isRoute('customers.edit') }}"><a href="{{route('customers.edit',)}}">Klant Wijzigen</a></li> --}}
                     </ul>
                 </li>
                 <li class="{{ Nav::isResource('products') }}">
                     <h3><span class="icon-color fas fa-industry"></span>Smake</h3>
                     <ul>
-                        {{-- <li class="{{ Nav::isRoute('products.index') }}"><a href="{{route('products.index')}}">Standaard Producten</a></li> --}}
                         <li class="{{ Nav::isRoute('products.productDownload') }}
                                    {{ Nav::isRoute('products.download') }}"><a href="{{route('products.productDownload')}}">Producten Downloaden</a></li>
-                        {{-- <li class="{{ Nav::isRoute('products.uploadImage') }}"><a href="{{route('products.uploadImage')}}">Basis Afbeeldingen Toevoegen</a></li> --}}
                     </ul>
                 </li>
 

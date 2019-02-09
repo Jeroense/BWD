@@ -6,30 +6,34 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use App\Variant;
+use App\Http\Traits\DebugLog;
 
 trait SmakeApi {
 
-    // public function UploadCustomVariant($body, $destinationUrl) {
-    //     $headers = [
-    //         'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
-    //         'Content-Type'    => 'application/json',
-    //         'Accept'          => 'application/json',
-    //         'Accept-Language' => 'nl'
-    //     ];
+    public $logFile = 'public/logs/message.txt';
+    use DebugLog;
 
-    //     try {
-    //         $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
-    //         $response = $client->request('POST', $destinationUrl, [
-    //             'headers' => $headers,
-    //             'body' => $body
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         return $e->getResponse();
-    //     }
-    //     return $response;
-    // }
+    public function getSmakeData($url) {
+        $headers = [
+            'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
+            'Content-Type'    => 'application/json',
+            'Accept'          => 'application/json',
+            'Accept-Language' => 'nl'
+        ];
 
-    public function PostSmakeData($body, $destinationUrl) {
+        try {
+            $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
+
+            $response = $client->request('GET', $url, [
+                'headers' => $headers
+            ]);
+        } catch (\Exception $e) {
+            return $e->getResponse();
+        }
+        return $response;
+    }
+
+    public function postSmakeData($body, $destinationUrl) {
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
             'Content-Type'    => 'application/json',
@@ -69,110 +73,7 @@ trait SmakeApi {
         return $pollResult;
     }
 
-    public function getCheckout($url) {
-        $headers = [
-            'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
-            'Content-Type'    => 'application/json',
-            'Accept'          => 'application/json',
-            'Accept-Language' => 'nl'
-        ];
-
-        try {
-            $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
-
-            $checkoutResult = $client->request('GET', $url, [
-                'headers' => $headers
-            ]);
-        } catch (\Exception $e) {
-            return $e->getResponse();
-        }
-        return $checkoutResult;
-    }
-
-    public function getSmakeData($url) {
-        $headers = [
-            'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
-            'Content-Type'    => 'application/json',
-            'Accept'          => 'application/json',
-            'Accept-Language' => 'nl'
-        ];
-
-        try {
-            $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
-
-            $response = $client->request('GET', $url, [
-                'headers' => $headers
-            ]);
-        } catch (\Exception $e) {
-            return $e->getResponse();
-        }
-        return $response;
-    }
-
-    public function GetCustomVariant($url) {
-        $headers = [
-            'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
-            'Content-Type'    => 'application/json',
-            'Accept'          => 'application/json',
-            'Accept-Language' => 'nl'
-        ];
-
-        try {
-            $client = new Client([
-                'base_uri' => env('SMAKE_URI', '')
-            ]);
-
-            $response = $client->request('GET', 'designed-variants/'.$url, [
-                'headers' => $headers
-            ]);
-        } catch (\Exception $e) {
-            return $e->getResponse();
-        }
-        return $response;
-    }
-
-    public function GetProducts($method = 'GET', $url = 'products?filter[id]=8186') {
-        $headers = [
-            'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
-            'Content-Type'    => 'application/json; charset=utf-8',
-            'Accept'          => 'application/json',
-            'Accept-Language' => 'nl'
-        ];
-
-        try {
-            $client = new Client([
-                'base_uri' => env('SMAKE_URI', '')
-            ]);
-
-            $products = $client->request($method, $url, [
-                'headers' => $headers
-            ]);
-        } catch (\Exception $e) {
-            return $e->getResponse();
-        }
-        return $products;
-    }
-
-    public function GetMedia($imageId) {
-        $resource = fopen('productImages/' . 'logo'. '.png', 'w');
-        $headers = [
-            'Accept' => 'image/png',
-        ];
-        $options = [
-            'sink' => $resource,
-            'http_errors' => false
-        ];
-
-        $client = new Client([
-            'base_uri' => env('MEDIA_URI', '')
-        ]);
-
-        $media = $client->get($imageId, $options);
-        fclose($resource);
-        return $media;
-    }
-
-    public function UploadMedia($designPath, $fileName, $contentLength, $destinationUrl = 'media') {
+      public function UploadMedia($designPath, $fileName, $contentLength, $destinationUrl = 'media') {
         $body = fopen($designPath . $fileName, 'r');
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
@@ -193,28 +94,8 @@ trait SmakeApi {
         return $response;
     }
 
-    public function CheckoutOrder($body, $url) {
-        $headers = [
-            'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
-            'Content-Type'    => 'application/json',
-            'Accept'          => 'application/json',
-            'Accept-Language' => 'nl'
-        ];
-
-        try {
-            $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
-            $response = $client->request('POST', $url, [
-                'headers' => $headers,
-                'body' => $body
-            ]);
-        } catch (\Exception $e) {
-            return $e->getResponse();
-        }
-        return $response;
-    }
-
-    public function getBaseTshirtImage($id, $fileName) {
-        $resource = fopen('tshirtImages/' . $fileName . '.png', 'w');
+    public function downloadMedia($id, $fileName, $path) {
+        $resource = fopen($path . '/' . $fileName . '.png', 'w');
         $headers = [
             'Accept' => 'image/png',
         ];
@@ -230,28 +111,5 @@ trait SmakeApi {
         $tshirtImage = $client->get((string)$id, $options);
         fclose($resource);
         return $fileName . '.png';
-    }
-
-    public function ListOrders() {
-        $headers = [
-            'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
-            'Content-Type'    => 'application/json',
-            'Accept'          => 'application/json',
-            'Accept-Language' => 'nl'
-        ];
-
-        try {
-            $client = new Client([
-                'base_uri' => env('SMAKE_URI', '')
-            ]);
-            $url = 'orders/82316';
-
-            $response = $client->request('GET', $url, [
-                'headers' => $headers
-            ]);
-        } catch (\Exception $e) {
-            return $e->getResponse();
-        }
-        return $response;
     }
 }
