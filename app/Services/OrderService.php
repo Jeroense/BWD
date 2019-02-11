@@ -7,27 +7,18 @@ use App\CustomVariant;
 use App\Order;
 use App\OrderItem;
 use App\Customer;
+use App\PostAddress;
+
+
+// $this->log_json( ** $response Body **, 'checkoutBody', $checkoutBody);
+// $this->log_var( ** $var **, $this->logFile);
+// $this->log_DBrecord( ** DBrecord **, $this->logFile);
 
 class OrderService {
 
     public $logFile = 'public/logs/message.txt';
     use SmakeApi;
     use DebugLog;
-
-    public function createOrder($orderItems) {
-        $newOrder = new Order();
-        $newOrder->shippingMethod = 'versand-niederlade-69';
-        $newOrder->save();
-        foreach($orderItems as $orderItem) {
-            dd($orderItem);
-            $newItem = new OrderItem();
-            $newItem->orderId = $newOrder->id;
-            $newItem->qty = $orderItem->items->qty;
-            $newItem->variantId = $orderItem->items->variantId;
-            $newItem->save();
-        }
-        return;
-    }
 
     public function getNewOrders() {
         return Order::where('orderStatus', 'new')->pluck('id');
@@ -38,23 +29,16 @@ class OrderService {
     }
 
     public function orderCustomVariant($orderId) {
-                                                                                            // $this->log_var('start of orderVariant id = '.$orderId, $this->logFile);
-
-        // $newOrderId = Order::where('id', $orderId)->value('id');
-
-
-
-                                                                                            // $this->log_array($orderedItems, $this->logFile);
-
+        $this->updateOrderStatus($orderId);
         $orderBody = $this->buildOrderObject($orderId);
-        $this->log_json('buildOrderObject', 'orderBody', $orderBody);
+        // $this->log_json('orderBody', 'buildOrderObject', $orderBody);
+
         $path = env('CHECKOUT_PATH','');
-                                                                                            // $this->log_json('orderVariant', 'checkoutBody', $checkoutBody);
-        $checkoutResponse = $this->postSmakeData($orderBody, $path);
+        $checkoutResponse = $this->postSmakeData($orderBody, $path); // if address is not complete -> statusCode 422 will be returned by Smake
+        $this->log_responseBody( 'postSmakeData', 'checkoutBody', $checkoutResponse);
+        return 0;
         if ($checkoutResponse->getStatusCode() == 201) {
-                                                                                            // $this->log_var('$checkoutResponse->getStatusCode()', $this->logFile);
             if ($this->IsOrderAccepted()) {
-                                                                                            // $this->log_var('$this->orderIsAccepted()', $this->logFile);
                 if($this->isValidShippingHandle()) {
                     $shippingLine = $this->buildAndSubmitShippingLine();
                     if($shippingLine != null) {
@@ -70,14 +54,30 @@ class OrderService {
         return 'error';
     }
 
-    public function buildOrderObject($orderId) {
-        // $customerId = Order::find($orderId)->customerId;
-        // $this->log_var('customer ID =>'.$customerId, $this->logFile);
-        // $customer = Customer::find($customerId);
+    public function updateOrderStatus($id) {
+        $order = Order::find($id);
+        $order->orderStatus = 'Initialized';
+        $order->save();
 
+        return;
+    }
+
+    public function buildOrderObject($orderId) {
         $customer = Customer::find(Order::find($orderId)->customerId);
-$this->log_DBrecord($customer, $this->logFile);
+        $deliveryAddress = $customer->hasDeliveryAddress != 0 ? PostAddress::where('customerId', $customer->id)->first() : $customer;
+        $lnPrefix = $customer->lnPrefix == "" ? "" : ', ' . $customer->lnPrefix;
+
         $app = app();
+        $shippingAddress = $app->make('stdClass');
+        $shippingAddress->first_name = $deliveryAddress->firstName;
+        $shippingAddress->last_name = $deliveryAddress->lastName . $lnPrefix;
+        $shippingAddress->street1 = $deliveryAddress->street . ' ' . $deliveryAddress->houseNr;
+        $shippingAddress->zip = $deliveryAddress->postalCode;
+        $shippingAddress->city = $deliveryAddress->city;
+        $shippingAddress->country_code = $deliveryAddress->countryCode;
+        $shippingAddress->province_code = $deliveryAddress->provinceCode;
+        $shippingAddress->phone = $deliveryAddress->phone;
+        $shippingAddress->email = $deliveryAddress->email;
 
         $billingAddress = $app->make('stdClass');
         $billingAddress->first_name = 'Barry';
@@ -90,19 +90,6 @@ $this->log_DBrecord($customer, $this->logFile);
         $billingAddress->phone = '0314653130';
         $billingAddress->email = 'info@internetsport.nl';
 
-        $shippingAddress = $app->make('stdClass');
-        $shippingAddress->first_name = 'Barry';
-        $shippingAddress->last_name = 'Bles';
-        $shippingAddress->street1 = 'Ulenpasweg 2F4';
-        $shippingAddress->zip = '7041 GB';
-        $shippingAddress->city = "'s-Heerenberg";
-        $shippingAddress->country_code = 'NL';
-        $shippingAddress->province_code = 'GD';
-        $shippingAddress->phone = '0314653130';
-        $shippingAddress->email = 'info@internetsport.nl';
-        $checkout = $app->make('stdClass');
-        $checkout->email = 'info@internetsport.nl';
-
         $orderedItems = OrderItem::where('orderId', $orderId)->get();
         $items = array();
 
@@ -114,8 +101,12 @@ $this->log_DBrecord($customer, $this->logFile);
             array_push($items, $itemObject);
         }
 
+        $checkout = $app->make('stdClass');
+        $checkout->email = 'info@internetsport.nl';
         $checkout->items = $items;
         $checkout->shipping_address = $shippingAddress;
+        $checkout->billing_address = $billingAddress;
+
         return json_encode((array)$checkout);
     }
 
@@ -135,7 +126,6 @@ $this->log_DBrecord($customer, $this->logFile);
     public function IsOrderAccepted() {
         $url = 'checkouts/'.$thisOrder->id.'/shipping-rates';
         $response = $this->getSmakeData($url);
-                                                                                        // $this->log_response($url, 'getSmakeData', $response);
 
         if ($response->getStatusCode() != 202 || $response->getStatusCode() != 200) {    // reasonPhrase = "Accepted"
             return false;

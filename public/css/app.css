@@ -19226,6 +19226,10 @@ input {
   text-decoration: underline;
 }
 
+.orderForm {
+  display: none;
+}
+
 #side-menu {
   position: fixed;
   top: 7px;

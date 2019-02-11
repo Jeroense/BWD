@@ -13,9 +13,9 @@ class RobotController extends Controller
     public $logFile = 'public/logs/message.txt';
     use DebugLog;
 
-    protected $newOrders;
+    protected $autoOrder;
     public function __construct(OrderService $service) {
-        $this->newOrders = $service;
+        $this->autoOrder = $service;
     }
 
     public function manageBolOrders() {
@@ -33,11 +33,11 @@ class RobotController extends Controller
     }
 
     public function findAndDispatchOrders() {
-        $orders = $this->newOrders->getNewOrders();
-        // $this->log_array($orders, $this->logFile);
-        if($orders != null) {
-            foreach($orders as $order) {
-                $this->newOrders->orderCustomVariant($order);
+        $newOrders = $this->autoOrder->getNewOrders();
+        $this->log_array($newOrders, $this->logFile);
+        if($newOrders != null) {
+            foreach($newOrders as $order) {
+                $this->autoOrder->orderCustomVariant($order);
                 //handle errors by sending email and log message in errorlog
                 //return null
             }

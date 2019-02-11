@@ -29,7 +29,7 @@ function validate(e) {
                     case "post_city":
                     case "houseNr":
                     case "post_houseNr":
-                        regExpr = /^(['a-zA-Z0-9_-\s]){3,100}$/;
+                        regExpr = /^(['a-zA-Z0-9_-\s]){1,100}$/;
                         inputFieldIsValid = 1;
                         if (!matchValue(pristine[i].value, regExpr)) {
                             formValidated = 0;

@@ -48,7 +48,6 @@ class ProductController extends Controller
         $response = $this->GetSmakeData('products?filter[id]=8186');
         if ($response->getStatusCode() === 200) {
             $products = json_decode($response->getBody())->data;
-    // dd($products);
             foreach($products as $product) {
                 if($product->id != 8186)  {
                     continue;
@@ -64,7 +63,6 @@ class ProductController extends Controller
                     $newProduct->id = $localProduct->id;
                 }
                 foreach($product->variants as $variant){
-                    // $this->checkIfAvailable($variant->id);
                     $newVariant = new Variant();
                     $localVariant = Variant::where('variantId', $variant->id)->first();
                     if($localVariant == null){

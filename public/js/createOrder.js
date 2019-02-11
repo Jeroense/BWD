@@ -1,4 +1,17 @@
 var values = [];
+var forms = document.getElementsByClassName('orderForm');
+var customer = document.querySelector('#customer');
+
+customer.addEventListener('mouseup', removeHidden);
+
+function removeHidden() {
+    if(customer.value != 'Selecteer Klant') {
+        while (forms[0]) {
+            forms[0].classList.remove('orderForm')
+        }
+    }
+}
+
 function AmountPlus(iterator) {
     var orderAmount = document.querySelector('#orderAmount' + CSS.escape(iterator));
     orderAmount.value++;
@@ -63,6 +76,7 @@ function finalizeOrder() {
         url: destination,
         dataType: "json",
         data: {
+            customer: customer.value,
             orderItems: data
         },
         error: function(message, status, xhr){
@@ -86,5 +100,6 @@ function collectData() {
             orderLine.push({items: items});
         }
     }
+    
     return JSON.stringify(orderLine);
 }

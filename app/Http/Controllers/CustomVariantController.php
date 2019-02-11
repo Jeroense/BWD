@@ -25,14 +25,24 @@ class CustomVariantController extends Controller
             $this->log_item('*** key', 'debug = false');
         }
         $customVariants = CustomVariant::All();
-        return view('customVariants.index', compact('customVariants'));
+        $customers = Customer::select('lastName', 'firstName', 'lnPrefix', 'id')->orderBy('lastName')->orderBy('firstName')->get();
+
+        $persons = [];
+        foreach($customers as $customer) {
+           array_push($persons, $customer->lnPrefix == null
+                ? ['fullName' => $customer->lastName . ', ' . $customer->firstName, 'id' => $customer->id]
+                : ['fullName' => $customer->lastName . ', ' . $customer->firstName . ' ' . $customer->lnPrefix, 'id' => $customer->id]);
+        }
+
+        return view('customVariants.index', compact('customVariants', 'persons'));
     }
 
     public function createVariant(Request $request) {
+        dd($request);
 
         $compositeMediaDesign = CompositeMediaDesign::find($request->compositeMediaId);
         if($compositeMediaDesign->smakeId === null){
-            $uploadResult = $this->uploadCompositeMediaDesignToSmake($compositeMediaDesign);
+            $uploadResult = $this->uploadCompositeMediaDesign($compositeMediaDesign);
             if($uploadResult == 'error'){
                 \Session::flash("flash_message", "Er is iets fout gegaan met het uploaden van het 'Design', neem contact op met de systeembeheerder");
                 return redirect()->route('variants.index');
@@ -58,8 +68,8 @@ class CustomVariantController extends Controller
                 $newCustomVariant->smakeProductionMediaId = Design::select('smakeId')->where('id', $newCustomVariant->productionMediaId)->first()->smakeId;
                 $newCustomVariant->smakeCompositeMediaId = CompositeMediaDesign::select('smakeId')->where('id' ,$request->compositeMediaId)->first()->smakeId;
                 $uploadCustomVariantBody = $this->buildVariantObject($newCustomVariant);
-                $newSmakeCustomVariant = $this->uploadCustomVariantToSmake($newCustomVariant, $uploadCustomVariantBody);
-                $newSmakeCustomVariant = $this->postSmakeData($newCustomVariant, $uploadCustomVariantBody);
+                $newSmakeCustomVariant = $this->UploadCustomVariant($newCustomVariant, $uploadCustomVariantBody);
+
                 if($newSmakeCustomVariant == null) {
                     if(\Session::pull('error') == 404){
                         return redirect()->route('variants.index')->with('status', 'Deze variant is momenteel niet beschikbaar');
@@ -67,6 +77,7 @@ class CustomVariantController extends Controller
                         return redirect()->route('variants.index')->with('status', 'Er is iets fout gegaan met het versturen van de custom variant naar Smake, neem contact op met de systeembeheerder');
                     }
                 }
+
                 $smakeId = $newSmakeCustomVariant->id;
                 $newCustomVariant->smakeVariantId = $smakeId;
                 $newCustomVariant->price = $newSmakeCustomVariant->price;
@@ -98,33 +109,39 @@ class CustomVariantController extends Controller
         $views->front = $front;
         $newVariant = $app->make('stdClass');
         $newVariant->views = $views;
+
         return json_encode((array)$newVariant);
     }
 
-    public function uploadCustomVariantToSmake($newCustomVariant, $uploadCustomVariantBody){
+    public function UploadCustomVariant($newCustomVariant, $uploadCustomVariantBody){
         $parentVariant = $newCustomVariant->parentVariantId;
         $smakeVariantId = Variant::find($parentVariant);
         $url = 'variants/'.$smakeVariantId->variantId.'/design';
         $response = $this->postSmakeData($uploadCustomVariantBody, $url);
+
         if ($response->getStatusCode() === 202) {    // reasonPhrase = "Accepted"
             $pollUrl = $response->getHeaders()['Location'][0];
+
             for($i = 0; $i < 100; $i++) {
                 usleep(100000);
                 $pollResult = $this->Poll($pollUrl);
+
                 if($pollResult->getStatusCode() === 200){
                     $designedVariantId = json_decode($pollResult->getBody())->resource_url;
                     $smakeNewCustomVariant = json_decode($this->getSmakeData('designed-variants/'.substr(strrchr($designedVariantId, '/'), 1))->getBody());
                     break;
                 }
             }
+
         } else {
             \Session::put('error', $response->getStatusCode());
             return null;
         }
+
         return $smakeNewCustomVariant;
     }
 
-    public function uploadCompositeMediaDesignToSmake($compositeMediaDesign) {
+    public function uploadCompositeMediaDesign($compositeMediaDesign) {
         $status='';
         $path = env('COMPOSITE_MEDIA_PATH','');
         $fileSize = filesize($path.$compositeMediaDesign->fileName);
@@ -140,8 +157,11 @@ class CustomVariantController extends Controller
         } else {
             $status = 'error';
         }
+
         return $status;
     }
+
+
 
     // comment out from here
 

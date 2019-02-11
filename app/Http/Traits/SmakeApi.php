@@ -34,6 +34,7 @@ trait SmakeApi {
     }
 
     public function postSmakeData($body, $destinationUrl) {
+        // dd('Body = '.$body.' - Url = '.PHP_EOL.$destinationUrl);
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
             'Content-Type'    => 'application/json',

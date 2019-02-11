@@ -7,14 +7,26 @@
                 <div class="notification is-danger">{{ Session::get('flash_message') }}</div>
             @endif
             <div>
-                <a href="{{ route('orders.store') }}" id="orderRoute" returnUrl="{{ route('customvariants.orderVariant', '') }}"></a>
+                <a href="{{ route('orders.store') }}" id="orderRoute" returnUrl="{{ route('customvariants.index', '') }}"></a>
             </div>
             <table class="table">
                 <tbody>
                     @if ($customVariants->count() !== 0)
-                        // klant hier selecteren
+                    <form>
+                        <div class="field">
+                            <label for="provinceCode" class="label m-b-0">Order voor:</label>
+                            <p class="control">
+                                <select class="input formInput address" data-pristine="true" name="customer" id="customer">
+                                        <option selected disabled>Selecteer Klant</option>
+                                    @foreach($persons as $person)
+                                        <option value="{{ $person['id'] }}">{{ $person['fullName'] }}</option>
+                                    @endforeach
+                                </select>
+                            </p>
+                        </div>
+                    </form>
                         @foreach ($customVariants as $customVariant)
-                            <tr>
+                            <tr class="orderForm hiddenForm">
                                 <td><p style="max-width: 350px;" class="imageHead is-size-6 has-text-centered has-text-weight-bold m-t-10 m-b-10">{{$customVariant->designName}}
                                     <img src="{{url('/customVariants')}}/{{ $customVariant->filename }}" width="250"></p>
                                     <div class="has-text-centered has-text-weight-bold is-size-5 m-b-20">{{ $customVariant->variantName }}</div>
@@ -23,9 +35,12 @@
                                     <div class="has-text-centered m-b-20">
                                         <p>Maat: <span class='has-text-weight-bold is-size-5'>{{ $customVariant->size }}</span></p>
                                     </div>
-                                    <form class="form" action="{{ route('customvariants.orderVariant', $customVariant->id) }}" method="post">
+                                    {{-- <form class="form" action="{{ route('customvariants.orderVariant', $customVariant->id) }}" method="post"> --}}
+                                    <form class="form" action="{{ route('orders.create', $customVariant->id) }}" method="post">
                                         {!! csrf_field() !!}
+
                                         <div class="input-group plus-minus-input">
+                                            {{-- <input id="customerId" type="hidden" value="test"> --}}
                                             <input id="variantId{{ $loop->iteration }}" type="hidden" value="{{ $customVariant->id }}">
                                             <div class="input-group-button is-danger is-outlined is-pulled-left m-b-15 m-l-50">
                                                 <button type="button"
