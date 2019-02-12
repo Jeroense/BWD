@@ -34,10 +34,11 @@ class RobotController extends Controller
 
     public function findAndDispatchOrders() {
         $newOrders = $this->autoOrder->getNewOrders();
-        $this->log_array($newOrders, $this->logFile);
+        // $this->log_array($newOrders, $this->logFile);
         if($newOrders != null) {
             foreach($newOrders as $order) {
-                $this->autoOrder->orderCustomVariant($order);
+                $result = $this->autoOrder->orderCustomVariant($order);
+$this->log_var('returned status code to RobotController: '.$result, $this->logFile);
                 //handle errors by sending email and log message in errorlog
                 //return null
             }

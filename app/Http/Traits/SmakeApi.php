@@ -34,7 +34,6 @@ trait SmakeApi {
     }
 
     public function postSmakeData($body, $destinationUrl) {
-        // dd('Body = '.$body.' - Url = '.PHP_EOL.$destinationUrl);
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
             'Content-Type'    => 'application/json',
@@ -45,6 +44,26 @@ trait SmakeApi {
         try {
             $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
             $response = $client->request('POST', $destinationUrl, [
+                'headers' => $headers,
+                'body' => $body
+            ]);
+        } catch (\Exception $e) {
+            return $e->getResponse();
+        }
+        return $response;
+    }
+
+    public function putSmakeData($body, $destinationUrl) {
+        $headers = [
+            'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
+            'Content-Type'    => 'application/json',
+            'Accept'          => 'application/json',
+            'Accept-Language' => 'nl'
+        ];
+
+        try {
+            $client = new Client(['base_uri' => env('SMAKE_URI', '')]);
+            $response = $client->request('PUT', $destinationUrl, [
                 'headers' => $headers,
                 'body' => $body
             ]);

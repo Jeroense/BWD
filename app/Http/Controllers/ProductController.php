@@ -7,12 +7,12 @@ use App\Variant;
 use App\Attribute;
 use Illuminate\Http\Request;
 use App\Http\Traits\SmakeApi;
-use App\Http\Traits\DebugLog;
+// use App\Http\Traits\DebugLog;
 
 class ProductController extends Controller
 {
     use SmakeApi;
-    use DebugLog;
+    // use DebugLog;
 
     /**
      * Display a listing of the resource.
@@ -104,13 +104,13 @@ class ProductController extends Controller
         }
     }
 
-    public function checkIfAvailable($id) {
-        $response = $this->getSmakeData('variants?filter[id]='.$id);
-        if(json_decode($response->getBody())->data == null) {
-            $this->log_var($id, 'logs/message.txt');
-        }
-        return;
-    }
+    // public function checkIfAvailable($id) {
+    //     $response = $this->getSmakeData('variants?filter[id]='.$id);
+    //     if(json_decode($response->getBody())->data == null) {
+    //         $this->log_var($id, 'logs/message.txt');
+    //     }
+    //     return;
+    // }
 
     /**
      * Store a newly created resource in storage.

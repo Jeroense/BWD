@@ -17,17 +17,29 @@ trait DebugLog
         return null;
     }
 
-    public function log_json($text, $command, $response) {
+    public function log_json($response) {
         $data = json_decode($response);
         $formattedData = json_encode($data, JSON_PRETTY_PRINT);
         $logFile = fopen('public/logs/message.txt', 'a');
         fwrite($logFile, '***** '.date(DATE_RFC2822).PHP_EOL);
-        fwrite($logFile, '*** called function: '. $text.PHP_EOL);
-        fwrite($logFile, '*** command: '. $command.PHP_EOL.PHP_EOL);
+        // fwrite($logFile, '*** called function: '. $text.PHP_EOL);
+        // fwrite($logFile, '*** command: '. $command.PHP_EOL.PHP_EOL);
         fwrite($logFile, $formattedData.PHP_EOL.PHP_EOL);
         fclose($logFile);
         return null;
     }
+
+    // public function log_json($text, $command, $response) {
+    //     $data = json_decode($response);
+    //     $formattedData = json_encode($data, JSON_PRETTY_PRINT);
+    //     $logFile = fopen('public/logs/message.txt', 'a');
+    //     fwrite($logFile, '***** '.date(DATE_RFC2822).PHP_EOL);
+    //     fwrite($logFile, '*** called function: '. $text.PHP_EOL);
+    //     fwrite($logFile, '*** command: '. $command.PHP_EOL.PHP_EOL);
+    //     fwrite($logFile, $formattedData.PHP_EOL.PHP_EOL);
+    //     fclose($logFile);
+    //     return null;
+    // }
     public function log_DBrecord($record, $file = 'logs/message.txt') {
         $reflector = new \ReflectionClass($record);
         $classProperty = $reflector->getProperty('attributes');

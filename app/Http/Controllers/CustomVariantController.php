@@ -214,41 +214,41 @@ class CustomVariantController extends Controller
     //     $order->totalTax = $thisOrder->total_tax;  // *** needs to be updated after 'Complete Checkout'
     //     $order->save();
 
-    //     // Get shipping options poll url
-    //     $url = 'checkouts/'.$thisOrder->id.'/shipping-rates';
-    //     $response = $this->getCheckout($url);
-    //     $this->log_response($url, 'getCheckout', $response);
-    //     if ($response->getStatusCode() != 202 || $response->getStatusCode() != 200) {    // reasonPhrase = "Accepted"
-    //         \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de order naar Smake, neem contact op met de systeembeheerder');
-    //         return redirect()->route('variants.index');
-    //     }
-    //     $pollUrl = $response->getHeaders()['Location'][0];  // retrieve poll url
-    //     for($i = 0; $i < 100; $i++) {
-    //         usleep(100000);
-    //         $pollResult = $this->Poll($pollUrl);
-    //         if($pollResult->getStatusCode() === 200){  // test for order to be completed before continuing to shipping details
-    //             //*** Debug only
-    //                     $this->log_response($pollUrl,'poll checkout', $pollResult);  // Log checkout response -- End of debug
-    //             break;
-    //         }
-    //     }
+        // Get shipping options poll url
+        // $url = 'checkouts/'.$thisOrder->id.'/shipping-rates';
+        // $response = $this->getCheckout($url);
+        // $this->log_response($url, 'getCheckout', $response);
+        // if ($response->getStatusCode() != 202 || $response->getStatusCode() != 200) {    // reasonPhrase = "Accepted"
+        //     \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de order naar Smake, neem contact op met de systeembeheerder');
+        //     return redirect()->route('variants.index');
+        // }
+        // $pollUrl = $response->getHeaders()['Location'][0];  // retrieve poll url
+        // for($i = 0; $i < 100; $i++) {
+        //     usleep(100000);
+        //     $pollResult = $this->Poll($pollUrl);
+        //     if($pollResult->getStatusCode() === 200){  // test for order to be completed before continuing to shipping details
+        //         //*** Debug only
+        //                 $this->log_response($pollUrl,'poll checkout', $pollResult);  // Log checkout response -- End of debug
+        //         break;
+        //     }
+        // }
 
-    //     // Get shipping options
-    //     $url = 'checkouts/'.$thisOrder->id.'shipping-rates';
-    //     $response = $this->getSmakeData($url);
-    //     //*** Debug only
-    //             $command = 'GET checkouts/'.$thisOrder->id.'shipping-rates';
-    //             $this->log_response($command, 'Get shipping options', $response); // End debug
+        // // Get shipping options
+        // $url = 'checkouts/'.$thisOrder->id.'shipping-rates';
+        // $response = $this->getSmakeData($url);
+        // //*** Debug only
+        //         $command = 'GET checkouts/'.$thisOrder->id.'shipping-rates';
+        //         $this->log_response($command, 'Get shipping options', $response); // End debug
 
-    //     $shippingOptions = json_decode($response->getBody())->data;
-    //     $shippingHandles = [];
-    //     foreach($options as $option) {  // build array of available shipping 'handle' options
-    //         array_push($shippingHandles, $option->handle);
-    //         //*** Debug only
-    //                 $this->log_item('handle: ', $option->handle); // End debug
-    //     }
-    //     $defaultHandle = env('SHIPPING_HANDLE', '');
-    //     if (!in_array($defaultHandle, $shippingHandles)) {
+        // $shippingOptions = json_decode($response->getBody())->data;
+        // $shippingHandles = [];
+        // foreach($options as $option) {  // build array of available shipping 'handle' options
+        //     array_push($shippingHandles, $option->handle);
+        //     //*** Debug only
+        //             $this->log_item('handle: ', $option->handle); // End debug
+        // }
+        // $defaultHandle = env('SHIPPING_HANDLE', '');
+        // if (!in_array($defaultHandle, $shippingHandles)) {
     //         \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de order naar Smake, neem contact op met de systeembeheerder');
     //         return redirect()->route('variants.index');
     //     }

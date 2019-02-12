@@ -2,59 +2,74 @@
 
 namespace App\Services;
 use App\Http\Traits\SmakeApi;
-use App\Http\Traits\DebugLog;
 use App\CustomVariant;
 use App\Order;
 use App\OrderItem;
 use App\Customer;
 use App\PostAddress;
 
-
-// $this->log_json( ** $response Body **, 'checkoutBody', $checkoutBody);
-// $this->log_var( ** $var **, $this->logFile);
-// $this->log_DBrecord( ** DBrecord **, $this->logFile);
-
-class OrderService {
-
+class OrderService
+{
     public $logFile = 'public/logs/message.txt';
     use SmakeApi;
-    use DebugLog;
 
-    public function getNewOrders() {
+    public function getNewOrders()
+    {
         return Order::where('orderStatus', 'new')->pluck('id');
     }
 
-    public function dispatchOrder($id) {
+    public function dispatchOrder($id)
+    {
         return 'orderstatus';
     }
 
-    public function orderCustomVariant($orderId) {
+    public function orderCustomVariant($orderId)
+    {
         $this->updateOrderStatus($orderId);
         $orderBody = $this->buildOrderObject($orderId);
-        // $this->log_json('orderBody', 'buildOrderObject', $orderBody);
-
         $path = env('CHECKOUT_PATH','');
         $checkoutResponse = $this->postSmakeData($orderBody, $path); // if address is not complete -> statusCode 422 will be returned by Smake
-        $this->log_responseBody( 'postSmakeData', 'checkoutBody', $checkoutResponse);
-        return 0;
-        if ($checkoutResponse->getStatusCode() == 201) {
-            if ($this->IsOrderAccepted()) {
-                if($this->isValidShippingHandle()) {
-                    $shippingLine = $this->buildAndSubmitShippingLine();
-                    if($shippingLine != null) {
-                        $completedCheckout = $this->finalyzeCheckout($shippingLine);
-                        if($completedCheckout != null) {
-                            $this->updateOrder($completedCheckout);
-                            return 'success';
-                        };
-                    }
-                }
-            }
+
+        if($checkoutResponse->getStatusCode() != 201) {  // 201 created
+            return $checkoutResponse->getStatusCode();
         }
-        return 'error';
+
+        $thisOrder = json_decode($checkoutResponse->getBody());
+        $orderIsAccepted = $this->IsOrderAccepted($thisOrder->id);
+
+        if ($orderIsAccepted->getStatusCode() != 200) {
+            return $orderIsAccepted->getStatusCode();
+        }
+
+        $shippingHandle = $this->isValidShippingHandle($thisOrder->id);
+        $shippingLine = $this->buildAndSubmitShippingLine($thisOrder->id, $shippingHandle);
+
+        if($shippingLine->getStatusCode() != 200) {
+            return $shippingLine->getStatusCode();
+        }
+
+        $completedCheckout = $this->finalyzeCheckout($shippingLine);
+
+        if($completedCheckout->getStatusCode() != 200) {
+            return $completedCheckout->getStatusCode();
+        }
+
+        $data = json_decode($completeCheckout->getBody());
+
+        $orderData = [];
+        $orderData['smakeOrderId'] = $data->id;
+        $orderData['orderStatus'] = $data->state;
+        $orderData['shippingRate'] = $data->shipping_line->price;
+        $orderData['shippingMethod'] = $data->title;
+        $orderData['orderAmount'] = $data->subtotal;
+        $orderData['totalTax'] = $data->total_tax;
+        $this->updateOrder($orderId, $orderData);
+
+        return $completedCheckout->getStatusCode();
     }
 
-    public function updateOrderStatus($id) {
+    public function updateOrderStatus($id)
+    {
         $order = Order::find($id);
         $order->orderStatus = 'Initialized';
         $order->save();
@@ -62,10 +77,11 @@ class OrderService {
         return;
     }
 
-    public function buildOrderObject($orderId) {
+    public function buildOrderObject($orderId)
+    {
         $customer = Customer::find(Order::find($orderId)->customerId);
         $deliveryAddress = $customer->hasDeliveryAddress != 0 ? PostAddress::where('customerId', $customer->id)->first() : $customer;
-        $lnPrefix = $customer->lnPrefix == "" ? "" : ', ' . $customer->lnPrefix;
+        $lnPrefix = $deliveryAddress->lnPrefix == "" ? "" : ', ' . $deliveryAddress->lnPrefix;
 
         $app = app();
         $shippingAddress = $app->make('stdClass');
@@ -93,7 +109,8 @@ class OrderService {
         $orderedItems = OrderItem::where('orderId', $orderId)->get();
         $items = array();
 
-        foreach($orderedItems as $item) {
+        foreach($orderedItems as $item)
+        {
             $smakeVariantId = CustomVariant::where('id', $item->variantId)->value('smakeVariantId');
             $itemObject = $app->make('stdClass');
             $itemObject->variant_id = $smakeVariantId;
@@ -110,87 +127,91 @@ class OrderService {
         return json_encode((array)$checkout);
     }
 
-    public function updateOrder($completedCheckout) {
-        $thisOrder = json_decode($completedCheckout->getBody());
-        $order = Order::find($variantId);
+    public function updateOrder($orderId, $orderData)
+    {
+        $update = Order::find($orderId);
+        $update->smakeOrderId = $orderData['smakeOrderId'];
+        $update->orderStatus = $orderData['orderStatus'];
+        $update->shippingMethod = $orderData['shippingMethod'];
+        $update->shippingRate = $orderData['shippingRate'];
+        $update->orderAmount = $orderData['orderAmount'];
+        $update->totalTax = $orderData['totalTax'];
+        $update->save();
 
-        $order->smakeOrderId = $thisOrder->id;
-        $order->orderStatus = $thisOrder->state;
-        $order->shippingRate = $shippingLine->shipping_line->price;
-        $order->orderAmount = $shippingLine->subtotal;
-        $order->totalTax = $shippingLine->total_tax;
-        $order->save();
         return;
     }
 
-    public function IsOrderAccepted() {
-        $url = 'checkouts/'.$thisOrder->id.'/shipping-rates';
+    public function IsOrderAccepted($id)
+    {
+        $url = 'checkouts/'.$id.'/shipping-rates';
         $response = $this->getSmakeData($url);
 
-        if ($response->getStatusCode() != 202 || $response->getStatusCode() != 200) {    // reasonPhrase = "Accepted"
-            return false;
+        if ($response->getStatusCode() != 202 && $response->getStatusCode() != 200) {    // reasonPhrase = "Accepted"
+            return $response;
         }
 
         $pollUrl = $response->getHeaders()['Location'][0];  // retrieve poll url
 
-        for($i = 0; $i < 100; $i++) {
+        for($i = 0; $i < 100; $i++)
+        {
             usleep(100000);
             $pollResult = $this->Poll($pollUrl);
+
             if($pollResult->getStatusCode() === 200) {
-                return true;
+                return $pollResult;
             }
         }
 
-        return false;
+        return $pollResult;
     }
 
-    public function isValidShippingHandle() {
-        $url = 'checkouts/'.$thisOrder->id.'shipping-rates';
+    public function isValidShippingHandle($id)
+    {
+        $url = 'checkouts/'.$id.'/shipping-rates';
         $response = $this->getSmakeData($url);
         $shippingOptions = json_decode($response->getBody())->data;
         $shippingHandles = [];
 
-        foreach($options as $option) {  // build array of available shipping 'handle' options
+        foreach($shippingOptions as $option)    // build array of available shipping 'handle' options
+        {
             array_push($shippingHandles, $option->handle);
         }
 
-        $defaultHandle = env('SHIPPING_HANDLE', '');
-
-        if (!in_array($defaultHandle, $shippingHandles)) {
-            return false;
-        }
-
-        return true;
+        return $shippingHandles[0];
     }
 
-    public function buildAndSubmitShippingLine() {
+    public function buildAndSubmitShippingLine($id, $shippingLine)
+    {
         $app = app();
         $shippingHandle = $app->make('stdClass');
-        $shippingHandle->handle = env('SHIPPING_HANDLE', '');
+        $shippingHandle->handle = $shippingLine;
         $shippingLine = $app->make('stdClass');
         $shippingLine->shipping = $shippingHandle;
-
-        $shippingResponse = $this->postSmakeData(json_encode($shippingLine), 'checkouts/'.$thisOrder);
+        $shippingResponse = $this->putSmakeData(json_encode($shippingLine), 'checkouts/'.$id);
 
         if ($shippingResponse->getStatusCode() != 200) {
             // \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de order naar Smake, neem contact op met de systeembeheerder');
-            return null;
+            return $shippingResponse;
         }
 
         return $shippingResponse;
     }
 
-    public function finalyzeCheckout($shippingLine) {
+    public function finalyzeCheckout($shippingLine)
+    {
+        $shippingData = json_decode($shippingLine->getBody());
+        $app = app();
         $payment = $app->make('stdClass');
         $payment->handle = "invoice";
-        $payment->amount = $shippingLine->total;
+        $payment->amount = $shippingData->total;
         $completeCheckout = $app->make('stdClass');
         $completeCheckout->payment = $payment;
-// dd($completeCheckout);
-        // $checkOutResponse= $this->postSmakeData(json_encode($completeCheckout), 'checkouts/'.$thisOrder.'/complete');
+        $this->log_var('amount: '.$payment->amount, $this->logFile);
+
+        $checkOutResponse= $this->putSmakeData(json_encode($completeCheckout), 'checkouts/'.$shippingData->id.'/complete');
 
         if ($checkOutResponse->getStatusCode() != 200) {
-            return null;
+            return $checkOutResponse;
         }
 
         return $checkOutResponse;
