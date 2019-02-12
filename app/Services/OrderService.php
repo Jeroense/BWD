@@ -208,7 +208,7 @@ class OrderService
         $completeCheckout->payment = $payment;
         $this->log_var('amount: '.$payment->amount, $this->logFile);
 
-        $checkOutResponse= $this->putSmakeData(json_encode($completeCheckout), 'checkouts/'.$shippingData->id.'/complete');
+        // $checkOutResponse= $this->putSmakeData(json_encode($completeCheckout), 'checkouts/'.$shippingData->id.'/complete');
 
         if ($checkOutResponse->getStatusCode() != 200) {
             return $checkOutResponse;
