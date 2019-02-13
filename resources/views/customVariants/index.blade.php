@@ -7,7 +7,7 @@
                 <div class="notification is-danger">{{ Session::get('flash_message') }}</div>
             @endif
             <div>
-                <a href="{{ route('orders.store') }}" id="orderRoute" returnUrl="{{ route('customvariants.index', '') }}"></a>
+                <a href="{{ route('orders.store') }}" id="orderRoute" returnUrl="{{ route('variants.index', '') }}"></a>
             </div>
             <table class="table">
                 <tbody>

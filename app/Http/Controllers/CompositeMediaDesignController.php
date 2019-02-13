@@ -20,8 +20,6 @@ class CompositeMediaDesignController extends Controller
 
     public function store(Request $request)
     {
-        // ini_set("log_errors", 1);
-        // ini_set("error_log", "logs/errors.log");
         try {
             $compositeMediaDesign = new CompositeMediaDesign();
 
@@ -30,7 +28,6 @@ class CompositeMediaDesignController extends Controller
             $image = str_replace(' ', '+', $image);
             $imageName = time().md5($request->get('imgName')).'.'.'png';
             $imagePath = public_path('customVariants/');
-            // error_log($imagePath);
             File::put($imagePath . $imageName, base64_decode($image));
 
             $compositeMediaDesign->designName = $request->get('imgName');

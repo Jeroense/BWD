@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class TshirtMetric extends Model
 {
-    protected $table = 'tshirtMetrics';
+    protected $table = 'tshirtmetrics';
     public $timestamps = false;
 }

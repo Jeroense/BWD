@@ -6,14 +6,11 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use App\Variant;
-use App\Http\Traits\DebugLog;
 
-trait SmakeApi {
-
-    public $logFile = 'public/logs/message.txt';
-    use DebugLog;
-
-    public function getSmakeData($url) {
+trait SmakeApi
+{
+    public function getSmakeData($url)
+    {
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
             'Content-Type'    => 'application/json',
@@ -30,10 +27,12 @@ trait SmakeApi {
         } catch (\Exception $e) {
             return $e->getResponse();
         }
+
         return $response;
     }
 
-    public function postSmakeData($body, $destinationUrl) {
+    public function postSmakeData($body, $destinationUrl)
+    {
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
             'Content-Type'    => 'application/json',
@@ -50,10 +49,12 @@ trait SmakeApi {
         } catch (\Exception $e) {
             return $e->getResponse();
         }
+
         return $response;
     }
 
-    public function putSmakeData($body, $destinationUrl) {
+    public function putSmakeData($body, $destinationUrl)
+    {
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
             'Content-Type'    => 'application/json',
@@ -70,10 +71,12 @@ trait SmakeApi {
         } catch (\Exception $e) {
             return $e->getResponse();
         }
+
         return $response;
     }
 
-    public function Poll($url) {
+    public function Poll($url)
+    {
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
             'Content-Type'    => 'application/json',
@@ -90,10 +93,12 @@ trait SmakeApi {
         } catch (\Exception $e) {
             return $e->getResponse();
         }
+
         return $pollResult;
     }
 
-      public function UploadMedia($designPath, $fileName, $contentLength, $destinationUrl = 'media') {
+    public function UploadMedia($designPath, $fileName, $contentLength, $destinationUrl = 'media')
+    {
         $body = fopen($designPath . $fileName, 'r');
         $headers = [
             'Authorization'   => 'Bearer ' . env('SMAKE_KEY',''),
@@ -111,10 +116,12 @@ trait SmakeApi {
         } catch (\Exception $e) {
             return $e->getResponse();
         }
+
         return $response;
     }
 
-    public function downloadMedia($id, $fileName, $path) {
+    public function downloadMedia($id, $fileName, $path)
+    {
         $resource = fopen($path . '/' . $fileName . '.png', 'w');
         $headers = [
             'Accept' => 'image/png',
@@ -130,6 +137,7 @@ trait SmakeApi {
 
         $tshirtImage = $client->get((string)$id, $options);
         fclose($resource);
+
         return $fileName . '.png';
     }
 }

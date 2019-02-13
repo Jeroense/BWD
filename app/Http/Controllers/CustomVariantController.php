@@ -18,10 +18,8 @@ class CustomVariantController extends Controller
 {
     use SmakeApi;
 
-    public function index() {
-        if (env('APP_DEBUG') == true) {
-            $this->log_item('*** key', 'debug = false');
-        }
+    public function index()
+    {
         $customVariants = CustomVariant::All();
         $customers = Customer::select('lastName', 'firstName', 'lnPrefix', 'id')->orderBy('lastName')->orderBy('firstName')->get();
 
@@ -35,7 +33,8 @@ class CustomVariantController extends Controller
         return view('customVariants.index', compact('customVariants', 'persons'));
     }
 
-    public function createVariant(Request $request) {
+    public function createVariant(Request $request)
+    {
         $compositeMediaDesign = CompositeMediaDesign::find($request->compositeMediaId);
         if($compositeMediaDesign->smakeId === null){
             $uploadResult = $this->uploadCompositeMediaDesign($compositeMediaDesign);
@@ -86,7 +85,8 @@ class CustomVariantController extends Controller
         return redirect()->route('customvariants.index');
     }
 
-    public function buildVariantObject($newCustomVariant){
+    public function buildVariantObject($newCustomVariant)
+    {
         $app = app();
         $dimensions = $app->make('stdClass');
         $dimensions->width = $newCustomVariant->width_mm;
@@ -109,7 +109,8 @@ class CustomVariantController extends Controller
         return json_encode((array)$newVariant);
     }
 
-    public function UploadCustomVariant($newCustomVariant, $uploadCustomVariantBody){
+    public function UploadCustomVariant($newCustomVariant, $uploadCustomVariantBody)
+    {
         $parentVariant = $newCustomVariant->parentVariantId;
         $smakeVariantId = Variant::find($parentVariant);
         $url = 'variants/'.$smakeVariantId->variantId.'/design';
@@ -137,7 +138,8 @@ class CustomVariantController extends Controller
         return $smakeNewCustomVariant;
     }
 
-    public function uploadCompositeMediaDesign($compositeMediaDesign) {
+    public function uploadCompositeMediaDesign($compositeMediaDesign)
+    {
         $status='';
         $path = env('COMPOSITE_MEDIA_PATH','');
         $fileSize = filesize($path.$compositeMediaDesign->fileName);
