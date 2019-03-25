@@ -14,9 +14,13 @@ class Variant extends Model
         return $this->hasMany('App\Attribute', 'variantId');
     }
 
-    public function views() {
-        return $this->hasMany('App\View');
+    public function customvariants() {
+        return $this->hasMany('App\CustomVariant', 'variantId');
     }
+
+    // public function views() {
+    //     return $this->hasMany('App\View');
+    // }
 
     protected $fillable = [
         'variantId',

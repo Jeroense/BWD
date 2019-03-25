@@ -1,0 +1,10 @@
+#!/bin/bash
+lftp - u PLAZA_207759,Rrtn7gii ftps.bol.com << EOF
+
+PLAZA_207759/SQUARE/feed      // hier plaats je het feedbestand met productinformatie
+PLAZA_207759/SQUARE/history   // hier vind je de verwerkte feedbestanden
+PLAZA_207759/images           // hier plaats je de hoofdafbeeldingen
+PLAZA_207759/images/Stills    // hier plaats je de additionele afbeeldingen
+
+EAN	Internal Reference	Name	Product Classification	Cover Image URL	Still Image URL	Material Description	Gender	Seasonal Year	Target Audience	Size Clothing	Colour	Description	Brand	Material	Sleeve Length	Kind of Shirt	Seasonal Collection	Washing Instructions
+7435156897878	311.60	T-shirt Basic stone blue Maat 4XL	Shirt	7435156897878.png	7435156897878_1.png	Katoen85%;viscose15%	Unisex	Never out of stock	Volwassenen	4XL	Blauw	Basic T-shirt Stone Blue	Merkloos	Katoen;Viscose	Korte mouw	T-shirt	Never out of stock	40 °C, normaal programma

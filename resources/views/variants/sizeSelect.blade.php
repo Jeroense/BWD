@@ -18,7 +18,7 @@
                                         <input name="numberOfSizes"
                                                value="{{$loop->iteration}}"
                                                type="hidden">
-                                        <input name="parentVariantId{{$loop->iteration}}"
+                                        <input name="variantId{{$loop->iteration}}"
                                                value="{{ $key }}"
                                                type="hidden">
                                         <input name="Size{{$loop->iteration}}"
@@ -59,13 +59,4 @@
 @endsection
 @section('scripts')
 <script src="{{ asset('js/sizeSelect.js') }}"></script>
-{{-- <script>
-    var app = new Vue({
-        el: '#app',
-        data: {
-            // checkboxCustom: ''
-        }
-    });
-
-</script> --}}
 @endsection

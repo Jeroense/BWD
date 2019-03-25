@@ -30,11 +30,18 @@ class CustomVariantController extends Controller
                 : ['fullName' => $customer->lastName . ', ' . $customer->firstName . ' ' . $customer->lnPrefix, 'id' => $customer->id]);
         }
 
-        return view('customVariants.index', compact('customVariants', 'persons'));
+        return view('customVariants.order', compact('customVariants', 'persons'));
+    }
+
+    public function publish()
+    {
+        $customVariants = CustomVariant::All();
+        return view('customVariants.publish', compact ('customVariants'));
     }
 
     public function createVariant(Request $request)
     {
+        // dd($request);
         $compositeMediaDesign = CompositeMediaDesign::find($request->compositeMediaId);
         if($compositeMediaDesign->smakeId === null){
             $uploadResult = $this->uploadCompositeMediaDesign($compositeMediaDesign);
@@ -46,13 +53,14 @@ class CustomVariantController extends Controller
         for ($i = 1; $i <= $request->numberOfSizes; $i++) {
             $currentEan = 'ean'.$i;
             $currentSize = 'Size'.$i;
-            $currentParentVariantId = 'parentVariantId'.$i;
+            $currentVariantId = 'variantId'.$i;
             if($request->has($currentEan)){
                 $shirtLength = TshirtMetric::select('length_mm')->where('size', $request->$currentSize)->get()[0]->length_mm;
                 $pixelSize = $shirtLength / 1125;  //was 1325 at first test order
                 $newCustomVariant = new CustomVariant();
-                $newCustomVariant->parentVariantId = $request->$currentParentVariantId;
+                $newCustomVariant->variantId = $request->$currentVariantId;
                 $newCustomVariant->variantName = $compositeMediaDesign->designName;
+                $newCustomVariant->baseColor = $compositeMediaDesign->baseColor;
                 $newCustomVariant->ean = $request->$currentEan;
                 $newCustomVariant->size = $request->$currentSize;
                 $newCustomVariant->width_mm = round($compositeMediaDesign->width_px * $pixelSize, 2);
@@ -111,7 +119,7 @@ class CustomVariantController extends Controller
 
     public function UploadCustomVariant($newCustomVariant, $uploadCustomVariantBody)
     {
-        $parentVariant = $newCustomVariant->parentVariantId;
+        $parentVariant = $newCustomVariant->variantId;
         $smakeVariantId = Variant::find($parentVariant);
         $url = 'variants/'.$smakeVariantId->variantId.'/design';
         $response = $this->postSmakeData($uploadCustomVariantBody, $url);

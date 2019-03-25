@@ -2,14 +2,17 @@
 namespace App\Http\Traits;
 trait DebugLog
 {
+    /*
+     * Usage: $this->log_responseBody('text', $response, $file = 'public/logs/message.txt');
+     */
     public function log_responseBody($text, $response, $file = 'logs/message.txt')
     {
         $data = json_decode($response->getBody());
-        $formattedData = json_encode($file, JSON_PRETTY_PRINT);
+        $formattedData = json_encode($data, JSON_PRETTY_PRINT);
         $logFile = fopen('logs/message.txt', 'a');
         fwrite($logFile, '***** '.date(DATE_RFC2822).PHP_EOL);
         fwrite($logFile, '*** called function: '. $text.PHP_EOL);
-        fwrite($logFile, '*** command: '. $command.PHP_EOL.PHP_EOL);
+        // fwrite($logFile, '*** command: '. $command.PHP_EOL.PHP_EOL);
         fwrite($logFile, $formattedData.PHP_EOL.PHP_EOL);
         fclose($logFile);
 
@@ -30,6 +33,9 @@ trait DebugLog
         return null;
     }
 
+    /*
+     * Usage: $this->log_DBrecord($record, $file = 'public/logs/message.txt');
+     */
     public function log_DBrecord($record, $file = 'logs/message.txt')
     {
         $reflector = new \ReflectionClass($record);
@@ -59,6 +65,10 @@ trait DebugLog
         return null;
     }
 
+
+     /*
+     * Usage: $this->log_var($var, $file = 'public/logs/message.txt');
+     */
     public function log_var($var, $file = 'logs/message.txt')
     {
         $logFile = fopen($file, 'a');
@@ -69,12 +79,15 @@ trait DebugLog
         return null;
     }
 
-    public function log_array($items, $file = 'logs/message.txt')
+    /*
+     * Usage: $this->log_array($itemsArray, $file = 'public/logs/message.txt');
+     */
+    public function log_array($itemsArray, $file = 'logs/message.txt')
     {
         $logFile = fopen($file, 'a');
         fwrite($logFile, '***** '.date(DATE_RFC2822).PHP_EOL);
 
-        foreach($items as $item) {
+        foreach($itemsArray as $item) {
             fwrite($logFile, $item.PHP_EOL);
         }
 

@@ -15,7 +15,7 @@ class CreateCustomVariantsTable extends Migration
     {
         Schema::create('customVariants', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('parentVariantId')->unsigned()->nullable();
+            $table->integer('variantId')->unsigned()->nullable();
             $table->integer('smakeVariantId')->unsigned()->nullable();
             $table->string('variantName');
             $table->string('ean');
@@ -33,6 +33,12 @@ class CreateCustomVariantsTable extends Migration
             $table->double('height_mm',5,1);
             $table->string('isPublishedAtBol')->nullable(); // initiated, pending, published, Failure
             $table->timestamps();
+
+            $table->foreign('variantId')
+                    ->references('id')
+                    ->on('variants')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
         });
     }
 

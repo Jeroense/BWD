@@ -8,9 +8,14 @@ class CustomVariant extends Model
 {
     protected $table = 'customvariants';
 
+    public function variants() {
+        return $this->belongsTo('App\Variant');
+    }
+
     protected $fillable = [
         'ean',
         'size',
-        'color'
+        'color',
+        'isPublishedAtBol'
     ];
 }

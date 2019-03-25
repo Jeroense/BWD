@@ -10,15 +10,20 @@ Route::prefix('manage')->middleware('role:superadministrator|administrator')->gr
     Route::get('/dashboard', 'ManageController@dashboard')->name('manage.dashboard');
     Route::resource('/users', 'UserController');
     Route::resource('/system', 'SystemController');
+    Route::resource('/bwdBolMapping', 'BwdBolMappingController');
     Route::get('/backup', 'ManageController@backup')->name('manage.backup');
     Route::get('/restore', 'ManageController@restore')->name('manage.restore');
     Route::resource('/permissions', 'PermissionController', ['except' => 'destroy']);
     Route::resource('/roles', 'RoleController', ['except' => 'destroy']);
     Route::resource('/metrics', 'TshirtMetricController');
+    Route::get('/uploadLogo', 'SystemController@uploadLogo')->name('system.uploadLogo');
+    Route::post('/storeLogo', 'SystemController@storeLogo')->name('system.storeLogo');
 });
 
 Route::prefix('products')->middleware('role:superadministrator|administrator')->group(function() {
+    Route::resource('/productAttributes', 'ProductAttributeController',['except' => 'create']);
     Route::resource('/products', 'ProductController');
+    Route::get('/create/{id}', 'ProductAttributeController@create')->name('productAttributes.create');
     Route::get('/download', 'ProductController@download')->name('products.download');
     Route::get('/productDownload', 'ProductController@productDownload')->name('products.productDownload');
     Route::get('/dashboard', 'ProductController@dashboard')->name('products.dashboard');
@@ -26,6 +31,7 @@ Route::prefix('products')->middleware('role:superadministrator|administrator')->
 
 Route::prefix('customvariants')->middleware('role:superadministrator|administrator')->group(function() {
     Route::resource('/customvariants', 'CustomVariantController');
+    Route::get('/publish','CustomVariantController@publish')->name('customvariants.publish');
     Route::post('/orderVariant/{id}','CustomVariantController@orderVariant')->name('customvariants.orderVariant');
     Route::get('/orderVariant/{id}','CustomVariantController@orderVariant')->name('customvariants.orderVariant');
 });
@@ -64,4 +70,3 @@ Route::prefix('summaries')->middleware('role:superadministrator|administrator')-
 Route::prefix('customers')->middleware('role:superadministrator|administrator')->group(function() {
     Route::resource('/customers', 'CustomerController');
 });
-

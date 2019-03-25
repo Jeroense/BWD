@@ -1,5 +1,5 @@
 var values = [];
-var forms = document.getElementsByClassName('orderForm');
+var forms = document.getElementsByClassName('hiddenForm');
 var customer = document.querySelector('#customer');
 
 customer.addEventListener('mouseup', removeHidden);
@@ -7,7 +7,7 @@ customer.addEventListener('mouseup', removeHidden);
 function removeHidden() {
     if(customer.value != 'Selecteer Klant') {
         while (forms[0]) {
-            forms[0].classList.remove('orderForm')
+            forms[0].classList.remove('hiddenForm')
         }
     }
 }
@@ -100,6 +100,6 @@ function collectData() {
             orderLine.push({items: items});
         }
     }
-    
+
     return JSON.stringify(orderLine);
 }

@@ -28,6 +28,7 @@ class CreateSystemsTable extends Migration
             $table->string('systemKey');
             $table->text('apiKeyBol');
             $table->text('apiKeySmake');
+            $table->string('logo_id')->nullable();
             $table->timestamps();
         });
     }

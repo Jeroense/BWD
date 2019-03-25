@@ -27,7 +27,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call('App\Http\Controllers\RobotController@findAndDispatchOrders')->everyMinute();
+        $schedule->call('App\Http\Controllers\RobotController@publishProducts')->everyMinute();
+        // $schedule->call('App\Http\Controllers\RobotController@findAndDispatchOrders')->everyMinute();
+
+        // $schedule->call('App\Http\Controllers\RobotController@statusCheck')->everyMinute();
         // $schedule->call('App\Http\Controllers\RobotController@changeName')->everyMinute();
     }
 

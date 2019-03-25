@@ -19,6 +19,7 @@ class System extends Model
         'appSerNr',
         'systemKey',
         'apiKeyBol',
-        'apiKeySmake'
+        'apiKeySmake',
+        'logo_id'
     ];
 }

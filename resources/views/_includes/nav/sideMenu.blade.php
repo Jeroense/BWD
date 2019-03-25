@@ -21,12 +21,14 @@
                                    {{ Nav::isRoute('permissions.edit') }}
                                    {{ Nav::isRoute('permissions.show') }}"><a href="{{route('permissions.index')}}">Rechten</a>
                         </li>
+                        <li class="{{ Nav::isRoute('bwdBolMapping.index') }}"><a href="{{route('bwdBolMapping.index')}}">Content Mappings</a></li>
                         <li class="{{ Nav::isRoute('manage.backup') }}"><a href="{{route('manage.backup')}}">Backup</a></li>
                         <li class="{{ Nav::isRoute('manage.restore') }}"><a href="{{route('manage.restore')}}">Restore</a></li>
                         <li class="{{ Nav::isRoute('metrics.index') }}
                                    {{ Nav::isRoute('metrics.create') }}
                                    {{ Nav::isRoute('metrics.edit') }}
                                    {{ Nav::isRoute('metrics.destroy') }}"><a href="{{route('metrics.index')}}">T-shirt Afmetingen</a></li>
+                        <li class="{{ Nav::isRoute('system.uploadLogo') }}"><a href="{{route('system.uploadLogo')}}">Upload pakbon Logo</a></li>
                     </ul>
                 </li>
                 <li class="{{ Nav::isResource('customers') }}">
@@ -41,6 +43,7 @@
                     <ul>
                         <li class="{{ Nav::isRoute('products.productDownload') }}
                                    {{ Nav::isRoute('products.download') }}"><a href="{{route('products.productDownload')}}">Producten Downloaden</a></li>
+                        <li class="{{ Nav::isRoute('productAttributes.index') }}"><a href="{{route('productAttributes.index')}}">Product Attributen</a></li>
                     </ul>
                 </li>
 
@@ -62,7 +65,7 @@
                     <h3><span class="icon-color fas fa-file-invoice"></span>Bestellen en Publiceren</h3>
                     <ul>
                         <li class="{{ Nav::isRoute('customvariants.index') }}"><a href="{{route('customvariants.index')}}">Bestellen</a></li>
-                        <li class="{{ Nav::isRoute('customvariants.index') }}"><a href="{{route('customvariants.index')}}">Publiceren op Bol.com</a></li>
+                        <li class="{{ Nav::isRoute('customvariants.publish') }}"><a href="{{route('customvariants.publish')}}">Publiceren op Bol.com</a></li>
                     </ul>
                 </li>
                 <li class="{{ Nav::isResource('orders') }}">

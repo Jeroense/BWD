@@ -1,13 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Traits\DebugLog;
+use App\Http\Traits\SmakeApi;
+use Illuminate\Http\Request;
 use App\System;
 use Session;
-use Illuminate\Http\Request;
+use App\Design;
 
 class SystemController extends Controller
 {
+    use DebugLog;
+    use SmakeApi;
+
     /**
      * Display a listing of the resource.
      *
@@ -18,10 +23,55 @@ class SystemController extends Controller
         $sysinfo = System::first();
         // dd($sysinfo);
         if(!$sysinfo == null){
-            return view('manage.system.index', compact('sysinfo', 'pageTitle'));
+            return view('manage.system.index', compact('sysinfo'));
         }
         $sysInfo = new System();
         return view('manage.system.create', compact('sysInfo'));
+    }
+
+    public function uploadLogo()
+    {
+        return view('manage.system.uploadLogo');
+    }
+
+    public function storeLogo(Request $request)
+    {
+        // dd($request);
+        $image = $request->file('file');
+        $logo = new Design();
+        $logo->originalName = $image->getClientOriginalName();
+        $logo->mimeType = $image->getClientMimeType();
+        $logo->fileSize = $image->getClientSize();
+        $logo->fileName = time().md5($logo->originalName).'.'.$image->getClientOriginalExtension();
+        $logo->path = public_path('systemImages');
+        $image->move($logo->path, $logo->fileName);
+
+        $logoPath = env('IMAGE_PATH', '');
+        // dd('dump');
+        $response = $this->UploadMedia($logoPath, $logo->fileName, $logo->fileSize, 'media');
+
+        $this->log_responseBody('text', $response, $file = 'public/logs/message.txt');
+        $this->log_var('response status = ' . $response->getStatusCode(), $file = 'logs/message.txt');
+
+        if ($response->getStatusCode() === 201) {
+
+            $logoResponse = json_decode($response->getBody());
+            // $systemData = System::firstOrCreate(['id' => '1']);
+            $this->log_var('logo_id = ' . $logoResponse->id, $file = 'logs/message.txt');
+            $systemData = System::find(1);
+            $systemData->update(['logo_id' => $logoResponse->id]);
+            // $systemData->update(['organizationName' => 'Shifa']);
+            $this->log_var('name = ' . $systemData->organizationName, $file = 'logs/message.txt');
+        } else {
+            unset($response);
+            gc_collect_cycles();
+            if (file_exists(public_path('systemImages').'\\'.$logo->fileName)) {
+                unlink(public_path('systemImages').'\\'.$logo->fileName);
+            }
+            return response()->json('Er is iets fout gegaan met het uploaden van designs', 400);
+        }
+
+        return response()->json('Pakbon logo succesvol opgeslagen', 201);
     }
 
     /**

@@ -7,51 +7,65 @@ use App\Services\OrderService;
 use App\Http\Traits\DebugLog;
 use app\Test;
 
-
 class RobotController extends Controller
 {
     public $logFile = 'public/logs/message.txt';
     use DebugLog;
 
     protected $autoOrder;
-    public function __construct(OrderService $service) {
+    public function __construct(OrderService $service)
+    {
         $this->autoOrder = $service;
     }
 
-    public function manageBolOrders() {
-        $bolOrders[] = $this->getBolOrders();
+    public function publishProducts()
+    {
+        $newProducts = $this->autoOrder->getProductsToBePublished();
 
+        if(count($newProducts) < 1){
+            return;
+        }
+
+        $productFeed = $this->autoOrder->buildProductFeed($newProducts);
+        return $this->autoOrder->publishProducts($productFeed);
     }
 
-    public function getBolOrders() {
-       // get BolApi list of new orders
-       // return array
+    public function processBolOrders()
+    {
+        $bolOrders = $this->getBolOrders();
+
+        if(count($bolOrders) < 1) {
+            return 0;
+        }
+
+        $status = $this->persistBolOrders($bolOrders);
+        return $status;
     }
 
-    public function manageSmakeOrders() {
-        //
-    }
-
-    public function findAndDispatchOrders() {
+    public function findAndDispatchOrders()
+    {
         $newOrders = $this->autoOrder->getNewOrders();
+
         if($newOrders != null) {
             foreach($newOrders as $order) {
                 $result = $this->autoOrder->orderCustomVariant($order);
+
+                // ???? $this->updateBolOrderStatus($updates);
+
                 //handle errors by sending email and log message in errorlog
                 //return null
             }
         }
+
         return null;
     }
 
-    public function changeInt() {
-        \DB::table('tests')->where('id', 1)->update(['Integer' => 3]);
-        return null;
+    public function statusCheck()
+    {
+        $updates = $this->autoOrder->orderProgress();
+        $status = $this->updateBolOrderStatus($updates);
+        return $status;
     }
 
-    public function changeName() {
-        \DB::table('tests')->where('id', 1)->update(['String' => str_random(10)]);
-        return null;
-    }
 }
 

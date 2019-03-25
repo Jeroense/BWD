@@ -1,0 +1,2 @@
+Internal Reference	EAN	Product Classification	Clothing Article Number	Material Description	Gender	Seasonal Year	Cover Image Url	Target Audience	Size Clothing	Description	Brand	Material	Sleeve length	Kind of Shirt	Seasonal Collection	Name	Colour	Washing Instructions	
+658315	3333333333333	Shirt	2	100% Katoen	Unisex	Never out of stock	15497893222cc495e53d001c1be2e0d53ea24720ec.png	Volwassenen	M	Het mooiste T-shirt ooit	BWD	Katoen	Korte mouw	T-shirt	Never out of stock	Blauwe Kampioen	Blue	40 °C, normaal programma	

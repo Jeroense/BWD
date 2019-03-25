@@ -7,7 +7,6 @@ document
 document
     .querySelector("#hasDeliveryAddress")
     .addEventListener("click", selectPristine, false);
-    // .addEventListener("click", validate, false);
 
 var pristine = document.querySelectorAll(".address");
 
