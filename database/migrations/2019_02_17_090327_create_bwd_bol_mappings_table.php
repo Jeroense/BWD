@@ -20,13 +20,13 @@ class CreateBwdBolMappingsTable extends Migration
             $table->string('id');
             $table->string('filename');
             $table->string('size');
-            $table->string('variantName');
+            $table->string('variantName');   // bol title
             $table->string('productgroup');
             $table->string('materialdescription');
             $table->string('gender');
             $table->string('seasonalyear');
             $table->string('targetaudience');
-            $table->string('salespitch');
+            $table->string('salespitch');   // bol description?
             $table->string('brand');
             $table->string('material');
             $table->string('sleevelength');

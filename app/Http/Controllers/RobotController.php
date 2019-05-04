@@ -7,6 +7,7 @@ use App\Services\OrderService;
 use App\Http\Traits\DebugLog;
 use app\Test;
 
+// scheduler trigger de robotcontroller, die triggert de orderservice, mijn code moet in de orderservice
 class RobotController extends Controller
 {
     public $logFile = 'public/logs/message.txt';
@@ -32,14 +33,17 @@ class RobotController extends Controller
 
     public function processBolOrders()
     {
-        $bolOrders = $this->getBolOrders();
 
-        if(count($bolOrders) < 1) {
-            return 0;
-        }
+        // $bolOrders = $this->autoOrder->getOrdersFromBol();
+        $this->autoOrder->getOrdersFromBol();
 
-        $status = $this->persistBolOrders($bolOrders);
-        return $status;
+        // if(count($bolOrders) < 1) {
+        //     return 0;
+        // }
+
+        // $status = $this->persistBolOrders($bolOrders);
+        // return $status;
+        return;
     }
 
     public function findAndDispatchOrders()

@@ -70,3 +70,64 @@ Route::prefix('summaries')->middleware('role:superadministrator|administrator')-
 Route::prefix('customers')->middleware('role:superadministrator|administrator')->group(function() {
     Route::resource('/customers', 'CustomerController');
 });
+
+Route::prefix('boloffers')->middleware('role:superadministrator|administrator')->group(function() {
+    Route::get('/boloffers', 'BolProduktieOfferController@index')->name('boloffers.index');
+});
+
+
+// app()->singleton('boltokendata', function(){     // kun je eventueel hier zetten, conventie is in AppSericeProvider.php..
+                                                    // singletons persisteren geen data tussen requests! elke req wordt app opnieuw doorlopen.
+//     return new \App\boltokendata();
+// });
+
+Route::prefix('boltestserver')->middleware('role:superadministrator|administrator')->group(function() {
+    Route::get('/boloauth', 'TestController@getBolOauth');
+    Route::get('/jsonoffer-en-session-data', 'TestController@test_JSON_and_Session_Data');
+
+    Route::get('/bolofferupload-v3', 'TestController@uploadSingleOfferToBolV3_DEMO');
+    // Route::get('/bolmultipleofferupload-v3', 'TestController@uploadMultipleOffersToBolV3_DEMO');
+    Route::get('/getbolorders-v3', 'TestController@getBolOrdersV3');
+
+    Route::get('/getbolorders-v3-async', 'RefactoredTestBolOrdersAsyncController@getOrdersFromBol');  // via job/async
+
+    Route::get('/getbolorders-v3-via-reftestorderscontroller', 'RefactoredTestBolOrdersController@getOrdersFromBol');
+
+    Route::get('/getbolorders-v3-by-id', 'TestController@getBolOrderByIdV3');
+    Route::get('/prep-offerexport-demo', 'TestController@prepare_CSV_Offer_Export_DEMO');
+
+    Route::get('/process-status/{id}', 'TestController@getProcessStatusById' );
+    Route::get('/process-statusses', 'TestController@getProcessStatusses' );
+    Route::get('/test-static-storage-class', 'TestController@test_Static_Storage'); // werkt niet, onthoudt static var niet bij andere route
+    Route::get('/test-boltoken-singleton', 'TestController@singletonWerkingVoorbeeldBoltokenData');
+    Route::get('/test-jobqeue-redis-throttling', 'TestController@testJobqeueRedisThrottling');
+});
+
+
+Route::get('/herstelcustomvarianten', 'RefactoredTestBolOrdersController@herstel_eerder_Aangemaakte_Smake_Customvarianten_Designs_en_Composite_media_Designs');
+Route::get('/maakfakeboldemocustomvarianten', 'RefactoredTestBolOrdersController@maak_Fake_Custom_Varianten_aan_voor_Test_met_Bol_Retailer_DEMO_SERVER');
+
+Route::prefix('bolprodserver')->middleware('role:superadministrator|administrator')->group(function() {
+
+    Route::get('/prep-offerexport-prod', 'TestController@prepare_CSV_Offer_Export_PROD');
+
+    Route::get('/generate-offer-export-file', 'BolProduktieOfferController@prepare_CSV_Offer_Export_PRODUCTION')->name('generate.offers.csv');
+
+    Route::get('/check-offer-export-file-ready', 'BolProduktieOfferController@check_if_CSV_Offer_Export_PRODUCTION_RDY')->name('boloffer.is.csv.ready');
+
+
+
+    // Route::get('/process-status-by-entity-id-and-event-type', 'TestController@getProcStatus_EntId_EventType_PRODSERVER' );
+
+    Route::get('/process-status-by-process-status-id/{procstatusid}', 'TestController@getProcStatus_ByProcessStatusId_PRODSERVER' );
+
+    Route::get('/get-offerexport-csv-prod/{offerexportid}', 'TestController@get_CSV_Offer_Export_PROD');
+
+    Route::get('/dump-and-db-store-dowloaded-csv-file-prod', 'TestController@dump_and_put_ProdCSVFile_in_BOL_produktie_offers_table');
+
+    Route::get('/bolofferupload-v3', 'TestController@uploadSingleOfferToBolV3_PROD');
+
+    Route::get('/getboloffers', 'TestController@getBolOffers');
+
+    Route::get('/getbolorders-v3', 'TestController@getBolOrdersV3_PROD');
+});

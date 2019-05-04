@@ -15,22 +15,30 @@ class CreateCustomVariantsTable extends Migration
     {
         Schema::create('customVariants', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('variantId')->unsigned()->nullable();
-            $table->integer('smakeVariantId')->unsigned()->nullable();
-            $table->string('variantName');
+            $table->integer('variantId')->unsigned()->nullable();   //record id van variants table
+            $table->integer('smakeVariantId')->unsigned()->nullable(); // vanuit smake verkregen
+            $table->string('variantName');                          // ook title voor bol
             $table->string('ean');
             $table->string('size');
             $table->double('price',8,2)->nullable();
             $table->double('tax',8,2)->nullable();
             $table->double('taxRate',8,2)->nullable();
             $table->double('total',8,2)->nullable();
-            $table->string('filename');
+            $table->string('fileName');
+            $table->string('baseColor');
             $table->integer('compositeMediaId')->unsigned();
             $table->integer('smakeCompositeMediaId')->unsigned()->nullable();
             $table->integer('productionMediaId')->unsigned();
             $table->integer('smakeProductionMediaId')->unsigned()->nullable();
+            // nog toevoegen: isInBolCatalog  (voor sftp produktinfo)
+            $table->boolean('isInBolCatalog');  // per 19-4 toegevoegd
             $table->double('width_mm',5,1);
             $table->double('height_mm',5,1);
+
+            $table->double('salePrice',8,2);                //  7-3
+            $table->string('boldeliverycode');              // table erbij levertijden/deliverycodes selectbox
+            $table->string('boldescription')->nullable();               // onduidelijk of required, alleen gebruikt als condition != 'new'
+
             $table->string('isPublishedAtBol')->nullable(); // initiated, pending, published, Failure
             $table->timestamps();
 

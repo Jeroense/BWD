@@ -1,0 +1,223 @@
+﻿"id","variantId","key","value"
+1,1,color,Sand
+2,1,size,S
+3,2,color,Brown
+4,2,size,S
+5,3,color,Bottle Green
+6,3,size,S
+7,4,color,Red
+8,4,size,S
+9,5,color,Royal Blue
+10,5,size,S
+11,6,color,Navy
+12,6,size,S
+13,7,color,Dark Grey
+14,7,size,S
+15,8,color,White
+16,8,size,S
+17,9,color,Black
+18,9,size,S
+19,10,color,Sport Grey
+20,10,size,S
+21,11,color,Swimming Pool
+22,11,size,S
+23,12,color,Sky Blue
+24,12,size,S
+25,13,color,Stone Blue
+26,13,size,S
+27,14,color,Orange
+28,14,size,S
+29,15,color,Burgundy
+30,15,size,S
+31,16,color,Kelly Green
+32,16,size,S
+33,17,color,Gold
+34,17,size,S
+35,18,color,Sand
+36,18,size,L
+37,19,color,Brown
+38,19,size,L
+39,20,color,Bottle Green
+40,20,size,L
+41,21,color,Red
+42,21,size,L
+43,22,color,Royal Blue
+44,22,size,L
+45,23,color,Navy
+46,23,size,L
+47,24,color,Dark Grey
+48,24,size,L
+49,25,color,White
+50,25,size,L
+51,26,color,Black
+52,26,size,L
+53,27,color,Sport Grey
+54,27,size,L
+55,28,color,Swimming Pool
+56,28,size,L
+57,29,color,Sky Blue
+58,29,size,L
+59,30,color,Stone Blue
+60,30,size,L
+61,31,color,Orange
+62,31,size,L
+63,32,color,Navy
+64,32,size,"5XL"
+65,33,color,Burgundy
+66,33,size,L
+67,34,color,Kelly Green
+68,34,size,L
+69,35,color,White
+70,35,size,"5XL"
+71,36,color,Black
+72,36,size,"5XL"
+73,37,color,Gold
+74,37,size,L
+75,38,color,Sport Grey
+76,38,size,"5XL"
+77,39,color,Sand
+78,39,size,XXL
+79,40,color,Brown
+80,40,size,XXL
+81,41,color,Bottle Green
+82,41,size,XXL
+83,42,color,Red
+84,42,size,XXL
+85,43,color,Royal Blue
+86,43,size,XXL
+87,44,color,Sand
+88,44,size,"3XL"
+89,45,color,Navy
+90,45,size,XXL
+91,46,color,Dark Grey
+92,46,size,XXL
+93,47,color,Brown
+94,47,size,"3XL"
+95,48,color,Bottle Green
+96,48,size,"3XL"
+97,49,color,White
+98,49,size,XXL
+99,50,color,Black
+100,50,size,XXL
+101,51,color,Sport Grey
+102,51,size,XXL
+103,52,color,Red
+104,52,size,"3XL"
+105,53,color,Swimming Pool
+106,53,size,XXL
+107,54,color,Sky Blue
+108,54,size,XXL
+109,55,color,Stone Blue
+110,55,size,XXL
+111,56,color,Royal Blue
+112,56,size,"3XL"
+113,57,color,Orange
+114,57,size,XXL
+115,58,color,Navy
+116,58,size,"3XL"
+117,59,color,Dark Grey
+118,59,size,"3XL"
+119,60,color,Burgundy
+120,60,size,XXL
+121,61,color,Kelly Green
+122,61,size,XXL
+123,62,color,White
+124,62,size,"3XL"
+125,63,color,Black
+126,63,size,"3XL"
+127,64,color,Gold
+128,64,size,XXL
+129,65,color,Sport Grey
+130,65,size,"3XL"
+131,66,color,Swimming Pool
+132,66,size,"3XL"
+133,67,color,Sky Blue
+134,67,size,"3XL"
+135,68,color,Stone Blue
+136,68,size,"3XL"
+137,69,color,Orange
+138,69,size,"3XL"
+139,70,color,Burgundy
+140,70,size,"3XL"
+141,71,color,Kelly Green
+142,71,size,"3XL"
+143,72,color,Gold
+144,72,size,"3XL"
+145,73,color,Sand
+146,73,size,XL
+147,74,color,Navy
+148,74,size,"4XL"
+149,75,color,Brown
+150,75,size,XL
+151,76,color,Gold
+152,76,size,XL
+153,77,color,Bottle Green
+154,77,size,XL
+155,78,color,White
+156,78,size,"4XL"
+157,79,color,Sand
+158,79,size,M
+159,80,color,Black
+160,80,size,"4XL"
+161,81,color,Brown
+162,81,size,M
+163,82,color,Sport Grey
+164,82,size,"4XL"
+165,83,color,Bottle Green
+166,83,size,M
+167,84,color,Red
+168,84,size,XL
+169,85,color,Red
+170,85,size,M
+171,86,color,Royal Blue
+172,86,size,XL
+173,87,color,Navy
+174,87,size,XL
+175,88,color,Dark Grey
+176,88,size,XL
+177,89,color,Royal Blue
+178,89,size,M
+179,90,color,Navy
+180,90,size,M
+181,91,color,White
+182,91,size,XL
+183,92,color,Dark Grey
+184,92,size,M
+185,93,color,Black
+186,93,size,XL
+187,94,color,Sport Grey
+188,94,size,XL
+189,95,color,White
+190,95,size,M
+191,96,color,Black
+192,96,size,M
+193,97,color,Sport Grey
+194,97,size,M
+195,98,color,Swimming Pool
+196,98,size,XL
+197,99,color,Sky Blue
+198,99,size,XL
+199,100,color,Stone Blue
+200,100,size,XL
+201,101,color,Swimming Pool
+202,101,size,M
+203,102,color,Sky Blue
+204,102,size,M
+205,103,color,Orange
+206,103,size,XL
+207,104,color,Stone Blue
+208,104,size,M
+209,105,color,Burgundy
+210,105,size,XL
+211,106,color,Orange
+212,106,size,M
+213,107,color,Kelly Green
+214,107,size,XL
+215,108,color,Burgundy
+216,108,size,M
+217,109,color,Kelly Green
+218,109,size,M
+219,110,color,Gold
+220,110,size,M
+221,111,color,Black
+222,111,size,XS

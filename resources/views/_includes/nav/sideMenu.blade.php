@@ -79,6 +79,7 @@
                     <h3><span class="icon-color far fa-chart-bar"></span>Overzichten</h3>
                     <ul>
                         <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Openstaande Bestellingen</a></li>
+                        <li class="{{ Nav::isRoute('boloffers.index') }}"><a href="{{route('boloffers.index')}}">Gepubliceerd op BOL</a></li>
                         <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Bestellingen per Periode</a></li>
                         <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Bestellingen per Klanr</a></li>
                         <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Bestellingen per Variant</a></li>

@@ -23,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        app()->singleton('boltokendata', function(){
+
+            return new \App\boltokendata();
+        });
     }
 }

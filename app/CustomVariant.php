@@ -13,9 +13,27 @@ class CustomVariant extends Model
     }
 
     protected $fillable = [
+        'variantId',
+        'smakeVariantId',
+        'variantName',
         'ean',
         'size',
-        'color',
-        'isPublishedAtBol'
+        'price',
+        'tax',
+        'taxRate',
+        'total',
+        'fileName',
+        'baseColor',
+        'compositeMediaId',
+        'smakeCompositeMediaId',
+        'productionMediaId',
+        'smakeProductionMediaId',
+        'isInBolCatalog',
+        'width_mm',
+        'height_mm',
+        'salePrice',
+
+        'boldeliverycode',
+        'boldescription'
     ];
 }

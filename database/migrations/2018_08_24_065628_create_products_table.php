@@ -23,9 +23,9 @@ class CreateProductsTable extends Migration
 
         Schema::create('variants', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('productId')->nullable();
-            $table->unsignedInteger('variantId')->unique()->nullable();
-            $table->unsignedInteger('variantId')->nullable();
+            $table->unsignedInteger('productId')->nullable();           // vanuit smake
+            $table->unsignedInteger('variantId')->unique()->nullable();  // vanuit smake toegekend
+            // $table->unsignedInteger('variantId')->nullable();
             $table->boolean('isBwdVariant')->nullable();
             $table->char('ean', 15)->unique()->nullable();
             $table->decimal('price',7,2)->nullable();

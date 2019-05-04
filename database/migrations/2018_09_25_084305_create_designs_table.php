@@ -20,7 +20,7 @@ class CreateDesignsTable extends Migration
             $table->string('fileName');
             $table->string('originalName');
             $table->string('mimeType');
-            $table->string('fileSize');
+            $table->string('fileSize');   // dit moet nog aangepast naar INT!!
             $table->string('path');
             $table->string('downloadUrl')->nullable();
             $table->timestamps();
