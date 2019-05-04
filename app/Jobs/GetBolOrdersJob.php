@@ -36,9 +36,9 @@ class GetBolOrdersJob implements ShouldQueue
      */
     public function handle()
     {
-        // $mykey = "{$this->order->orderId}";  // wsch niet correct
 
-        Redis::throttle('getbolorders')->allow(1)->every(2)->then(function () {
+
+        Redis::throttle('getbolorders')->allow(1)->every(2)->then(function () {   // 1 job per 2 seconden
             // Job logic...
 
             $bol_single_order_resp = $this->make_V3_PlazaApiRequest($this->servertype,  "orders/{$this->order->orderId}", 'get');
@@ -48,7 +48,8 @@ class GetBolOrdersJob implements ShouldQueue
             // dump($bol_single_order_resp['bolbody']);
             // dump($bol_single_order_resp['bolstatuscode']);
             if($bol_single_order_resp['bolstatuscode'] != 200){
-                dump('Status code op orders/{orderid} niet 200 !'); // sleep(3);
+
+                dump('Status code op orders/{orderid} niet 200 !');
                 $this->checkAndLogBolErrorResponse($bol_single_order_resp);
                 return 'http error-codes aanwezig'; // nog response loggen
             }
@@ -56,8 +57,8 @@ class GetBolOrdersJob implements ShouldQueue
             $reply_body_data = json_decode($bol_single_order_resp['bolbody'], true); // naar assoc_arr
 
             if(isset($reply_body_data['orderId']) && isset( $reply_body_data["orderItems"][0]["orderItemId"] ) ){
-                dump('op regel 49 in GetBolOrdersJob class!');
-                dump($reply_body_data);
+                // dump('op regel 59 in GetBolOrdersJob class!');
+                // dump($reply_body_data);
                 Order::where('bolOrderNr', $reply_body_data['orderId'])->doesntExist() ? $this->newOrder($reply_body_data) : $this->existingOrder($reply_body_data);
             }
 
@@ -218,7 +219,7 @@ class GetBolOrdersJob implements ShouldQueue
             }
             dump($this->erIsTenminsteEenOrderItemZonderCancelRequest);
         }
-        return; // whatever there is to return !!
+        return;
     }
 
 
@@ -234,7 +235,7 @@ class GetBolOrdersJob implements ShouldQueue
 
         if(strtoupper($de_order->orderStatus) != 'NEW'){
             dump('Volgens BOL is deze order nog open. Order bestaat reeds in DB, maar order status is bij ons niet meer NEW');
-            return; // whatever there is to return !!
+            return;
         }
 
         if(strtoupper($de_order->orderStatus) == 'NEW'){   // dry nakijken
@@ -284,7 +285,7 @@ class GetBolOrdersJob implements ShouldQueue
                 }
             }
         }
-        return; // whatever there is to return !!
+        return;
     }
 
     public function storeNewCustomerInDB(array $custData, bool $billingAddr, bool $shipmentAddr){
@@ -311,7 +312,7 @@ class GetBolOrdersJob implements ShouldQueue
     }
 
     public function storeNewOrderItemInDB(array $hetItem, $orderID){
-        // dump('in storeNewOrderItemInDB, regel 349'); dump($hetItem);
+        // dump('in GetBolOrdersJob, regel 314'); dump($hetItem);
         $newOrderItem = new OrderItem();
         $newOrderItem->orderId = $orderID;
         $newOrderItem->bolOrderItemId = $hetItem['orderItemId'];
@@ -327,7 +328,7 @@ class GetBolOrdersJob implements ShouldQueue
     public function checkAndLogBolErrorResponse($bol_response){
         $code = (string)$bol_response['bolstatuscode']; $firstNumber = \substr($code, 0, 1);
 
-        // strpos($bol_outh_response->getHeaders()['Content-Type'][0], 'json') !== false
+
         if(strpos( $bol_response['bolheaders']['Content-Type'][0], 'json') ){
             if( isset($bol_response['bolbody']) ){
 
@@ -346,7 +347,7 @@ class GetBolOrdersJob implements ShouldQueue
                     $this->putContent('/other_errors_fromGetBolOrdersJob.txt', $code, $bol_response['bolreasonphrase']);
             }
         }
-        return; // whatever there is to return !!
+        return;
     }
 
     public function putContent($fileName, $code, $phrase)
@@ -356,11 +357,7 @@ class GetBolOrdersJob implements ShouldQueue
             file_put_contents( storage_path( 'app/public') . $fileName, $this->bolErrorBody . "\r\n\r\n", FILE_APPEND );
             $this->bolErrorBody = null;
         }
-        return; // whatever there is to return !!
+        return;
     }
-    // if($unixtime != null && $x_ratelimit_limit != null && $x_ratelimit_reset != null && $x_ratelimit_remaining != null){
-    //     dump('Alle x_ratelimit headers in response aanwezig');
-    // file_put_contents( storage_path( 'app/public') . '/' . $fileName, ((string)date('D, d M Y H:i:s') . "\r\n" . $unixtime . "\r\n" . $x_ratelimit_limit . "\r\n" . $x_ratelimit_remaining . "\r\n" . $x_ratelimit_reset . "\r\n" . "\r\n" . $code . " " . $phrase  .
-    // "\r\n\r\n" . (string)$body) . "\r\n\r\n", FILE_APPEND );
-    // }
+
 }

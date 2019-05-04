@@ -80,7 +80,7 @@ trait BolApiV3 {
                             BolToken::create(['access_token' => $this->oauth_access_token['access_token'],
                                               'at_unix_time' => time(),
                                               'seconds_valid' => $this->oauth_access_token['expires_in']]);
-                            dump($this->oauth_access_token);
+                            // dump($this->oauth_access_token);
 
                             return $this->oauth_access_token['access_token'];
 
@@ -102,7 +102,7 @@ trait BolApiV3 {
                 $token = $last_db_token->access_token;
                 $basic_auth_header = 'Bearer ' . $token;
                 dump('DB token nog geldig. Gebruikt hier access-token uit de DB');
-                dump($basic_auth_header);
+                // dump($basic_auth_header);
             }
             else{
                 $basic_auth_header = 'Bearer ' . $this->request_BOL_Oauth_Token();
@@ -141,19 +141,7 @@ trait BolApiV3 {
     }
 
 
-    public function giveBolV3Headers_For_CSV_Offer_Export(){   // aparte headers voor ophalen offer-file in CSV format
 
-        $basic_auth_header = 'Bearer ' . $this->request_BOL_Oauth_Token();
-
-        $headers = [
-                    'Accept'  => 'application/vnd.retailer.v3+csv',
-                    'Authorization' => $basic_auth_header,
-                    'Content-Type' => 'application/x-www-form-urlencoded'
-                 ];
-
-
-        return $headers;
-    }
 
 
     public function prepare_CSV_Offers_export_demo(){
@@ -175,21 +163,7 @@ trait BolApiV3 {
         return;
     }
 
-    public function prepare_CSV_Offers_export_prod(){
 
-        $csv_endpoint = 'offers/export';
-        $post_body = new \stdClass();
-        $post_body->format = 'CSV';
-        $post_body_json = json_encode($post_body);
-
-        $csv_response_array = $this->make_V3_PlazaApiRequest('prod' ,$csv_endpoint, 'post', $post_body_json, false);
-
-        dump($csv_response_array);
-        $this->putResponseInFile('bol-generate-prod-csv-response.txt', $csv_response_array['bolstatuscode'], $csv_response_array['bolreasonphrase'],
-                                                                $csv_response_array['bolbody']);
-
-        return $csv_response_array;
-    }
 
     public function getCSVOfferExportPROD($serverType ,$offerexportid){
 
@@ -210,11 +184,6 @@ trait BolApiV3 {
 
 
     public function zet_CSV_export_file_om_in_array( $csvFileName){
-
-
-
-                // maak file aan, om later met file() in array vorm aan 'array_map()' door te geven
-
 
         // Handy one liner to parse a CSV file into an array: de waarden van elke row uit de csv-(file!) wordt een array.
         // $my_csv_array = array_map('str_getcsv', file(storage_path('app/public') . '\AllOffersOnBol'  . '.csv'));
@@ -243,21 +212,7 @@ trait BolApiV3 {
 
 
 
-    public function getProcessStatusBy_EntityId_and_EventType_PROD( string $entityId, string $eventType){
 
-// EventType: Enum:"CONFIRM_SHIPMENT" "CANCEL_ORDER" "CHANGE_TRANSPORT" "HANDLE_RETURN_ITEM" "CREATE_INBOUND" "DELETE_OFFER" "CREATE_OFFER" "UPDATE_OFFER" "UPDATE_OFFER_STOCK" "UPDATE_OFFER_PRICE"
-// Example: "PROCESS_EXAMPLE"
-
-        $endpoint = "process-status?entity-id={$entityId}&event-type={$eventType}";
-
-        $bol_response_array = $this->make_V3_PlazaApiRequest('prod', $endpoint, 'get');
-        dump($bol_response_array);
-
-        $this->putResponseInFile('bol-proces-status-response-PROD-server.txt', $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
-        $bol_response_array['bolbody']);
-
-        return;
-    }
 
 
     public function geefProcesStatusById($serverType, $id){
@@ -419,7 +374,7 @@ trait BolApiV3 {
                     $bolresponse = $client->request($method, $rest_endpoint,  ['headers' => $headers, 'http_errors' => false]);
                     // sync
 
-                    // async
+
 
 
                     return              ['bolheaders' => $bolresponse->getHeaders(),
@@ -525,7 +480,8 @@ trait BolApiV3 {
 
         public function maak_JSON_voor_single_offer_BOL(CustomVariant $custvar, $publish = true){
 
-            $refcode = 'test123'; $onHoldByRetailer = !$publish;
+            $refcode = 'test123';
+            $onHoldByRetailer = !$publish;
             $unKnownProductTitle = $custvar->variantName;
 
             $stock = 100;
@@ -571,7 +527,7 @@ trait BolApiV3 {
             return $singleBolOffer_JSON_body;
         }
 
-        //     Request body
+//     Request body voorbeeld van bol ReDoc
 
 // {
 //   "ean" : "0045496420253",
@@ -601,7 +557,7 @@ trait BolApiV3 {
 
 
 
-        // onderstaande functies werken niet, geen multiple offers-upload door plaza-api geaccepteerd
+        // onderstaande functies werken niet, geen multiple offers-upload door plaza-api geaccepteerd!
         //-------------------------------------------------------------------------------------------------------------------------------
         public function upload_Multiple_Offers_To_BOL_V3_DEMO(Collection $customVariants){
             // "violations":[{"reason":"Cannot deserialize instance of `com.bol.service.merchant.api.v3.offers.model.CreateOfferRequest` out of START_ARRAY token."}]}
@@ -680,4 +636,51 @@ trait BolApiV3 {
 
                 return $multiple_BolOffer_JSON_body;
             }
+
+
+            public function getProcessStatusBy_EntityId_and_EventType_PROD( string $entityId, string $eventType){
+
+                // EventType: Enum:"CONFIRM_SHIPMENT" "CANCEL_ORDER" "CHANGE_TRANSPORT" "HANDLE_RETURN_ITEM" "CREATE_INBOUND" "DELETE_OFFER" "CREATE_OFFER" "UPDATE_OFFER" "UPDATE_OFFER_STOCK" "UPDATE_OFFER_PRICE"
+                // Example: "PROCESS_EXAMPLE"
+
+                        $endpoint = "process-status?entity-id={$entityId}&event-type={$eventType}";
+
+                        $bol_response_array = $this->make_V3_PlazaApiRequest('prod', $endpoint, 'get');
+                        dump($bol_response_array);
+
+                        $this->putResponseInFile('bol-proces-status-response-PROD-server.txt', $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
+                        $bol_response_array['bolbody']);
+
+                        return;
+                    }
+
+    // public function giveBolV3Headers_For_CSV_Offer_Export(){   // aparte headers voor ophalen offer-file in CSV format
+
+    //     $basic_auth_header = 'Bearer ' . $this->request_BOL_Oauth_Token();
+
+    //     $headers = [
+    //                 'Accept'  => 'application/vnd.retailer.v3+csv',
+    //                 'Authorization' => $basic_auth_header,
+    //                 'Content-Type' => 'application/x-www-form-urlencoded'
+    //              ];
+
+
+    //     return $headers;
+    // }
+
+    // public function prepare_CSV_Offers_export_prod(){
+
+    //     $csv_endpoint = 'offers/export';
+    //     $post_body = new \stdClass();
+    //     $post_body->format = 'CSV';
+    //     $post_body_json = json_encode($post_body);
+
+    //     $csv_response_array = $this->make_V3_PlazaApiRequest('prod' ,$csv_endpoint, 'post', $post_body_json, false);
+
+    //     dump($csv_response_array);
+    //     $this->putResponseInFile('bol-generate-prod-csv-response.txt', $csv_response_array['bolstatuscode'], $csv_response_array['bolreasonphrase'],
+    //                                                             $csv_response_array['bolbody']);
+
+    //     return $csv_response_array;
+    // }
     }

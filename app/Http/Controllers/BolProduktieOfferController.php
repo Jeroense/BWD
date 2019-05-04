@@ -83,7 +83,7 @@ class BolProduktieOfferController extends Controller
         return;
     }
 
-    public function check_if_CSV_Offer_Export_PRODUCTION_RDY(){
+    public function check_if_CSV_Offer_Export_PRODUCTION_RDY(){   // nog niet af..
 
         $laatste_proc_status = BolProcesStatus::latest()->first();
         // rest-endpoint uit de BolProcesStatus halen
