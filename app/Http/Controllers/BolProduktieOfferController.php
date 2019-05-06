@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BolProduktieOffer;
 use App\BolProcesStatus;
+use App\Jobs\GetBolOffersJob;
 use Illuminate\Http\Request;
 use App\Http\Traits\BolApiV3;
 use function GuzzleHttp\json_decode;
@@ -93,7 +94,7 @@ class BolProduktieOfferController extends Controller
 
         $process_status_by_id_response = $this->geefProcesStatusById('prod', $process_status_id);
 
-        if($process_status_by_id_response['bolstatuscode'] == 200 && strpos($process_status_by_id_response['bolheaders']['Content-Type'][0], 'json') != null ){
+        if($process_status_by_id_response['bolstatuscode'] == 200 && strpos($process_status_by_id_response['bolheaders']['Content-Type'][0], 'json') != false ){
 
             $resp_object = json_decode($process_status_by_id_response['bolbody']);
 
@@ -121,23 +122,29 @@ class BolProduktieOfferController extends Controller
 
 
         $latest_succesfull_made_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT', 'status' => 'SUCCESS'])->latest()->first();
-        $latest_csv_offer_export_id = $latest_succesfull_made_offer_export_db_entry->entityId;
 
-        // slaat, bij 200, de verkregen csv offer export data op in file: storage_path( 'app/public') . '/' .  bol-get-csv-export-response-{$serverType}.csv
-        $csvFileName = $this->getCSVOfferExportPROD('prod', $latest_csv_offer_export_id);
+        if( $latest_succesfull_made_offer_export_db_entry->exists() ){
 
-        if($csvFileName == 'status niet 200'){
+            $latest_csv_offer_export_id = $latest_succesfull_made_offer_export_db_entry->entityId;
+
+            // slaat, bij 200, de verkregen csv offer export data op in file: storage_path( 'app/public') . '/' .  bol-get-csv-export-response-{$serverType}.csv
+            $csvFileName = $this->getCSVOfferExportPROD('prod', $latest_csv_offer_export_id);
+
+            if($csvFileName == 'status niet 200'){
+                return 'BOL response-code voor reply vanuit laatste DB offer-export entry is geen 200!';
+            }
+
+            $csv_array = $this->zet_CSV_export_file_om_in_array($csvFileName);
+
+            if($csv_array == 'no csv file!'){
+                return 'no csv file!';
+            }
+
+            $this->zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_array);
+            dump('in get_CSV_Offer_Export_PROD');
+
             return;
         }
-
-        $csv_array = $this->zet_CSV_export_file_om_in_array($csvFileName);
-
-        if($csv_array == 'no csv file!'){
-            return;
-        }
-
-        $this->zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_array);
-        dump('in get_CSV_Offer_Export_PROD');
     }
 
 
@@ -200,65 +207,72 @@ class BolProduktieOfferController extends Controller
         $this->get_BolOffers_By_Id();  // nog job van maken
     }
 
+
     // om de bol_produktie_offers table te updaten, het best NA een succesvol verwerkte get-CSV-offer-export request.
+    // de toegelaten rate van deze request is: ca. 28 requests per 3 seconden, is ca. 9 req/ sec
     public function get_BolOffers_By_Id(){
 
         $bol_prod_offers_in_db = BolProduktieOffer::all();
-        // hier nog job/queu van maken
+
         if($bol_prod_offers_in_db->count() == 0){
             return 'Geen bol produktie offers in lokale DB!';
         }
             foreach($bol_prod_offers_in_db as $lokale_db_offers){
             // "offerId":"38dff9a2-dc45-4201-85f2-cb0ae0cd80d5","ean":"7435156898868"  // dit is het produkt dat ik heb aangemaakt zonder catalog bekend ean
-            $bol_offer_by_id_response_array = $this->get_Bol_Offer_by_Id_PROD("prod", $lokale_db_offers->offerId);   // blijkt 28 reqs/sec toegestaan  retailer/offers/{offer_id}
 
-                if($bol_offer_by_id_response_array['bolstatuscode'] != 200){
-                    return 'Error bij request naar offers/{offerId}. Status code niet 200 !';
-                }
-            // $this->putResponseInFile("bol-offer-response-by-id-{$serverType}.txt", $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
-            // $bol_response_array['bolbody'], $bol_response_array['x_ratelimit_limit'], $bol_response_array['x_ratelimit_reset'], $bol_response_array['x_ratelimit_remaining'], (string)time());
-                if( isset($bol_offer_by_id_response_array['bolbody']) && strpos($bol_offer_by_id_response_array['bolheaders']['Content-Type'][0], 'json') != null ){
+            GetBolOffersJob::dispatch('prod', $lokale_db_offers->offerId);
 
-                    $single_offer_as_stdclass = json_decode($bol_offer_by_id_response_array['bolbody']);
 
-                    $bol_offer_in_db = BolProduktieOffer::where(
-                            ['offerId' => $single_offer_as_stdclass->offerId, 'ean' => $single_offer_as_stdclass->ean])->first();
 
-                    $product_title = '';
-                    $not_publishable_reason = 'Is publishable. No errors!';
+            // $bol_offer_by_id_response_array = $this->get_Bol_Offer_by_Id_PROD("prod", $lokale_db_offers->offerId);   // blijkt 28 reqs/sec toegestaan  retailer/offers/{offer_id}
 
-                    // ofwel de property: ->unknownProductTitle  ofwel property:  ->store->productTitle    is aanwezig in reply
-                    if( isset($single_offer_as_stdclass->unknownProductTitle) ){
-                        $product_title = $single_offer_as_stdclass->unknownProductTitle;
-                    }
-                    if( isset($single_offer_as_stdclass->store->productTitle) ){
-                        $product_title = $single_offer_as_stdclass->store->productTitle;
-                    }
-                    if( isset($single_offer_as_stdclass->notPublishableReasons[0]->description) ){                   // is niet aanwezig in response
-                        $not_publishable_reason = $single_offer_as_stdclass->notPublishableReasons[0]->description;  // als alles ok/publishable is
-                    }
+            //     if($bol_offer_by_id_response_array['bolstatuscode'] != 200){
+            //         return 'Error bij request naar offers/{offerId}. Status code niet 200 !';
+            //     }
+            // // $this->putResponseInFile("bol-offer-response-by-id-{$serverType}.txt", $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
+            // // $bol_response_array['bolbody'], $bol_response_array['x_ratelimit_limit'], $bol_response_array['x_ratelimit_reset'], $bol_response_array['x_ratelimit_remaining'], (string)time());
+            //     if( isset($bol_offer_by_id_response_array['bolbody']) && strpos($bol_offer_by_id_response_array['bolheaders']['Content-Type'][0], 'json') != false ){
 
-                    // nog eventueel alle response-velden controleren met isset()?
-                    $bol_offer_in_db->update([
-                        'referenceCode' => $single_offer_as_stdclass->referenceCode,
-                        'onHoldByRetailer' => $single_offer_as_stdclass->onHoldByRetailer,
-                        'unknownProductTitle' => $product_title,
-                        'bundlePricesQuantity' => $single_offer_as_stdclass->pricing->bundlePrices[0]->quantity,
-                        'bundlePricesPrice' => $single_offer_as_stdclass->pricing->bundlePrices[0]->price,
-                        'stockAmount' => $single_offer_as_stdclass->stock->amount,
-                        'correctedStock' => $single_offer_as_stdclass->stock->correctedStock,
-                        'stockManagedByRetailer' => $single_offer_as_stdclass->stock->managedByRetailer,
-                        'fulfilmentType' => $single_offer_as_stdclass->fulfilment->type,
-                        'fulfilmentDeliveryCode' => $single_offer_as_stdclass->fulfilment->deliveryCode,
-                        'fulfilmentConditionName' => $single_offer_as_stdclass->condition->name,
-                        'fulfilmentConditionCategory' => $single_offer_as_stdclass->condition->category,
-                        'notPublishableReasonsCode' => $single_offer_as_stdclass->notPublishableReasons[0]->code,
-                        'notPublishableReasonsDescription' => $not_publishable_reason
-                    ]);
-                    dump('bol_produktie_offers table succesvol geupdated voor offer-id: ');
-                    dump($single_offer_as_stdclass->offerId);
-                }
-            }
+            //         $single_offer_as_stdclass = json_decode($bol_offer_by_id_response_array['bolbody']);
+
+            //         $bol_offer_in_db = BolProduktieOffer::where(
+            //                 ['offerId' => $single_offer_as_stdclass->offerId, 'ean' => $single_offer_as_stdclass->ean])->first();
+
+            //         $product_title = '';
+            //         $not_publishable_reason = 'Is publishable. No errors!';
+
+            //         // ofwel de property: ->unknownProductTitle  ofwel property:  ->store->productTitle    is aanwezig in reply
+            //         if( isset($single_offer_as_stdclass->unknownProductTitle) ){
+            //             $product_title = $single_offer_as_stdclass->unknownProductTitle;
+            //         }
+            //         if( isset($single_offer_as_stdclass->store->productTitle) ){
+            //             $product_title = $single_offer_as_stdclass->store->productTitle;
+            //         }
+            //         if( isset($single_offer_as_stdclass->notPublishableReasons[0]->description) ){                   // is niet aanwezig in response
+            //             $not_publishable_reason = $single_offer_as_stdclass->notPublishableReasons[0]->description;  // als alles ok/publishable is
+            //         }
+
+            //         // nog eventueel alle response-velden controleren met isset()?
+            //         $bol_offer_in_db->update([
+            //             'referenceCode' => $single_offer_as_stdclass->referenceCode,
+            //             'onHoldByRetailer' => $single_offer_as_stdclass->onHoldByRetailer,
+            //             'unknownProductTitle' => $product_title,
+            //             'bundlePricesQuantity' => $single_offer_as_stdclass->pricing->bundlePrices[0]->quantity,
+            //             'bundlePricesPrice' => $single_offer_as_stdclass->pricing->bundlePrices[0]->price,
+            //             'stockAmount' => $single_offer_as_stdclass->stock->amount,
+            //             'correctedStock' => $single_offer_as_stdclass->stock->correctedStock,
+            //             'stockManagedByRetailer' => $single_offer_as_stdclass->stock->managedByRetailer,
+            //             'fulfilmentType' => $single_offer_as_stdclass->fulfilment->type,
+            //             'fulfilmentDeliveryCode' => $single_offer_as_stdclass->fulfilment->deliveryCode,
+            //             'fulfilmentConditionName' => $single_offer_as_stdclass->condition->name,
+            //             'fulfilmentConditionCategory' => $single_offer_as_stdclass->condition->category,
+            //             'notPublishableReasonsCode' => $single_offer_as_stdclass->notPublishableReasons[0]->code,
+            //             'notPublishableReasonsDescription' => $not_publishable_reason
+            //         ]);
+            //         dump('bol_produktie_offers table succesvol geupdated voor offer-id: ');
+            //         dump($single_offer_as_stdclass->offerId);
+            //     }
+            }  // endforeach
     }
 
 }
