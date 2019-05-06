@@ -79,7 +79,7 @@ class GetBolOrdersJob implements ShouldQueue
 
 
 
-        dump('in newOrder functie. regel 130');
+        dump('in GetBolOrdersJob@newOrder functie. regel 82');
         dump($order);
 
         if($this->erIsTenminsteEenOrderItemZonderCancelRequest){
@@ -153,10 +153,10 @@ class GetBolOrdersJob implements ShouldQueue
                     $this->storeNewBOLOrderInDB($bestaandeCust->id, (string)$order['orderId']);   // nu order aanmaken voor bekende customer zonder apart shipmentadr.
 
                     if(isset($order['orderItems'][0]['orderItemId'])){    // maak orderitems aan:   // hij komt hier niet! !!!!!!
-                        dump('op regel 191 in code');
+                        dump('op regel 156 in code');
                         foreach($order['orderItems'] as $item){
                             if( $item['cancelRequest']  == false){
-                                 dump('op regel 194 in code') ;dump($item);
+                                 dump('op regel 159 in code') ;dump($item);
                                 $this->storeNewOrderItemInDB($item,  Order::where('bolOrderNr', $order['orderId'])->value('id') );
                             }
                         }
@@ -196,7 +196,7 @@ class GetBolOrdersJob implements ShouldQueue
                     if( isset($order['orderItems'][0]['orderItemId']) ){
                         dump('in isset[orderitems]  regel 231'); //komt hier wel
                         foreach($order['orderItems'] as $item){
-                            dump('in foreach regel 233. $item is:'); dump($item); // komt hier wel
+                            dump('in foreach regel 199. $item is:'); dump($item); // komt hier wel
                             if( $item['cancelRequest'] == false){      // hier zat de fout: string/bool!
                                 $this->storeNewOrderItemInDB($item, Order::where('bolOrderNr', $order['orderId'])->value('id'));
                             }

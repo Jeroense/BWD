@@ -12,8 +12,8 @@ use App\BolToken;
 
 trait BolApiV3 {
 
-    // BOL_URI_TEST_V3=https://api.bol.com/retailer-demo
-    // BOL_URI_V3=https://api.bol.com/retailer
+    // BOL_URI_TEST_V3=https://api.bol.com/retailer-demo/
+    // BOL_URI_V3=https://api.bol.com/retailer/
 
 
     private $oauth_access_token = [];
@@ -144,23 +144,21 @@ trait BolApiV3 {
 
 
 
-    public function prepare_CSV_Offers_export_demo(){
+    public function prepare_CSV_Offers_export($serverType){
 
         $csv_endpoint = 'offers/export';
         $post_body = new \stdClass();
         $post_body->format = 'CSV';
         $post_body_json = json_encode($post_body);
 
-        $csv_response_array = $this->make_V3_PlazaApiRequest('demo', $csv_endpoint, 'post', $post_body_json, false);
+        $csv_response_array = $this->make_V3_PlazaApiRequest($serverType, $csv_endpoint, 'post', $post_body_json, false);
 
         dump($csv_response_array);
-        $this->putResponseInFile('bol-test-csv-response.txt', $csv_response_array['bolstatuscode'], $csv_response_array['bolreasonphrase'],
-                                                                $csv_response_array['bolbody']);
-
-        // $resp_body_obj = \json_decode($csv_response_array['bolbody']);
+        $this->putResponseInFile("bol-generate-csv-export-response-{$serverType}.txt", $csv_response_array['bolstatuscode'], $csv_response_array['bolreasonphrase'],
+                                                                $csv_response_array['bolbody'],  $csv_response_array['x_ratelimit_limit'], $csv_response_array['x_ratelimit_reset'], $csv_response_array['x_ratelimit_remaining'], (string)time());
 
 
-        return;
+        return $csv_response_array;
     }
 
 
@@ -168,18 +166,22 @@ trait BolApiV3 {
     public function getCSVOfferExportPROD($serverType ,$offerexportid){
 
         $endpoint = "offers/export/{$offerexportid}";
-
+        $csv_file_name = "bol-get-csv-export-response-{$serverType}.csv";
 
         $bol_response = $this->make_V3_PlazaApiRequest('prod', $endpoint, 'get', null, true);
 
         dump( $bol_response );
 
-//      $this->putResponseInFile("bol-get-csv-export-response-appended-{$serverType}.txt", $bol_response['bolstatuscode'], $bol_response['bolreasonphrase'],
-//      $bol_response['bolbody'], $bol_response['x_ratelimit_limit'], $bol_response['x_ratelimit_reset'], $bol_response['x_ratelimit_remaining'], (string)time());
+        if($bol_response['bolstatuscode'] != 200){
+            return 'status niet 200';
+        }
 
-        $this->putCSVResponseInCleanFile("bol-get-csv-export-response-{$serverType}.csv",  $bol_response['bolbody']);
+        $this->putResponseInFile("bol-get-csv-export-response-appended-{$serverType}.txt", $bol_response['bolstatuscode'], $bol_response['bolreasonphrase'],
+        $bol_response['bolbody'], $bol_response['x_ratelimit_limit'], $bol_response['x_ratelimit_reset'], $bol_response['x_ratelimit_remaining'], (string)time());
 
-        return;
+        $this->putCSVResponseInCleanFile($csv_file_name,  $bol_response['bolbody']);
+
+        return $csv_file_name;
     }
 
 
@@ -192,7 +194,11 @@ trait BolApiV3 {
         // Dit doet hij ook voor de 1e kolom (['EAN' => 'EAN', 'Condition' => 'Condition']).  Dit array is meestal overbodig
         // Dus 1e array-element in hoofd-array weghalen met array_shift()
 
-        if( file_exists( storage_path("app/public") . '/' . $csvFileName) ){
+        if( !file_exists( storage_path("app/public") . '/' . $csvFileName) ){
+            return 'no csv file!';
+        }
+
+        // if( file_exists( storage_path("app/public") . '/' . $csvFileName) ){
 
             $my_csv_array = array_map('str_getcsv', file(storage_path("app/public") . '/' . $csvFileName ));
                 // dd(storage_path('app/public') . '/' . $csvFileName);
@@ -204,10 +210,7 @@ trait BolApiV3 {
             //---------------------------
 
             return $my_csv_array;
-        }
-        else{
-            return 'Ontbrekende offer-export CSV-file!';
-        }
+
     }
 
 
@@ -220,16 +223,23 @@ trait BolApiV3 {
         $endpoint = "process-status/{$id}";
         $bol_response_array = $this->make_V3_PlazaApiRequest($serverType, $endpoint, 'get');
         dump($bol_response_array);
-        dump($bol_response_array['x_ratelimit_limit']);
-        dump($bol_response_array['x_ratelimit_remaining']);
-        dump($bol_response_array['x_ratelimit_reset']);
+        // dump($bol_response_array['x_ratelimit_limit']);
+        // dump($bol_response_array['x_ratelimit_remaining']);
+        // dump($bol_response_array['x_ratelimit_reset']);
+        if($bol_response_array['bolstatuscode'] !== 200){
+
+            $this->putResponseInFile("bol-proces-status-response-{$serverType}.txt", $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
+            $bol_response_array['bolbody'], $bol_response_array['x_ratelimit_limit'], $bol_response_array['x_ratelimit_reset'], $bol_response_array['x_ratelimit_remaining'], (string)time());
 
 
+            return 'process status by id response code niet 200!';
+        }
 
         $this->putResponseInFile("bol-proces-status-response-{$serverType}.txt", $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
         $bol_response_array['bolbody'], $bol_response_array['x_ratelimit_limit'], $bol_response_array['x_ratelimit_reset'], $bol_response_array['x_ratelimit_remaining'], (string)time());
 
-        return;
+        return $bol_response_array;
+
     }
 
     // public function getProcStatusByProcessStatusID_PRODSERVER(int $procstatusid){
@@ -275,9 +285,9 @@ trait BolApiV3 {
 
         $bol_response_array = $this->make_V3_PlazaApiRequest('prod', $endpoint, 'get');
         dump($bol_response_array);
-        echo('unix-epoch timeis: ' . time() );
-        echo( "\r\n");
-        echo('x_ratelimit_reset: ' . $bol_response_array['x_ratelimit_reset']);
+        // echo('unix-epoch timeis: ' . time() );
+        // echo( "\r\n");
+        // echo('x_ratelimit_reset: ' . $bol_response_array['x_ratelimit_reset']);
 
         $this->putResponseInFile("bol-offer-response-by-id-{$serverType}.txt", $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
         $bol_response_array['bolbody'], $bol_response_array['x_ratelimit_limit'], $bol_response_array['x_ratelimit_reset'], $bol_response_array['x_ratelimit_remaining'], (string)time());
@@ -404,7 +414,11 @@ trait BolApiV3 {
                                         'bolstatuscode' => $bol_response_code,
                                         'bolreasonphrase' => $bol_reason_phrase,
                                         'requestheaders' => $headers,
-                                        'requestbody' => $requestBody];
+                                        'requestbody' => $requestBody,
+                                        'x_ratelimit_limit' => $bolresponse->getHeader('X-RateLimit-Limit')[0],
+                                        'x_ratelimit_remaining' => $bolresponse->getHeader('X-RateLimit-Remaining')[0],
+                                        'x_ratelimit_reset' => $bolresponse->getHeader('X-RateLimit-Reset')[0]
+                                        ];
 
 
             }

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('pageTitle', 'Status BOL offer export file')
+@section('pageTitle', 'Status Offers-export CSV-file.')
 @section('content')
 
 
@@ -13,53 +13,67 @@
     <hr class="m-t-0">
     <div class="card">
         <div class="card-content">
+                <p>Is de Offer export CSV file aangemaakt door BOL?</p>
+                <p>Als er SUCCESS staat bij onderstaande status is het aangemaakt.</p>
 
+               {{-- <a  href="{{ route('boloffer.is.csv.ready') }}" class="button is-danger "><i class="fa fa-user-plus m-r-10"></i>Check of export-offer file klaar is.</a> --}}
 
-            {{-- <table class="table is-narrow">
+            <table class="table is-narrow">
                 <thead>
                 <tr>
-                    <th>offerId</th>
-                    <th>EAN</th>
-                    <th>Hold</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Fulfil</th>
-                    <th>DeliveryCode</th>
-                    <th>Condition</th>
-                    <th>Updated</th>
-                    <th>Err-Code</th>
-                    <th>Err-Mssg</th>
+                    @isset($laatste_db_entry->process_status_id)
+                    <th>Process status id</th>
+                    @endisset
+                    @isset($laatste_db_entry->entityId)
+                    <th>Offer-export-Id</th>
+                    @endisset
+
+                    <th>EventType</th>
+                    @isset($laatste_db_entry->description)
+                    <th>Description </th>
+                    @endisset
+
+                    <th>Status</th>
+
+                    @isset($laatste_db_entry->errorMessage)
+                    <th>Error Message</th>
+                    @endisset
+                    <th>Link to self</th>
+                    <th>Method to self</th>
+                    <th>createTimestamp</th>
+                    <th>updated At:</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @foreach ($bol_produktie_offers as $offer)
+
                         <tr>
-                            <td>{{ $offer->offerId }}</td>
-                            <td>{{ $offer->ean }} </td>
-                            <td>{{ $offer->onHoldByRetailer }}</td>
-                            <td>{{ $offer->bundlePricesPrice }}</td>
-                            <td>{{ $offer->stockAmount }}</td>
-                            @isset($offer->correctedStock)
-                            <td>{{$offer->correctedStock}}</td>
+                            @isset($laatste_db_entry->process_status_id)
+                            <td>{{ $laatste_db_entry->process_status_id }}</td>
                             @endisset
-                            <td>{{ $offer->fulfilmentType }}</td>
-                            <td>{{ $offer->fulfilmentDeliveryCode }}</td>
-                            <td>{{ $offer->fulfilmentConditionName }}</td>
-                            <td>{{ $offer->updated_at }}</td>
-                            @isset($offer->notPublishableReasonsCode)
-                            <td>{{$offer->notPublishableReasonsCode}}</td>
+                            @isset($laatste_db_entry->entityId)
+                            <td>{{ $laatste_db_entry->entityId }} </td>
                             @endisset
-                            @isset($offer->notPublishableReasonsDescription)
-                            <td>{{$offer->notPublishableReasonsDescription}}</td>
+                            <td>{{ $laatste_db_entry->eventType }}</td>
+                            @isset($laatste_db_entry->description)
+                            <td>{{ $laatste_db_entry->description }}</td>
                             @endisset
-                            <td class="has-text-right"> --}}
+                            <td>{{ $laatste_db_entry->status }}</td>
+                            @isset($laatste_db_entry->errorMessage)
+                            <td>{{$laatste_db_entry->errorMessage}}</td>
+                            @endisset
+                            <td>{{ $laatste_db_entry->link_to_self }}</td>
+                            <td>{{ $laatste_db_entry->method_to_self }}</td>
+                            <td>{{ $laatste_db_entry->createTimestamp }}</td>
+                            <td>{{ $laatste_db_entry->updated_at }}</td>
+
+                            <td class="has-text-right">
                                 {{-- <a class="button is-hovered is-small m-r-5" href="{{ route('customers.show', $customer->id) }}">View</a> --}}
                                 {{-- <a class="button is-hovered is-small" href="{{ route('customers.edit', $customer->id) }}">Edit</a> --}}
-                            {{-- </td>
+                            </td>
                         </tr>
-                    @endforeach
+
                 </tbody>
-            </table> --}}
+            </table>
 
         </div>
     </div>

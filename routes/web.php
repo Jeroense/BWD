@@ -107,23 +107,27 @@ Route::prefix('boltestserver')->middleware('role:superadministrator|administrato
 Route::get('/herstelcustomvarianten', 'RefactoredTestBolOrdersController@herstel_eerder_Aangemaakte_Smake_Customvarianten_Designs_en_Composite_media_Designs');
 Route::get('/maakfakeboldemocustomvarianten', 'RefactoredTestBolOrdersController@maak_Fake_Custom_Varianten_aan_voor_Test_met_Bol_Retailer_DEMO_SERVER');
 
+
+
 Route::prefix('bolprodserver')->middleware('role:superadministrator|administrator')->group(function() {
 
-    Route::get('/prep-offerexport-prod', 'TestController@prepare_CSV_Offer_Export_PROD');
-
+    // volgorde van correct vullen van 'bol_produktie_offer' table is 1,2,3:
+    // 1)
     Route::get('/generate-offer-export-file', 'BolProduktieOfferController@prepare_CSV_Offer_Export_PRODUCTION')->name('generate.offers.csv');
-
+    // 2)
     Route::get('/check-offer-export-file-ready', 'BolProduktieOfferController@check_if_CSV_Offer_Export_PRODUCTION_RDY')->name('boloffer.is.csv.ready');
+    // 3)
+    Route::get('/get-offerexport-prod', 'BolProduktieOfferController@get_CSV_Offer_Export_PROD');
 
 
-
-    // Route::get('/process-status-by-entity-id-and-event-type', 'TestController@getProcStatus_EntId_EventType_PRODSERVER' );
 
     Route::get('/process-status-by-process-status-id/{procstatusid}', 'TestController@getProcStatus_ByProcessStatusId_PRODSERVER' );
 
-    Route::get('/get-offerexport-csv-prod/{offerexportid}', 'TestController@get_CSV_Offer_Export_PROD');
 
-    Route::get('/dump-and-db-store-dowloaded-csv-file-prod', 'TestController@dump_and_put_ProdCSVFile_in_BOL_produktie_offers_table');
+    // Route::get('/prep-offerexport-prod', 'TestController@prepare_CSV_Offer_Export_PROD');
+    // Route::get('/get-offerexport-csv-prod/{offerexportid}', 'TestController@get_CSV_Offer_Export_PROD');
+    // Route::get('/dump-and-db-store-dowloaded-csv-file-prod', 'TestController@dump_and_put_ProdCSVFile_in_BOL_produktie_offers_table');
+    // Route::get('/process-status-by-entity-id-and-event-type', 'TestController@getProcStatus_EntId_EventType_PRODSERVER' );
 
     Route::get('/bolofferupload-v3', 'TestController@uploadSingleOfferToBolV3_PROD');
 
