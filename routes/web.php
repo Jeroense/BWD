@@ -98,8 +98,8 @@ Route::prefix('boltestserver')->middleware('role:superadministrator|administrato
 
     Route::get('/process-status/{id}', 'TestController@getProcessStatusById' );
     Route::get('/process-statusses', 'TestController@getProcessStatusses' );
-    Route::get('/test-static-storage-class', 'TestController@test_Static_Storage'); // werkt niet, onthoudt static var niet bij andere route
-    Route::get('/test-boltoken-singleton', 'TestController@singletonWerkingVoorbeeldBoltokenData');
+    // Route::get('/test-static-storage-class', 'TestController@test_Static_Storage'); // werkt niet, onthoudt static var niet bij andere route, is logisch
+    // Route::get('/test-boltoken-singleton', 'TestController@singletonWerkingVoorbeeldBoltokenData');
     Route::get('/test-jobqeue-redis-throttling', 'TestController@testJobqeueRedisThrottling');
 });
 

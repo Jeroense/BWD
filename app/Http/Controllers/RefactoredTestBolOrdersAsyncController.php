@@ -74,12 +74,12 @@ class RefactoredTestBolOrdersAsyncController extends Controller{
                     $this->nietBestaandeOrderIDSinOrderResponse = true;
                     dump($this->nullOrEmptyOrderIDsArePresent);
                 }
-                dump('Zijn er lege orderIds', $this->nullOrEmptyOrderIDsArePresent);
+                dump('Zijn er lege orderIds? : ', \in_array('ispresent', $this->nullOrEmptyOrderIDsArePresent) ? 'Ja' : 'Nee');
             }
 
             if($this->nietBestaandeOrderIDSinOrderResponse){
                 $this->checkAndLogBolErrorResponse($bolOrdersResponse);
-                dd('Ongeldige of ontbrekende OrderIDs in Order response!');
+                dump('Ongeldige of ontbrekende OrderIDs in Order response!');
                 return;
             }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\OrderService;
+use App\Services\OfferService;
 use App\Http\Traits\DebugLog;
 use app\Test;
 
@@ -14,10 +15,26 @@ class RobotController extends Controller
     use DebugLog;
 
     protected $autoOrder;
-    public function __construct(OrderService $service)
+    protected $bolOfferService;
+
+    public function __construct(OrderService $service, OfferService $offer_service)
     {
         $this->autoOrder = $service;
+        $this->bolOfferService = $offer_service;
     }
+
+
+    public function requestBolToConstructBolOffersExportCSVFile(){
+
+        $this->bolOfferService->prepare_CSV_Offer_Export('prod');
+    }
+
+
+    public function update_All_Process_statusses_In_Local_DB(){
+
+        $this->bolOfferService->update_process_status_create_offer_export();
+    }
+
 
     public function publishProducts()
     {

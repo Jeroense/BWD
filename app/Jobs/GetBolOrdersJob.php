@@ -51,7 +51,7 @@ class GetBolOrdersJob implements ShouldQueue
 
                 dump('Status code op orders/{orderid} niet 200 !');
                 $this->checkAndLogBolErrorResponse($bol_single_order_resp);
-                return 'http error-codes aanwezig'; // nog response loggen
+                return 'http error-codes aanwezig';
             }
 
             $reply_body_data = json_decode($bol_single_order_resp['bolbody'], true); // naar assoc_arr

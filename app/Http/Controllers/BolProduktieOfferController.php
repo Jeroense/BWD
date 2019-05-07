@@ -204,7 +204,7 @@ class BolProduktieOfferController extends Controller
                 ]);
             }
         }
-        $this->get_BolOffers_By_Id();  // nog job van maken
+        $this->get_BolOffers_By_Id();
     }
 
 

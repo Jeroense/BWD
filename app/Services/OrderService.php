@@ -2,9 +2,8 @@
 
 namespace App\Services;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Traits\SmakeApi;
-use App\Http\Traits\BolAPi;
+use App\Http\Traits\BolApiV3;
 use App\Http\Traits\DebugLog;
 use App\CustomVariant;
 use App\Order;
@@ -13,6 +12,8 @@ use App\Customer;
 use App\PostAddress;
 use App\ProductAttribute;
 use App\AttributeValue;
+use App\Jobs\GetBolOrdersJob;
+use function GuzzleHttp\json_decode;
 
 class OrderService
 {
@@ -20,122 +21,46 @@ class OrderService
 
     use SmakeApi;
     use DebugLog;
-    use BolAPi;
+    use BolAPiV3;
 
     private $bolErrorBody = null;
     private $erIsTenminsteEenOrderItemZonderCancelRequest = false;
     private $nullOrEmptyOrderIDsArePresent = [];
     private $nietBestaandeOrderIDSinOrderResponse = false;
 
+
+
     public function getOrdersFromBol(){
-        // $deXml = require 'mytestxml.php';
-        // exec('notepad.exe');
-        // om de xml test str te gebruiken wel eerst (test)customvariant entries aanmaken met de bijbehorende eans, title, reference codes
-        CustomVariant::truncate();
-        CustomVariant::create([
-                'variantName' => 't-shirt football',
-                'ean' => '5412810182312',
-                'size' => '4XL',
-                'filename' => 'plaatjetshirtfootball.png',
-                'compositeMediaId' => 34563,
-                'productionMediaId' => 12345,
-                'width_mm' => 2000.1,
-                'height_mm' => 2200.2,
-                'salePrice' => 25.75,
-                'boltitle' => 'T-shirt met voetbal-logo',
-                'referencecode' => '456.66',
-                'boldeliverycode' => '3-5d',
-                'boldescription' => 'Een leuk voetbal t-shirt']);
 
-        CustomVariant::create([
-                'variantName' => 't-shirt jantje',
-                'ean' => '6812810182312',
-                'size' => '4XL',
-                'filename' => 'plaatjetshirtjantje.png',
-                'compositeMediaId' => 34564,
-                'productionMediaId' => 12346,
-                'width_mm' => 2000.1,
-                'height_mm' => 2200.2,
-                'salePrice' => 25.75,
-                'boltitle' => 'T-shirt Jantje',
-                'referencecode' => '456.71',
-                'boldeliverycode' => '3-5d',
-                'boldescription' => 'T-shirt met logo van grappige Jantje.']);
 
-        CustomVariant::create([
-                'variantName' => 't-shirt pluche beertje bjorn',
-                'ean' => '7012810182312',
-                'size' => '3XL', 'filename' =>
-                'plaatjetshirtbjorn.png',
-                'compositeMediaId' => 34566,
-                'productionMediaId' => 12348,
-                'width_mm' => 1800.1,
-                'height_mm' => 2100.2,
-                'salePrice' => 23.75,
-                'boltitle' => 'T-shirt met beertje-logo',
-                'referencecode' => '456.73',
-                'boldeliverycode' => '3-5d',
-                'boldescription' => 'Een t-shirt met beertjes motief.']);
 
-        CustomVariant::create([
-                'variantName' => 't-shirt oh yeah',
-                'ean' => '7112810182312',
-                'size' => '2XL',
-                'filename' => 'plaatjetshirtoyeah.png',
-                'compositeMediaId' => 34567,
-                'productionMediaId' => 12349,
-                'width_mm' => 1800.1,
-                'height_mm' => 2100.2,
-                'salePrice' => 25.75,
-                'boltitle' => 'T-shirt Ohh..Yeahh..',
-                'referencecode' => '456.80',
-                'boldeliverycode' => '3-5d',
-                'boldescription' => 'Een t-shirt met de tekst: o yeah.']);
-
-        // $xml_obj = \simplexml_load_string($xmlstr);   //zelfde als onder
-        // $xml_obj_2 = new \SimpleXMLElement($xmlstr);    //zelfde als boven
-
-        // $xml_obj_toString = (new \SimpleXMLElement($xmlstr))->asXML();  // korte manier
-
-        // $xml_obj_string = $xml_obj->asXML();        // krijg je de totaal-gevormde symmetrische xml string
-        // $xml_obj_2_string = $xml_obj_2->asXML();    // krijg je de totaal-gevormde symmetrische xml string
-
-        $bolOrdersRestEndpoint = '/services/rest/orders/v2';
-
-        // GET /services/rest/orders/v2?page=1&fulfilment-method=FBR  // voorbeeld met query
-
-        $accept_header = 'application/vnd.orders-v2.1+xml';
-
-        $bolOrdersResponse = $this->makePlazaApiRequest($bolOrdersRestEndpoint, 'get', $accept_header); // je krijgt alleen de 'open' orders
-
-        // $bolOrdersResponse = ['bolstatuscode' => 200, 'bolbody' => $deXml, 'bolreasonphrase' => 'OK', 'bolheaders' => ['Content-Type' => 'application/xml']];   // test response
+        $bolOrdersResponse = $this->make_V3_PlazaApiRequest('demo',  'orders?fulfilment-method=FBR', 'get');
 
         if($bolOrdersResponse['bolstatuscode'] != 200){     // checken op http-errors/codes
             $this->checkAndLogBolErrorResponse($bolOrdersResponse);
-            // dump($bolOrdersResponse['bolstatuscode']);
             return;
         }
 
         if($bolOrdersResponse['bolstatuscode'] == 200){
-            $order_resp_code = $bolOrdersResponse['bolstatuscode'];
-            $order_resp_phrase = $bolOrdersResponse['bolreasonphrase'];
-            $order_resp_body = $bolOrdersResponse['bolbody'];
-            $bolBodyXMLObject = new \SimpleXMLElement($order_resp_body);
-            // doet het hier met scheduler
+            // $order_resp_code = $bolOrdersResponse['bolstatuscode'];
+            // $order_resp_phrase = $bolOrdersResponse['bolreasonphrase'];
+            // $order_resp_body = $bolOrdersResponse['bolbody'];
 
-            if( !isset($bolBodyXMLObject->Order->OrderId[0]) || (isset($bolBodyXMLObject->Order->OrderId[0]) && (string)$bolBodyXMLObject->Order->OrderId[0] == '') ){     // geen OrderId, geen order in $bolOrdersResponse, dus niet in $bolBodyXMLObject
-                // dump( 'Geen openstaande orders vanuit BOL!', $order_resp_code, $bolBodyXMLObject);
+            $bolRespBodystdClassObject = json_decode($bolOrdersResponse['bolbody']);
 
-                $this->putEmptyOrderRespInFile('empty_orders.txt', $order_resp_code, $order_resp_phrase, $order_resp_body);
+            if(!isset($bolRespBodystdClassObject->orders) || !isset($bolRespBodystdClassObject->orders[0]->orderId)){
 
-                return 'Scheduler loopt';
+                dump( 'Geen openstaande orders vanuit BOL!', $bolRespBodystdClassObject);
+                return 'Geen openstaande orders vanuit BOL!';
             }
 
+
+
             // checken of er orders aanwezig zijn, en of elke order in de order response een orderid heeft
-            if( isset($bolBodyXMLObject->Order->OrderId[0])  ){   // OrderId isset = true bij String.Empty
-                foreach($bolBodyXMLObject->Order as $order){
-                    dump($order->OrderId);
-                    if( !isset($order->OrderId) || ( isset( $order->OrderId ) && (string)$order->OrderId == '' ) ) {
+            if( isset($bolRespBodystdClassObject->orders[0]->orderId)  ){   // OrderId isset = true bij String.Empty
+                foreach($bolRespBodystdClassObject->orders as $order){
+                    dump($order->orderId);
+                    if( !isset($order->orderId) || ( isset( $order->orderId ) && (string)$order->orderId == '' ) ) {
                         \array_push( $this->nullOrEmptyOrderIDsArePresent, 'ispresent');
                     }
                 }
@@ -143,305 +68,36 @@ class OrderService
                     $this->nietBestaandeOrderIDSinOrderResponse = true;
                     dump($this->nullOrEmptyOrderIDsArePresent);
                 }
-                dump($this->nullOrEmptyOrderIDsArePresent);
+                dump('Zijn er lege orderIds? : ', \in_array('ispresent', $this->nullOrEmptyOrderIDsArePresent) ? 'Ja' : 'Nee');
             }
 
             if($this->nietBestaandeOrderIDSinOrderResponse){
                 $this->checkAndLogBolErrorResponse($bolOrdersResponse);
-                dd('Ongeldige of ontbrekende OrderIDs in Order response!');
+                dump('Ongeldige of ontbrekende OrderIDs in Order response!');
                 return;
             }
 
             // is er een order aanwezig in de resp-body en zijn alle orderid's niet null of String.Empty?
-            if( isset($bolBodyXMLObject->Order->OrderId[0]) && (string)$bolBodyXMLObject->Order->OrderId[0] != '' &&  $this->nietBestaandeOrderIDSinOrderResponse == false){      // er is tenmiste 1 order, en alle orderid's zijn niet null of ''.
+            if( isset($bolRespBodystdClassObject->orders[0]->orderId) && (string)$bolRespBodystdClassObject->orders[0]->orderId != '' &&  $this->nietBestaandeOrderIDSinOrderResponse == false){      // er is tenmiste 1 order, en alle orderid's zijn niet null of ''.
                 dump("Er is tenminste 1 (bij bol openstaande) order aanwezig en alle orderid's zijn niet null of empty strings.");
 
-                foreach($bolBodyXMLObject->Order as $order){
-                    $this->erIsTenminsteEenOrderItemZonderCancelRequest = false; // is er tenminste 1 orderitem met 'CancelRequest' = false   aanwezig?
-                    $this->nullOrEmptyOrderIDsArePresent = [];
-                    foreach ($order->OrderItems->OrderItem as $item) {
-                        if( strtoupper((string)$item->CancelRequest) == 'FALSE' ){
+                foreach($bolRespBodystdClassObject->orders as $order){
+                    // $this->erIsTenminsteEenOrderItemZonderCancelRequest = false; // is er tenminste 1 orderitem met 'CancelRequest' = false   aanwezig?
+                    // $this->nullOrEmptyOrderIDsArePresent = [];
+                    foreach ($order->orderItems as $item) {
+
+                            if( $item->cancelRequest == false ){
                             $this->erIsTenminsteEenOrderItemZonderCancelRequest = true;
-                            dump('Er is tenminste 1 order item zonder cancel request: item: ' . $item->OrderItemId);
-                        }
-                    }
-                    Order::where('bolOrderNr', (string)$order->OrderId)->doesntExist() ? $this->newOrder($order) : $this->existingOrder($order);  // ipv switch statement
-                }
-            }
-        }
-        // alle orders met status='new' returnen
-        return Order::where('orderStatus', 'new');
-    }
-
-    public function newOrder(\SimpleXMLElement $order)
-    {
-        // nieuwe order aanmaken, zoeken naar of customer bekend is, zo niet nieuwe customer aanmaken, ook orderitems
-        dump('Order bestaat nog niet in lokale DB.');
-        dump('OrderId is hier: ' . (string)$order->OrderId);
-
-        if($this->erIsTenminsteEenOrderItemZonderCancelRequest){
-            $customerAdressDataFromBolOrderResp =   ['firstName' => (string)$order->CustomerDetails->BillingDetails->Firstname,
-                                                    'lastName' => (string)$order->CustomerDetails->BillingDetails->Surname,
-                                                    'postalCode' => (string)$order->CustomerDetails->BillingDetails->ZipCode,
-                                                    'houseNr' => (string)$order->CustomerDetails->BillingDetails->Housenumber,
-                                                    'houseNrPostfix' => (string)$order->CustomerDetails->BillingDetails->HousenumberExtended];
-
-            $shipmentAdressDataFromBolOrderResp =   ['firstName' => (string)$order->CustomerDetails->ShipmentDetails->Firstname,
-                                                    'lastName' => (string)$order->CustomerDetails->ShipmentDetails->Surname,
-                                                    'postalCode' => (string)$order->CustomerDetails->ShipmentDetails->ZipCode,
-                                                    'houseNr' => (string)$order->CustomerDetails->ShipmentDetails->Housenumber,
-                                                    'houseNrPostfix' => (string)$order->CustomerDetails->ShipmentDetails->HousenumberExtended,];
-
-            $allCustomerDataFromBolOrderResp =      ['firstName' => (string)$order->CustomerDetails->BillingDetails->Firstname,
-                                                    'lastName' => (string)$order->CustomerDetails->BillingDetails->Surname,
-                                                    'street' => (string)$order->CustomerDetails->BillingDetails->Streetname,
-                                                    'postalCode' => (string)$order->CustomerDetails->BillingDetails->ZipCode,
-                                                    'houseNr' => (string)$order->CustomerDetails->BillingDetails->Housenumber,
-                                                    'houseNrPostfix' => (string)$order->CustomerDetails->BillingDetails->HousenumberExtended,
-                                                    'city' => (string)$order->CustomerDetails->BillingDetails->City,
-                                                    'countryCode' => (string)$order->CustomerDetails->BillingDetails->CountryCode,
-                                                    'email' => (string)$order->CustomerDetails->BillingDetails->Email  ];
-
-            $allShipmentDataFromBolOrderResp =      ['firstName' => (string)$order->CustomerDetails->ShipmentDetails->Firstname,
-                                                    'lastName' => (string)$order->CustomerDetails->ShipmentDetails->Surname,
-                                                    'street' => (string)$order->CustomerDetails->ShipmentDetails->Streetname,
-                                                    'postalCode' => (string)$order->CustomerDetails->ShipmentDetails->ZipCode,
-                                                    'houseNr' => (string)$order->CustomerDetails->ShipmentDetails->Housenumber,
-                                                    'houseNrPostfix' => (string)$order->CustomerDetails->ShipmentDetails->HousenumberExtended,
-                                                    'city' => (string)$order->CustomerDetails->ShipmentDetails->City,
-                                                    'countryCode' => (string)$order->CustomerDetails->ShipmentDetails->CountryCode,
-                                                    'email' => (string)$order->CustomerDetails->ShipmentDetails->Email ];
-
-            $nogNietBestaandeCustomer = Customer::where($customerAdressDataFromBolOrderResp)->doesntExist();
-
-            if(!$nogNietBestaandeCustomer){ // bestaande customer, dwz slechts bestaand in alleen de customer table
-                $bestaandeCust = Customer::where($customerAdressDataFromBolOrderResp)->first();
-                $geenShipmentAdresNu = $customerAdressDataFromBolOrderResp == $shipmentAdressDataFromBolOrderResp; //is er een shipment adres? true als geen
-                if($geenShipmentAdresNu){
-                    dump('Bestaande customer. Geen apart shipmentadres.');
-
-                    // 1st checken of er een (oud) shipment adres in de lokale DB bekend is bij deze customer, zo ja verwijderen
-                    // en met $bestaandeCust->update([ 'hasDeliveryAddress' => 0] ); het bestaande customer record updaten.
-                    if($bestaandeCust->hasDeliveryAddress == 1){    // $bestaande customer heeft bestaand (oud) afwijkend deliveryadress
-                        $postAdrr = PostAddress::where('customerId', $bestaandeCust->id)->first();
-                        if($postAdrr->exists()){
-                            $postAdrr->delete();
-                            $bestaandeCust->update([ 'hasDeliveryAddress' => false] );
+                            dump('Er is tenminste 1 order item zonder cancel request: item: '); dump($item->orderItemId);
                         }
                     }
 
-                    $this->storeNewBOLOrderInDB($bestaandeCust->id, (string)$order->OrderId);   // nu order aanmaken voor bekende customer zonder apart shipmentadr.
 
-                    if(isset($order->OrderItems->OrderItem[0])){    // maak orderitems aan:
-                        foreach($order->OrderItems->OrderItem as $item){
-                            if(strtoupper($item->CancelRequest) == 'FALSE'){
-                                $this->storeNewOrderItemInDB($item,  Order::where('bolOrderNr', (string)$order->OrderId)->value('id') );    // $item is een instance of SimpleXMLElement
-                            }
-                        }
-                    }
-                }
+                    GetBolOrdersJob::dispatch($order, 'demo');
 
-                if(!$geenShipmentAdresNu){   //  wel apart shipment adres nu
-                    dump('Bestaande customer. Wel apart shipmentadres nu.');
-                    // als er een bekend shipmentadr in lokale DB aanwezig is, deze deleten.
-                    // Dan er weer een aanmaken met recente data uit deze orderresponse
-                    if( PostAddress::where('customerId', $bestaandeCust->id)->exists() ){
-                        PostAddress::where('customerId', $bestaandeCust->id)->delete();
-                    }
-
-                    $this->storeNewPostAddressInDB($allShipmentDataFromBolOrderResp, $bestaandeCust->id);
-                    $this->storeNewBOLOrderInDB($bestaandeCust->id, (string)$order->OrderId);   // nu order aanmaken voor bekende customer met net geupdate shipment adres.
-
-                    if(isset($order->OrderItems->OrderItem[0])){        // maak orderitems aan:
-                        foreach($order->OrderItems->OrderItem as $item){
-                            if(strtoupper($item->CancelRequest) == 'FALSE'){
-                                $this->storeNewOrderItemInDB($item,  Order::where('bolOrderNr', (string)$order->OrderId)->value('id') );
-                            }
-                        }
-                    }
-                }
-            }
-
-            if($nogNietBestaandeCustomer){
-                $heeftGeenShipmentAdr = $customerAdressDataFromBolOrderResp == $shipmentAdressDataFromBolOrderResp;  // shipmentadr = billingadr
-                dump('Shipment adres is het Billing adres: ' . ($heeftGeenShipmentAdr ? 'true' : 'false') );
-
-                if(!$heeftGeenShipmentAdr){  // heeft wel ander shipment adres
-                    $this->storeNewCustomerInDB($allCustomerDataFromBolOrderResp, true, true);
-                    $this->storeNewPostAddressInDB( $allShipmentDataFromBolOrderResp, Customer::where($customerAdressDataFromBolOrderResp)->value('id') );
-                    $this->storeNewBOLOrderInDB(Customer::where($customerAdressDataFromBolOrderResp, ['hasDeliveryAddress' => true])->value('id'), (string)$order->OrderId);
-
-                    if(isset($order->OrderItems->OrderItem[0])){
-                        foreach($order->OrderItems->OrderItem as $item){
-                            if(strtoupper($item->CancelRequest) == 'FALSE'){
-                                $this->storeNewOrderItemInDB($item, Order::where('bolOrderNr', (string)$order->OrderId)->value('id'));    // $item is een instance of SimpleXMLElement
-                            }
-                        }
-                    }
-                }
-
-                if($heeftGeenShipmentAdr){
-                    $this->storeNewCustomerInDB($allCustomerDataFromBolOrderResp, true, false);
-                    $this->storeNewBOLOrderInDB(Customer::where($customerAdressDataFromBolOrderResp, ['hasDeliveryAddress' => false])->value('id'), (string)$order->OrderId);       // nu order aanmaken in DB:
-
-                    if(isset($order->OrderItems->OrderItem[0])){        // nu orderitems aanmaken in DB:
-                        foreach($order->OrderItems->OrderItem as $item){
-                            if(strtoupper($item->CancelRequest) == 'FALSE'){
-                                $this->storeNewOrderItemInDB($item, Order::where('bolOrderNr', (string)$order->OrderId)->value('id'));    // $item is een instance of SimpleXMLElement
-                            }
-                        }
-                    }
-                }
-            }
-            dump($this->erIsTenminsteEenOrderItemZonderCancelRequest);
-        }
-        return; // whatever there is to return !!
-    }
-
-
-    // scenario: order bestaat reeds in lokale DB. Nu kan er een OrderItem->CancelRequest op true staan, hier op checken
-    // dit natuurlijk alleen bij orderItems van een order waarvan de status nog 'new' is.
-    // in orderitems een kolom status: pending, failure success. in de orders response daarop checken en deze bolOrder(Item)State updaten aan de shipment/resource status van de bol status van het item
-    // pas order naar smake als we van bol de shipment status vh orderitem als 'success' hebben geconfirmed
-    // order komt binnen -> 5 min wachten, weer checken op cancellations -> dan shipment bevestigen aan bol -> shipment status confirmed/success van bol -> dan pas naar smake de order sturen
-    public function existingOrder(\SimpleXMLElement $order)
-    {
-        dump('Order bestaat reeds in DB');
-        $de_order = Order::where('bolOrderNr', (string)$order->OrderId )->first();
-
-        if(strtoupper($de_order->orderStatus) != 'NEW'){
-            dump('Volgens BOL is deze order nog open. Order bestaat reeds in DB, maar order status is bij ons niet meer NEW');
-            return; // whatever there is to return !!
-        }
-
-        if(strtoupper($de_order->orderStatus) == 'NEW'){   // dry nakijken
-            // checken op Cancelrequest == 'true'
-            foreach($order->OrderItems->OrderItem as $item){
-                if(strtoupper((string)$item->CancelRequest) == 'TRUE'){
-                    // $OrderItemFromDBBestaat = OrderItem::where(['orderId' => Order::where('bolOrderNr', (string)$order->OrderId )->value('id'),
-                    //                                         'bolOrderItemId' => (string)$item->OrderItemId])->exists();
-                    $OrderItemFromDBBestaat = OrderItem::where(['orderId' => $de_order->id, 'bolOrderItemId' => (string)$item->OrderItemId])->exists();
-                    if($OrderItemFromDBBestaat){
-
-                        $OrderItemFromDB = OrderItem::where(['orderId' => $de_order->id, 'bolOrderItemId' => (string)$item->OrderItemId])->first();
-                        dump('Deleting order item: ' . $OrderItemFromDB->bolOrderItemId  );
-                        $OrderItemFromDB->delete();
-                    }
-                }
-
-                // nu nog voor case scenario: order bestaat in DB, maar orderitem nog niet, van cancelrequest=true naar false gezet
-                if(strtoupper((string)$item->CancelRequest) == 'FALSE'){
-                    $OrderItemFromDBBestaatNiet = OrderItem::where(['orderId' => $de_order->id, 'bolOrderItemId' => (string)$item->OrderItemId])->doesntExist();
-                    if($OrderItemFromDBBestaatNiet){
-
-                        $this->storeNewOrderItemInDB($item, $de_order->id);
-                    }
-                }
-            }
-            // checken of er nu uberhaupt nog wel orderitems aanwezig zijn voor deze order in de lokale DB
-            // $lokaleOrderItems = Order::where('bolOrderNr', (string)$order->OrderId )->first()->orderItems;
-            $lokaleOrderItems = $de_order->orderItems;
-            $orderItemsCount = $de_order->orderItems()->count();
-
-            dump('lokaleOrderItems zijn: ',  $lokaleOrderItems, 'aantal orderitems is nu: ' . $orderItemsCount );
-
-            if($orderItemsCount == 0){
-                dump('Geen orderitems meer voor order: ' . $de_order->bolOrderNr . ' Deze order wordt verwijderd.');
-                // eerst nog customerId ophalen van deze te deleten order, na delete is deze id niet meer beschikbaar..
-                $het_customer_id = $de_order->customerId;
-                $deOpOudeOrdersTeCheckenCustomer = Customer::find($het_customer_id);
-                $de_order->delete();
-                // zijn er nu nog (oude) orders bekend voor deze customer?
-                $aantalOudeOrdersVanDezeCustomer = Order::where('customerId', $het_customer_id)->count();
-
-                if($aantalOudeOrdersVanDezeCustomer == 0){
-                    dump('Klant ' . $deOpOudeOrdersTeCheckenCustomer->firstName . ' ' . $deOpOudeOrdersTeCheckenCustomer->lastName
-                            . ' heeft geen eerdere bekende orders in de lokale DB. Deze klant wordt verwijderd.');
-                    $deOpOudeOrdersTeCheckenCustomer->delete();
                 }
             }
         }
-        // return nu als er orders zijn, de orders met een orderstatus='new'
-        // return als er geen orders zijn de http-xml-response
-        return; // whatever there is to return !!
-    }
-
-    public function storeNewCustomerInDB(array $custData, bool $billingAddr, bool $shipmentAddr){
-        $custData['hasBillingAddress'] =  $billingAddr; //  deze key toevoegen
-        $custData['hasDeliveryAddress'] = $shipmentAddr;
-        Customer::create($custData);
-        dump('new customer created');
-    }
-
-    public function storeNewPostAddressInDB(array $postAdressData, $customerId){
-        $postAdressData['customerId'] = $customerId;
-        dump($postAdressData);
-        PostAddress::create($postAdressData);
-        dump('new post adress created');
-    }
-
-    public function storeNewBOLOrderInDB($custId, $bolOrderId){
-        $newOrder = new Order();
-        $newOrder->customerId = $custId;
-        $newOrder->bolOrderNr = $bolOrderId;
-        $newOrder->orderStatus = 'new';
-        $newOrder->save();
-        dump('Order created in DB: ' . $bolOrderId );
-    }
-
-    public function storeNewOrderItemInDB(\SimpleXMLElement $hetItem, $orderID){
-        $newOrderItem = new OrderItem();
-        $newOrderItem->orderId = $orderID;
-        $newOrderItem->bolOrderItemId = (string)$hetItem->OrderItemId;
-        $newOrderItem->qty = (int)$hetItem->Quantity;
-        // customvariantid van de customvariant met het EAN uit het $bolBodyXMLObject
-        $newOrderItem->customVariantId = CustomVariant::where('ean', (string)$hetItem->EAN)->value('id');
-        $newOrderItem->latestDeliveryDate = (string)$hetItem->LatestDeliveryDate;
-        $newOrderItem->save();
-        dump('er is een order item aangemaakt');
-    }
-
-    public function checkAndLogBolErrorResponse($bol_response){
-        $code = (string)$bol_response['bolstatuscode']; $firstNumber = \substr($code, 0, 1);
-        if($bol_response['bolheaders']['Content-Type'] == 'application/xml'){
-            if( isset($bol_response['bolbody']) ){
-                $bolBodyResp_AsObj = new \SimpleXMLElement($bol_response['bolbody']);
-                $this->bolErrorBody = $bolBodyResp_AsObj->asXML();
-            }
-            switch($firstNumber){
-                case '4':
-                    putContent('client_errors.txt', $code, $bol_response['bolreasonphrase']);
-                break;
-
-                case '5':
-                    putContent('server_errors.txt', $code, $bol_response['bolreasonphrase']);
-                break;
-
-                default:
-                    putContent('other_errors.txt', $code, $bol_response['bolreasonphrase']);
-            }
-        }
-        return; // whatever there is to return !!
-    }
-
-    public function putContent($fileName, $code, $phrase)
-    {
-        file_put_contents( storage_path( 'app/public') . '/' . $fileName, (date('D, d M Y H:i:s') . "\r\n" . $code . " " . $phrase  . "\r\n\r\n"), FILE_APPEND );
-        if($this->bolErrorBody != null){
-            file_put_contents( storage_path( 'app/public') .'/' . $fileName, $this->bolErrorBody . "\r\n\r\n", FILE_APPEND );
-            $this->bolErrorBody = null;
-        }
-        return; // whatever there is to return !!
-    }
-
-    public function putEmptyOrderRespInFile($fileName, $code, $phrase, $body)
-    {
-        // komt hier ook
-        file_put_contents( storage_path( 'app/public') . '/' . $fileName, ((string)date('D, d M Y H:i:s') . "\r\n" . $code . " " . $phrase  .
-        "\r\n" . (string)$body) . "\r\n\r\n", FILE_APPEND );
-        // file_put_contents( storage_path( 'app/public') . '/test.txt' ,  'Hallo het werkt');
-
-        return; // whatever there is to return !!
     }
 
     // end code bart

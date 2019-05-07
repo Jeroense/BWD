@@ -51,7 +51,7 @@ class TestController extends Controller
 
     public function test_Static_Storage(Request $req){
 
-        // dump(\App\MyCustomClasses\StaticStorage::$process_status);  // werkt niet, gezette static data verdwijnt na wijziging route
+        // dump(\App\MyCustomClasses\StaticStorage::$process_status);
         // dump(Config::all());
         dump($req->session()->all());
         dump(session());
@@ -69,12 +69,12 @@ class TestController extends Controller
 
     public function prepare_CSV_Offer_Export_DEMO(){
 
-        $this->prepare_CSV_Offers_export_demo();
+        $this->prepare_CSV_Offers_export('demo');
     }
 
     public function  prepare_CSV_Offer_Export_PROD(){
 
-        $this->prepare_CSV_Offers_export_prod();
+        $this->prepare_CSV_Offers_export('prod');
     }
 
     public function uploadSingleOfferToBolV3_DEMO(){
@@ -168,10 +168,10 @@ class TestController extends Controller
         $this->get_Order_From_BOL_V3_by_Id('demo',  "7616222700");
     }
 
-    public function getProcStatus_EntId_EventType_PRODSERVER(){
+    // public function getProcStatus_EntId_EventType_PRODSERVER(){
 
-        //  $this->getProcessStatusBy_EntityId_and_EventType_PROD( '118419857', 'CREATE_OFFER_EXPORT');
-    }
+    //     //  $this->getProcessStatusBy_EntityId_and_EventType_PROD( '118419857', 'CREATE_OFFER_EXPORT');
+    // }
 
     public function getProcessStatusById($id){
 

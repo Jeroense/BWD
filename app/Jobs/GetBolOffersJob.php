@@ -70,9 +70,9 @@ class GetBolOffersJob implements ShouldQueue
 
                         // nog eventueel alle response-velden controleren met isset()?
                         $bol_offer_in_db->update([
-                            'referenceCode' => $single_offer_as_stdclass->referenceCode,
+                            'referenceCode' => isset($single_offer_as_stdclass->referenceCode) ? $single_offer_as_stdclass->referenceCode : null,
                             'onHoldByRetailer' => $single_offer_as_stdclass->onHoldByRetailer,
-                            'unknownProductTitle' => $product_title,
+                            'unknownProductTitle' => $product_title,    // deze naam nog in table aanpassen naar 'producttitle'
                             'bundlePricesQuantity' => $single_offer_as_stdclass->pricing->bundlePrices[0]->quantity,
                             'bundlePricesPrice' => $single_offer_as_stdclass->pricing->bundlePrices[0]->price,
                             'stockAmount' => $single_offer_as_stdclass->stock->amount,

@@ -28,9 +28,19 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call('App\Http\Controllers\RobotController@processBolOrders')->everyMinute();
+        $schedule->call('App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile')
+          ->weekdays()
+          ->hourly()
+          ->timezone('Europe/Amsterdam')
+          ->between('8:00', '18:00');
+        $schedule->call('App\Services\OfferService@update_process_status_create_offer_export')
+        ->weekdays()
+        ->hourly()
+        ->timezone('Europe/Amsterdam')
+        ->between('8:00', '18:00');;
+
+
         // $schedule->call('App\Http\Controllers\RobotController@publishProducts')->everyMinute();
-
-
         // $schedule->call('App\Http\Controllers\RobotController@statusCheck')->everyMinute();
         // $schedule->call('App\Http\Controllers\RobotController@changeName')->everyMinute();
     }
