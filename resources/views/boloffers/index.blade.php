@@ -20,11 +20,14 @@
             <table class="table is-narrow">
                 <thead>
                 <tr>
+
                     <th>offerId</th>
                     <th>EAN</th>
-                    <th>Hold</th>
+                    <th>Name</th>
+                    <th>OnHold</th>
                     <th>Price</th>
                     <th>Stock</th>
+                    <th>CorrectedStock</th>
                     <th>Fulfil</th>
                     <th>DeliveryCode</th>
                     <th>Condition</th>
@@ -36,8 +39,19 @@
                 <tbody>
                     @foreach ($bol_produktie_offers as $offer)
                         <tr>
-                            <td>{{ $offer->offerId }}</td>
+
+                            @if($offer->offerId)
+                            <td>{{ $offer->offerId }} </td>
+                            @else
+                            <td> nog onbekend! </td>
+                            @endif
+
                             <td>{{ $offer->ean }} </td>
+                            @if($offer->unknownProductTitle)
+                            <td>{{ $offer->unknownProductTitle }} </td>
+                            @else
+                            <td> onbekend! </td>
+                            @endif
                             <td>{{ $offer->onHoldByRetailer }}</td>
                             <td>{{ $offer->bundlePricesPrice }}</td>
                             <td>{{ $offer->stockAmount }}</td>

@@ -30,7 +30,7 @@ class RobotController extends Controller
     }
 
 
-    public function update_All_Process_statusses_In_Local_DB(){
+    public function update_offer_export_process_statusses_in_local_DB(){
 
         $this->bolOfferService->update_process_status_create_offer_export();
     }

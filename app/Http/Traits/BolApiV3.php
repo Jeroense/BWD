@@ -4,10 +4,11 @@ namespace App\Http\Traits;
 
 use GuzzleHttp\Client;
 use function GuzzleHttp\json_decode;
+use function GuzzleHttp\json_encode;
 use App\CustomVariant;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
-use function GuzzleHttp\json_encode;
+
 use App\BolToken;
 
 trait BolApiV3 {
@@ -402,7 +403,7 @@ trait BolApiV3 {
                 if(strtoupper($method) == "DELETE" || strtoupper($method) == "PUT" || strtoupper($method) == "POST"){
 
 
-                    $bolresponse = $client->request($method, $rest_endpoint, ['http_errors' => false ,'headers' => $headers, 'body' => $requestBody]); // 'http errors' => false, zou geen exceptions mogen geven zodat ik gewoon de codes en de resp body als xml terugkrijg..
+                    $bolresponse = $client->request($method, $rest_endpoint, ['http_errors' => false ,'headers' => $headers, 'body' => $requestBody]);
 
                     $bol_resp_body = (string)$bolresponse->getBody();
                     $bol_resp_headers = $bolresponse->getHeaders();

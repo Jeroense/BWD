@@ -17,32 +17,36 @@ class OfferService
         use BolApiV3;
 
 
-
+        // doe initiele opdracht tot aanmaken csv-offer-export-file, en zet de process-status response in 'bol_proces_statuses'
         public function prepare_CSV_Offer_Export($serverType){
 
-            $bol_generate_offers_csv = $this->prepare_CSV_Offers_export($serverType);
+            $bol_generate_offers_csv_resp = $this->prepare_CSV_Offers_export($serverType);
 
 
-            if( ($bol_generate_offers_csv['bolstatuscode'] != 202) ||  (!isset($bol_generate_offers_csv['bolbody']) ) ){
+            if( ($bol_generate_offers_csv_resp['bolstatuscode'] != 202) ||  (!isset($bol_generate_offers_csv_resp['bolbody']) ) ){
 
                 dump( 'response op de aanmaak request voor een offer-export is niet 202!');
 
                 return 'statuscode geen 202';
             }
 
-            $process_status_object = json_decode($bol_generate_offers_csv['bolbody']);
+            $process_status_object = json_decode($bol_generate_offers_csv_resp['bolbody']);
 
-            BolProcesStatus::where(['process_status_id' => $process_status_object->id,
-                                    // 'entityId' => isset( $process_status_object->entityId) ? $process_status_object->entityId : null,
-                                    'eventType' => $process_status_object->eventType ])->first()->exists() ? $this->update_Bol_Process_Status($process_status_object) : $this->create_Bol_Process_Status_after_POST_Make_offer_Export_CSV($process_status_object);
+            $latest_proc_status_db_entry = BolProcesStatus::where(['process_status_id' => $process_status_object->id,
+               'eventType' => $process_status_object->eventType ])->latest()->first();
 
-            // $process_status = BolProcesStatus::where(['process_status_id' => $process_status_object->id,
-            //                                         //   'entityId' =>  isset( $process_status_object->entityId) ? $process_status_object->entityId : null,
-            //                                           'eventType' => $process_status_object->eventType ])->first();
+               // na ::where([])->latest()->first(), kreeg ik hier errors met ->exists() dus dan maar met != null controleren of aanwezig
+               if($latest_proc_status_db_entry != null){
 
+                $this->update_Bol_Process_Status($process_status_object);
+               }
+               else{
+                $this->create_Bol_Process_Status($process_status_object);
+               }
 
             return;
         }
+
 
         public function create_Bol_Process_Status_after_POST_Make_offer_Export_CSV(\stdClass $process_status_object){
 
@@ -58,8 +62,8 @@ class OfferService
                                      ]);
 
             // in de hoop, dat de bol api in staat is, direct na de initiele process-status response na een POST opdracht tot
-            // het aanmaken van een offer-export-csv, om een geupdate process-status te geven, met een 'entityId'
-            $this->getUpdatedProcessStatusFrom_prepare_CSV_Offer_Export_Response('prod', $process_status_object->id);
+            // het aanmaken van een offer-export-csv, om een geupdate process-status te geven, met een 'entityId' -> neen. duurt langer.
+            // $this->getUpdatedProcessStatusFrom_prepare_CSV_Offer_Export_Response('prod', $process_status_object->id);
 
             return;
         }
@@ -120,7 +124,8 @@ class OfferService
             if( $latest_create_offer_export_db_entry->exists() ){
 
                 if($latest_create_offer_export_db_entry->status = 'PENDING'){
-                    $resp =  $this->make_V3_PlazaApiRequest('prod', "process-status/{$latest_create_offer_export_db_entry->process_status_id}");
+                    // $resp =  $this->make_V3_PlazaApiRequest('prod', "process-status/{$latest_create_offer_export_db_entry->process_status_id}");
+                    $resp = $this->geefProcesStatusById('prod', $latest_create_offer_export_db_entry->process_status_id);
 
                     if($resp['bolstatuscode'] != 200){
                             return;
@@ -142,7 +147,7 @@ class OfferService
 
                 if($latest_create_offer_export_db_entry->status = 'SUCCESS'){
 
-                    $this->get_CSV_Offer_Export_PROD();
+                    $this->get_CSV_Offer_Export_PROD($latest_create_offer_export_db_entry);
                 }
 
                 return;
@@ -183,14 +188,15 @@ class OfferService
         //     }
         // }
 
-        public function get_CSV_Offer_Export_PROD(){
+        public function get_CSV_Offer_Export_PROD($process_status_model_instance){
 
 
-            $latest_succesfull_made_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT', 'status' => 'SUCCESS'])->latest()->first();
+            // $latest_succesfull_made_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT', 'status' => 'SUCCESS'])->latest()->first();
 
-            if( $latest_succesfull_made_offer_export_db_entry->exists() ){
+            // if( $latest_succesfull_made_offer_export_db_entry->exists() ){
 
-                $latest_csv_offer_export_id = $latest_succesfull_made_offer_export_db_entry->entityId;
+                // $latest_csv_offer_export_id = $latest_succesfull_made_offer_export_db_entry->entityId;
+                $latest_csv_offer_export_id = $process_status_model_instance->entityId;
 
                 // slaat, bij 200, de verkregen csv offer export data op in file: storage_path( 'app/public') . '/' .  bol-get-csv-export-response-{$serverType}.csv
                 $csvFileName = $this->getCSVOfferExportPROD('prod', $latest_csv_offer_export_id);
@@ -206,10 +212,10 @@ class OfferService
                 }
 
                 $this->zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_array);
-                dump('in get_CSV_Offer_Export_PROD');
+                // dump('in get_CSV_Offer_Export_PROD');
 
                 return;
-            }
+            // }
         }
 
 
@@ -288,56 +294,7 @@ class OfferService
                 GetBolOffersJob::dispatch('prod', $lokale_db_offers->offerId);
 
 
-
-                // $bol_offer_by_id_response_array = $this->get_Bol_Offer_by_Id_PROD("prod", $lokale_db_offers->offerId);   // blijkt 28 reqs/sec toegestaan  retailer/offers/{offer_id}
-
-                //     if($bol_offer_by_id_response_array['bolstatuscode'] != 200){
-                //         return 'Error bij request naar offers/{offerId}. Status code niet 200 !';
-                //     }
-                // // $this->putResponseInFile("bol-offer-response-by-id-{$serverType}.txt", $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
-                // // $bol_response_array['bolbody'], $bol_response_array['x_ratelimit_limit'], $bol_response_array['x_ratelimit_reset'], $bol_response_array['x_ratelimit_remaining'], (string)time());
-                //     if( isset($bol_offer_by_id_response_array['bolbody']) && strpos($bol_offer_by_id_response_array['bolheaders']['Content-Type'][0], 'json') != false ){
-
-                //         $single_offer_as_stdclass = json_decode($bol_offer_by_id_response_array['bolbody']);
-
-                //         $bol_offer_in_db = BolProduktieOffer::where(
-                //                 ['offerId' => $single_offer_as_stdclass->offerId, 'ean' => $single_offer_as_stdclass->ean])->first();
-
-                //         $product_title = '';
-                //         $not_publishable_reason = 'Is publishable. No errors!';
-
-                //         // ofwel de property: ->unknownProductTitle  ofwel property:  ->store->productTitle    is aanwezig in reply
-                //         if( isset($single_offer_as_stdclass->unknownProductTitle) ){
-                //             $product_title = $single_offer_as_stdclass->unknownProductTitle;
-                //         }
-                //         if( isset($single_offer_as_stdclass->store->productTitle) ){
-                //             $product_title = $single_offer_as_stdclass->store->productTitle;
-                //         }
-                //         if( isset($single_offer_as_stdclass->notPublishableReasons[0]->description) ){                   // is niet aanwezig in response
-                //             $not_publishable_reason = $single_offer_as_stdclass->notPublishableReasons[0]->description;  // als alles ok/publishable is
-                //         }
-
-                //         // nog eventueel alle response-velden controleren met isset()?
-                //         $bol_offer_in_db->update([
-                //             'referenceCode' => $single_offer_as_stdclass->referenceCode,
-                //             'onHoldByRetailer' => $single_offer_as_stdclass->onHoldByRetailer,
-                //             'unknownProductTitle' => $product_title,
-                //             'bundlePricesQuantity' => $single_offer_as_stdclass->pricing->bundlePrices[0]->quantity,
-                //             'bundlePricesPrice' => $single_offer_as_stdclass->pricing->bundlePrices[0]->price,
-                //             'stockAmount' => $single_offer_as_stdclass->stock->amount,
-                //             'correctedStock' => $single_offer_as_stdclass->stock->correctedStock,
-                //             'stockManagedByRetailer' => $single_offer_as_stdclass->stock->managedByRetailer,
-                //             'fulfilmentType' => $single_offer_as_stdclass->fulfilment->type,
-                //             'fulfilmentDeliveryCode' => $single_offer_as_stdclass->fulfilment->deliveryCode,
-                //             'fulfilmentConditionName' => $single_offer_as_stdclass->condition->name,
-                //             'fulfilmentConditionCategory' => $single_offer_as_stdclass->condition->category,
-                //             'notPublishableReasonsCode' => $single_offer_as_stdclass->notPublishableReasons[0]->code,
-                //             'notPublishableReasonsDescription' => $not_publishable_reason
-                //         ]);
-                //         dump('bol_produktie_offers table succesvol geupdated voor offer-id: ');
-                //         dump($single_offer_as_stdclass->offerId);
-                //     }
-                }  // endforeach
+                }
         }
 
 

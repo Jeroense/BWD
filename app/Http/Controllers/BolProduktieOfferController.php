@@ -21,51 +21,76 @@ class BolProduktieOfferController extends Controller
     }
 
 
+    // heb het idee dat: ook al zit je throttle-matig (ca 10 reqs/uur) nog binnen de grenzen,
+    // als je binnen enkele minuten, b.v. 3 x achter elkaar een nieuwe POST prepare_CSV_Offer_Export_PRODUCTION() doet,
+    // de plaza-api met 500 errort. Plaza-api kan dit niet aan.
     public function prepare_CSV_Offer_Export_PRODUCTION(){
 
-        $bol_generate_offers_csv = $this->prepare_CSV_Offers_export('prod');
+        $bol_generate_offers_csv_resp = $this->prepare_CSV_Offers_export('prod');
 
 
-        if( ($bol_generate_offers_csv['bolstatuscode'] != 202) ||  (!isset($bol_generate_offers_csv['bolbody']) ) ){
+        if( ($bol_generate_offers_csv_resp['bolstatuscode'] != 202) ||  (!isset($bol_generate_offers_csv_resp['bolbody']) ) ){
 
-            dd( 'response op de aanmaak request voor een offer-export is niet 202!');
+            dump( 'response op de aanmaak request voor een offer-export is niet 202!');
+
+            return 'statuscode geen 202';
         }
 
-        $process_status_object = json_decode($bol_generate_offers_csv['bolbody']);
+        $process_status_object = json_decode($bol_generate_offers_csv_resp['bolbody']);
 
-        BolProcesStatus::where(['process_status_id' => $process_status_object->id,
-                                'entityId' => isset( $process_status_object->entityId) ? $process_status_object->entityId : null,
-                                'eventType' => $process_status_object->eventType ])->exists() ? $this->update_Bol_Process_Status($process_status_object) : $this->create_Bol_Process_Status($process_status_object);
+        $latest_proc_status_db_entry = BolProcesStatus::where(['process_status_id' => $process_status_object->id,
+        // 'entityId' => isset( $process_status_object->entityId) ? $process_status_object->entityId : null,
+           'eventType' => $process_status_object->eventType ])->latest()->first(); // als ::where([])->latest()->first(), dan geen ->exists() mogelijk, dan met != null controleren of aanwezig
+
+           if($latest_proc_status_db_entry != null){
+
+            $this->update_Bol_Process_Status($process_status_object);
+           }
+           else{
+            $this->create_Bol_Process_Status($process_status_object);
+           }
+
+        // BolProcesStatus::where(['process_status_id' => $process_status_object->id,
+        //                      // 'entityId' => isset( $process_status_object->entityId) ? $process_status_object->entityId : null,
+        //                         'eventType' => $process_status_object->eventType ])->latest()->first()->exists() ? $this->update_Bol_Process_Status($process_status_object) : $this->create_Bol_Process_Status($process_status_object);
 
         $process_status = BolProcesStatus::where(['process_status_id' => $process_status_object->id,
-                                                  'entityId' =>  isset( $process_status_object->entityId) ? $process_status_object->entityId : null,
-                                                  'eventType' => $process_status_object->eventType ])->first();
+                                             //   'entityId' =>  isset( $process_status_object->entityId) ? $process_status_object->entityId : null,
+                                                  'eventType' => $process_status_object->eventType ])->latest()->first();
 
-        // echo('Bol response body als stdClass na json_decode:');
-        // dump($process_status_object);
-        // echo('BolProcesStatus::where');
-        // dump($process_status);
+        dump($process_status);
+            // in de hoop, dat de bol api in staat is, direct na de initiele process-status response na een POST opdracht tot
+            // het aanmaken van een offer-export-csv, om een geupdate process-status te geven, met een 'entityId'
+            sleep(1); // neen. tijd is te kort.. met scheduler op intervals de proces-statussen nagaan.
+            $this->getUpdatedProcessStatusFrom_prepare_CSV_Offer_Export_Response('prod', $process_status_object->id);
+
         return view('boloffers.generateofferscsv', compact('process_status'));
     }
 
 
     public function update_Bol_Process_Status(\stdClass $process_status_object){
 
-        // geen "entityId" in link naar proces status na POST/opdracht creeren prod-offer-csv-export?
-        $de_BolProcesStatus = BolProcesStatus::where(['process_status_id' => $process_status_object->id,
-                                                      'entityId' => isset($process_status_object->entityId) ? $process_status_object->entityId : null,
-                                                      'eventType' => $process_status_object->eventType ])->first();
+            // geen "entityId" aanwezig in response proces status na, POST/opdracht creeren prod-offer-csv-export.
+            $de_BolProcesStatus = BolProcesStatus::where(['process_status_id' => $process_status_object->id,
+                                                        //   'entityId' => isset($process_status_object->entityId) ? $process_status_object->entityId : null,
+                                                          'eventType' => $process_status_object->eventType ])->latest()->first();
 
-        $de_BolProcesStatus->update([
-                                //  'process_status_id' => $process_status_object->id,
-                                'entityId' => isset( $process_status_object->entityId) ? $process_status_object->entityId : null,
-                                 'eventType' => $process_status_object->eventType,
-                                 'description' => isset($process_status_object->description) ? $process_status_object->description : null,
-                                 'status' => $process_status_object->status,
-                                 'errorMessage' => isset($process_status_object->errorMessage) ? $process_status_object->errorMessage : null,
-                                //  'link_to_self' => $process_status_object->links[0]->href,
-                                //  'method_to_self' => $process_status_object->links[0]->method
-                                 ]);
+            dump('In: update_Bol_Process_Status(\stdClass $process_status_object). r.77');
+            dump($de_BolProcesStatus);
+
+            // als er nieuwe data in $process_status_object aanwezig is: zet dit in 'bol_proces_statuses', zo niet? zet de oude waarde terug.
+            $de_BolProcesStatus->update([
+                                    //  'process_status_id' => $process_status_object->id,
+                                    'entityId' => isset( $process_status_object->entityId) ? $process_status_object->entityId : $de_BolProcesStatus->entityId,
+                                     'eventType' => $process_status_object->eventType,
+                                     'description' => isset($process_status_object->description) ? $process_status_object->description : $de_BolProcesStatus->description,
+                                     'status' => $process_status_object->status,
+                                     'errorMessage' => isset($process_status_object->errorMessage) ? $process_status_object->errorMessage : $de_BolProcesStatus->errorMessage,
+                                    //  'link_to_self' => $process_status_object->links[0]->href,
+                                    //  'method_to_self' => $process_status_object->links[0]->method
+                                     ]);
+            dump('In: update_Bol_Process_Status(\stdClass $process_status_object). r.92');
+
         return;
     }
 
@@ -85,10 +110,47 @@ class BolProduktieOfferController extends Controller
         return;
     }
 
+
+        // als response(code) na opdracht tot aanmaak csv export 202 is, gelijk een GET doen naar 'link_to_self' uit deze response.
+        // de response uit deze GET bevat, bij 200, als het goed is, het 'entityId', dit is hier: het offerexportId.
+        // throttling: reqs 100/minuut toegestaan, nog.. geen job aanmaken , is maar 1 request
+        public function getUpdatedProcessStatusFrom_prepare_CSV_Offer_Export_Response($serverType ,$process_status_id){
+
+            $endpoint = "process-status/{$process_status_id}";
+            $process_status_response =  $this->geefProcesStatusById($serverType, $process_status_id);
+            // $process_status_response = $this->make_V3_PlazaApiRequest($serverType, $endpoint);
+            $bolStatusCode = $process_status_response['bolstatuscode'];
+
+            if($bolStatusCode != 200){
+                return "process-status/{$process_status_id} response statuscode is: {$bolStatusCode}";
+            }
+
+            if( !isset($process_status_response['bolbody']) ){
+                return 'lege response body';
+            }
+
+            $process_status_body_as_object = json_decode($process_status_response['bolbody']);
+            $this->update_Bol_Process_Status($process_status_body_as_object);
+
+            dump('In getUpdatedProcessStatusFrom_prepare_CSV_Offer_Export_Response()');
+            dump($process_status_body_as_object);  //  hier na 1 seconde, nog geen 'entityId' in aanwezig!
+
+            return redirect()->route('boloffers.index');
+        }
+
+
+
     public function check_if_CSV_Offer_Export_PRODUCTION_RDY(){
 
         // nu laatste proces-status ophalen waar 'eventType' = 'CREATE_OFFER_EXPORT'
         $laatste_create_offer_export_proc_status_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
+
+        if($laatste_create_offer_export_proc_status_db_entry->doesntExist()){
+
+            dump('geen bol_proces_status entry aanwezig met ["eventType" => "CREATE_OFFER_EXPORT"]');
+            return 'geen CREATE_OFFER_EXPORT entry in bol_proces_statuses-table!';
+        }
+
         // rest-endpoint uit de BolProcesStatus halen
         $process_status_id = $laatste_create_offer_export_proc_status_db_entry->process_status_id;
 
@@ -100,17 +162,21 @@ class BolProduktieOfferController extends Controller
 
             if($laatste_create_offer_export_proc_status_db_entry->process_status_id == $resp_object->id){
 
-                // bij 'mass-assignment' (met->update([])) wordt de timestamps -> updated_at niet bijgewerkt!
+                // bij 'mass-assignment' (met->update([])) zouden de timestamps -> updated_at bijgewerkt moeten worden, hier niet?
+                // onderstaande update-functie werkt wel.
                 $laatste_create_offer_export_proc_status_db_entry->update([
 
-                    'entityId' => isset( $resp_object->entityId) ? $resp_object->entityId : null,
+                    'entityId' => isset( $resp_object->entityId) ? $resp_object->entityId : $laatste_create_offer_export_proc_status_db_entry->entityId,
                     'eventType' => $resp_object->eventType,
-                    'description' => isset($resp_object->description) ? $resp_object->description : null,
+                    'description' => isset($resp_object->description) ? $resp_object->description :  $laatste_create_offer_export_proc_status_db_entry->description,
                     'status' => $resp_object->status,
-                    'errorMessage' => isset($resp_object->errorMessage) ? $resp_object->errorMessage : null,
+                    'errorMessage' => isset($resp_object->errorMessage) ? $resp_object->errorMessage :  $laatste_create_offer_export_proc_status_db_entry->errorMessage,
 
                 ]);
+                $laatste_create_offer_export_proc_status_db_entry->touch(); // om updated_at te forceren?
+
                     dump('laatse offer-export db-entry is ge-updated!!');
+
                 $laatste_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
 
                 return view('boloffers.iscsvexportready', compact('laatste_db_entry'));
@@ -123,7 +189,8 @@ class BolProduktieOfferController extends Controller
 
         $latest_succesfull_made_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT', 'status' => 'SUCCESS'])->latest()->first();
 
-        if( $latest_succesfull_made_offer_export_db_entry->exists() ){
+        if( $latest_succesfull_made_offer_export_db_entry->exists() ){  // nu werkt ->exists() WEL..met ->latest()->first().. ???
+            dump('regel 175 werkt! $latest_succesfull_made_offer_export_db_entry->exists() geeft geen error..');
 
             $latest_csv_offer_export_id = $latest_succesfull_made_offer_export_db_entry->entityId;
 
@@ -143,6 +210,10 @@ class BolProduktieOfferController extends Controller
             $this->zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_array);
             dump('in get_CSV_Offer_Export_PROD');
 
+
+            // $bol_produktie_offers = BolProduktieOffer::all();
+
+            // return view('boloffers.index', compact('bol_produktie_offers'));
             return;
         }
     }
