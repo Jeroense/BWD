@@ -41,7 +41,7 @@ class OfferService
                 $this->update_Bol_Process_Status($process_status_object);
                }
                else{
-                $this->create_Bol_Process_Status($process_status_object);
+                $this->create_Bol_Process_Status_after_POST_Make_offer_Export_CSV($process_status_object);
                }
 
             return;
@@ -62,7 +62,7 @@ class OfferService
                                      ]);
 
             // in de hoop, dat de bol api in staat is, direct na de initiele process-status response na een POST opdracht tot
-            // het aanmaken van een offer-export-csv, om een geupdate process-status te geven, met een 'entityId' -> neen. duurt langer.
+            // het aanmaken van een offer-export-csv, om een geupdate process-status te geven, met een 'entityId'. neen. duurt langer. Heeft geen zin!
             // $this->getUpdatedProcessStatusFrom_prepare_CSV_Offer_Export_Response('prod', $process_status_object->id);
 
             return;
@@ -145,7 +145,9 @@ class OfferService
 
                 $latest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
 
-                if($latest_create_offer_export_db_entry->status = 'SUCCESS'){
+                // nu het volgende: een flag in proces_statuses table zetten, of dat er vanuit deze db_entry al eens een offer-export-csv
+                // succesvol opgehaald is (geweest).
+                if($latest_create_offer_export_db_entry->status = 'SUCCESS' && $latest_create_offer_export_db_entry->csv_success == false){
 
                     $this->get_CSV_Offer_Export_PROD($latest_create_offer_export_db_entry);
                 }
@@ -155,38 +157,7 @@ class OfferService
         }
 
 
-        // public function check_if_CSV_Offer_Export_RDY($serverType){
 
-        //     // nu laatste proces-status ophalen waar 'eventType' = 'CREATE_OFFER_EXPORT'
-        //     $laatste_create_offer_export_proc_status_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
-        //     // rest-endpoint uit de BolProcesStatus halen
-        //     $process_status_id = $laatste_create_offer_export_proc_status_db_entry->process_status_id;
-
-        //     $process_status_by_id_response = $this->geefProcesStatusById($serverType, $process_status_id);
-
-        //     if($process_status_by_id_response['bolstatuscode'] == 200 && strpos($process_status_by_id_response['bolheaders']['Content-Type'][0], 'json') != false ){
-
-        //         $resp_object = json_decode($process_status_by_id_response['bolbody']);
-
-        //         if($laatste_create_offer_export_proc_status_db_entry->process_status_id == $resp_object->id){ // wellicht overbodige controle
-
-        //             // bij 'mass-assignment' (met->update([])) wordt de timestamps -> updated_at hier nu niet bijgewerkt?
-        //             $laatste_create_offer_export_proc_status_db_entry->update([
-
-        //                 'entityId' => isset( $resp_object->entityId) ? $resp_object->entityId : null,
-        //                 'eventType' => $resp_object->eventType,
-        //                 'description' => isset($resp_object->description) ? $resp_object->description : null,
-        //                 'status' => $resp_object->status,
-        //                 'errorMessage' => isset($resp_object->errorMessage) ? $resp_object->errorMessage : null,
-
-        //             ]);
-        //                 dump('laatse offer-export db-entry is ge-updated!!');
-        //             // $laatste_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
-
-        //             return;
-        //         }
-        //     }
-        // }
 
         public function get_CSV_Offer_Export_PROD($process_status_model_instance){
 
@@ -210,6 +181,11 @@ class OfferService
                 if($csv_array == 'no csv file!'){
                     return 'no csv file!';
                 }
+
+                // hier wellicht goed punt in code om: de flag: "csv_success" op true te zetten.
+                // op dit punt is is er een up-to-date csv-file aangemaakt.
+                $process_status_model_instance->update(['csv_success' => true]);
+
 
                 $this->zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_array);
                 // dump('in get_CSV_Offer_Export_PROD');
@@ -249,7 +225,7 @@ class OfferService
                     $te_updaten_prod_offer->update([
 
                         'fulfilmentConditionName' => $key['conditionName'],
-                        'fulfilmentConditionCategory' => $key['conditionName'],
+                        'fulfilmentConditionCategory' => $key['conditionCategory'],
                         'bundlePricesPrice' => $key['bundlePricesPrice'],
                         'fulfilmentDeliveryCode' => $key['fulfilmentDeliveryCode'],
                         'stockAmount' => $key['stockAmount'],
@@ -298,6 +274,38 @@ class OfferService
         }
 
 
+                // public function check_if_CSV_Offer_Export_RDY($serverType){
+
+        //     // nu laatste proces-status ophalen waar 'eventType' = 'CREATE_OFFER_EXPORT'
+        //     $laatste_create_offer_export_proc_status_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
+        //     // rest-endpoint uit de BolProcesStatus halen
+        //     $process_status_id = $laatste_create_offer_export_proc_status_db_entry->process_status_id;
+
+        //     $process_status_by_id_response = $this->geefProcesStatusById($serverType, $process_status_id);
+
+        //     if($process_status_by_id_response['bolstatuscode'] == 200 && strpos($process_status_by_id_response['bolheaders']['Content-Type'][0], 'json') != false ){
+
+        //         $resp_object = json_decode($process_status_by_id_response['bolbody']);
+
+        //         if($laatste_create_offer_export_proc_status_db_entry->process_status_id == $resp_object->id){ // wellicht overbodige controle
+
+        //             // bij 'mass-assignment' (met->update([])) wordt de timestamps -> updated_at hier nu niet bijgewerkt?
+        //             $laatste_create_offer_export_proc_status_db_entry->update([
+
+        //                 'entityId' => isset( $resp_object->entityId) ? $resp_object->entityId : null,
+        //                 'eventType' => $resp_object->eventType,
+        //                 'description' => isset($resp_object->description) ? $resp_object->description : null,
+        //                 'status' => $resp_object->status,
+        //                 'errorMessage' => isset($resp_object->errorMessage) ? $resp_object->errorMessage : null,
+
+        //             ]);
+        //                 dump('laatse offer-export db-entry is ge-updated!!');
+        //             // $laatste_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
+
+        //             return;
+        //         }
+        //     }
+        // }
 
 
 }

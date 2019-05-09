@@ -21,6 +21,7 @@ class CreateBolProcesStatusesTable extends Migration
             $table->string('description')->nullable();
             $table->string('status');
             $table->string('errorMessage')->nullable();
+            $table->boolean('csv_success')->nullable()->default(false);  // true als er een succesvolle cvs-offer-export is opgehaald vanuit deze db-entry
             $table->string('link_to_self');
             $table->string('method_to_self');
             $table->string('createTimestamp'); // geeft timestamp aan wanneer 1e opdracht to aanmaak van eventtype gegeven is.

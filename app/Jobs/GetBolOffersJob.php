@@ -43,8 +43,10 @@ class GetBolOffersJob implements ShouldQueue
                 $bol_offer_by_id_response_array = $this->get_Bol_Offer_by_Id_PROD($this->serverType, $this->offerId);
 
                 if($bol_offer_by_id_response_array['bolstatuscode'] != 200){
-                    return 'Error bij request naar offers/{offerId}. Status code niet 200 !';
 
+                     // dan eerst wellicht deze job weer her-releasen naar de queu
+                    return $this->release(10);  // ??
+                    // return 'Error bij request naar offers/{offerId}. Status code niet 200 !';
                     }
 
                     if( isset($bol_offer_by_id_response_array['bolbody']) && strpos($bol_offer_by_id_response_array['bolheaders']['Content-Type'][0], 'json') != false ){

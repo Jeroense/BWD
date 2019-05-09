@@ -171,7 +171,7 @@ trait BolApiV3 {
 
         $bol_response = $this->make_V3_PlazaApiRequest('prod', $endpoint, 'get', null, true);
 
-        dump( $bol_response );
+        // dump( $bol_response );
 
         if($bol_response['bolstatuscode'] != 200){
             return 'status niet 200';
@@ -180,7 +180,7 @@ trait BolApiV3 {
         $this->putResponseInFile("bol-get-csv-export-response-appended-{$serverType}.txt", $bol_response['bolstatuscode'], $bol_response['bolreasonphrase'],
         $bol_response['bolbody'], $bol_response['x_ratelimit_limit'], $bol_response['x_ratelimit_reset'], $bol_response['x_ratelimit_remaining'], (string)time());
 
-        $this->putCSVResponseInCleanFile($csv_file_name,  $bol_response['bolbody']);
+        $this->putCSVResponseInCleanFile($csv_file_name,  $bol_response['bolbody']);  // dit maakt/update de csv-file, die gebruikt wordt om per offerId verder requests te doen
 
         return $csv_file_name;
     }
