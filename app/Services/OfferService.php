@@ -65,6 +65,8 @@ class OfferService
             // het aanmaken van een offer-export-csv, om een geupdate process-status te geven, met een 'entityId'. neen. duurt langer. Heeft geen zin!
             // $this->getUpdatedProcessStatusFrom_prepare_CSV_Offer_Export_Response('prod', $process_status_object->id);
 
+            file_put_contents( storage_path( 'app/public') . '/' . 'scheduler-log.txt', ((string)date('D, d M Y H:i:s') . "\r\n" . 'create_Bol_Process_Status_after_POST_Make_offer_Export_CSV is aangeroepen!'), FILE_APPEND );
+
             return;
         }
 
@@ -121,7 +123,8 @@ class OfferService
 
             $latest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
 
-            if( $latest_create_offer_export_db_entry->exists() ){
+            // if( $latest_create_offer_export_db_entry->exists() ){  // geeft error, dus met != null controleren
+            if( $latest_create_offer_export_db_entry != null ){  // geeft error, dus met != null controleren
 
                 if($latest_create_offer_export_db_entry->status = 'PENDING'){
                     // $resp =  $this->make_V3_PlazaApiRequest('prod', "process-status/{$latest_create_offer_export_db_entry->process_status_id}");
@@ -147,19 +150,20 @@ class OfferService
 
                 // nu het volgende: een flag in proces_statuses table zetten, of dat er vanuit deze db_entry al eens een offer-export-csv
                 // succesvol opgehaald is (geweest).
-                if($latest_create_offer_export_db_entry->status = 'SUCCESS' && $latest_create_offer_export_db_entry->csv_success == false){
+                if($latest_create_offer_export_db_entry != null && $latest_create_offer_export_db_entry->status = 'SUCCESS' && $latest_create_offer_export_db_entry->csv_success == false){
 
                     $this->get_CSV_Offer_Export_PROD($latest_create_offer_export_db_entry);
                 }
 
                 return;
             }
+            return;
         }
 
 
 
 
-        public function get_CSV_Offer_Export_PROD($process_status_model_instance){
+        public function get_CSV_Offer_Export_PROD(BolProcesStatus $process_status_model_instance){
 
 
             // $latest_succesfull_made_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT', 'status' => 'SUCCESS'])->latest()->first();
@@ -184,7 +188,7 @@ class OfferService
 
                 // hier wellicht goed punt in code om: de flag: "csv_success" op true te zetten.
                 // op dit punt is is er een up-to-date csv-file aangemaakt.
-                $process_status_model_instance->update(['csv_success' => true]);
+                $process_status_model_instance->update(['csv_success' => 1]);   // boolean = tinyint  true is 1
 
 
                 $this->zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_array);
@@ -198,30 +202,10 @@ class OfferService
         public function zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_arr){
 
 
-
-            // $table->string('offerId');
-            // $table->string('ean')->unique();    // unique om ev later aan gereferenced te worden door een FK uit andere table
-            // $table->string('referenceCode')->nullable();
-            // $table->boolean('onHoldByRetailer');
-            // $table->string('unknownProductTitle')->nullable();
-            // $table->unsignedInteger('bundlePricesQuantity')->nullable();
-            // $table->double('bundlePricesPrice',8,2);
-            // $table->unsignedInteger('stockAmount');
-            // $table->unsignedInteger('correctedStock')->nullable();
-            // $table->boolean('stockManagedByRetailer')->nullable();
-            // $table->string('fulfilmentType');
-            // $table->string('fulfilmentDeliveryCode');
-            // $table->string('fulfilmentConditionName');
-            // $table->string('fulfilmentConditionCategory');
-            // $table->string('notPublishableReasonsCode')->nullable();
-            // $table->string('notPublishableReasonsDescription')->nullable();
-            // $table->dateTimeTz('mutationDateTime')->nullable();
-            // $fg = BolProduktieOffer::where(['offerId' => $csv_file_as_array[0]['offerId']]);
-
             foreach($csv_arr as $key ){
-                if( BolProduktieOffer::where( ['offerId' => $key['offerId'], 'ean' => $key['ean'] ])->exists() ){
+                if( BolProduktieOffer::where( ['offerId' => $key['offerId'], 'ean' => $key['ean'] ])->first()->exists() ){
 
-                    $te_updaten_prod_offer = BolProduktieOffer::where( ['offerId' => $key['offerId'], 'ean' => $key['ean'] ]);
+                    $te_updaten_prod_offer = BolProduktieOffer::where( ['offerId' => $key['offerId'], 'ean' => $key['ean'] ])->first();
                     $te_updaten_prod_offer->update([
 
                         'fulfilmentConditionName' => $key['conditionName'],
@@ -235,7 +219,7 @@ class OfferService
                     ]);
                 }
 
-                if(BolProduktieOffer::where( ['offerId' => $key['offerId'], 'ean' => $key['ean'] ])->doesntExist() ){
+                if(BolProduktieOffer::where( ['offerId' => $key['offerId'], 'ean' => $key['ean'] ])->first()->doesntExist() ){
 
                     BolProduktieOffer::create([
                         'offerId' =>  $key['offerId'],

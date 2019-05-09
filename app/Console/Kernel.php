@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->call('App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB')
         ->weekdays()
-        ->everyTenMinutes()
+        ->everyThirtyMinutes()
         ->timezone('Europe/Amsterdam')
         ->between('8:15', '18:15');;
 
