@@ -31,15 +31,15 @@ class Kernel extends ConsoleKernel
 
         $schedule->call('App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile')
           ->weekdays()
-          ->hourly()
+          ->everyThirtyMinutes()
           ->timezone('Europe/Amsterdam')
-          ->between('8:00', '18:00');
+          ->between('8:00', '20:00');
 
         $schedule->call('App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB')
         ->weekdays()
-        ->everyThirtyMinutes()
+        ->everyTenMinutes()
         ->timezone('Europe/Amsterdam')
-        ->between('8:15', '18:15');;
+        ->between('8:15', '20:15');;
 
 
         // $schedule->call('App\Http\Controllers\RobotController@publishProducts')->everyMinute();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BolProduktieOffer;
 use App\BolProcesStatus;
+use App\CustomVariant;
 use App\Jobs\GetBolOffersJob;
 use Illuminate\Http\Request;
 use App\Http\Traits\BolApiV3;
@@ -16,6 +17,17 @@ class BolProduktieOfferController extends Controller
     public function index(){
 
         $bol_produktie_offers = BolProduktieOffer::all();
+
+        foreach($bol_produktie_offers as $offer){
+            $custVariant = CustomVariant::where(['ean' => $offer['ean']])->first();
+
+            if($custVariant != null){
+                $imageName = $custVariant->fileName;
+                $offer['fileName'] = $imageName;
+            }
+
+
+        }
 
         return view('boloffers.index', compact('bol_produktie_offers'));
     }

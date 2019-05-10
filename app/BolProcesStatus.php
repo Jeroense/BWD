@@ -13,6 +13,7 @@ class BolProcesStatus extends Model
         'description',
         'status',
         'errorMessage',
+        'csv_success',
         'link_to_self',
         'method_to_self',
         'createTimestamp'

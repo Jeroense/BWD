@@ -138,21 +138,24 @@ class OfferService
 
                     $latest_create_offer_export_db_entry->update([
                         'entityId' => isset( $status_data->entityId) ? $status_data->entityId : $latest_create_offer_export_db_entry->entityId,
-                        'eventType' => $status_data->eventType,
+                        'eventType' => isset($status_data->eventType) ? $status_data->eventType : $latest_create_offer_export_db_entry->eventType,
                         'description' => isset($status_data->description) ? $status_data->description : $latest_create_offer_export_db_entry->description,
-                        'status' => $status_data->status,
+                        'status' => isset($status_data->status) ? $status_data->status : $latest_create_offer_export_db_entry->status,
                         'errorMessage' => isset($status_data->errorMessage) ? $status_data->errorMessage : $latest_create_offer_export_db_entry->errorMessage,
 
                     ]);
                 }
 
-                $latest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
+                $ltest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
 
                 // nu het volgende: een flag in proces_statuses table zetten, of dat er vanuit deze db_entry al eens een offer-export-csv
                 // succesvol opgehaald is (geweest).
-                if($latest_create_offer_export_db_entry != null && $latest_create_offer_export_db_entry->status = 'SUCCESS' && $latest_create_offer_export_db_entry->csv_success == false){
+                if($ltest_create_offer_export_db_entry != null && $ltest_create_offer_export_db_entry->status = 'SUCCESS' && $ltest_create_offer_export_db_entry->csv_success == false){
 
-                    $this->get_CSV_Offer_Export_PROD($latest_create_offer_export_db_entry);
+                    // dump('in: update_process_status_create_offer_export()');
+                    // dump($ltest_create_offer_export_db_entry->status);
+
+                    $this->get_CSV_Offer_Export_PROD($ltest_create_offer_export_db_entry);
                 }
 
                 return;
@@ -190,6 +193,8 @@ class OfferService
                 // op dit punt is is er een up-to-date csv-file aangemaakt.
                 $process_status_model_instance->update(['csv_success' => 1]);   // boolean = tinyint  true is 1
 
+                // dump("in: get_CSV_Offer_Export_PROD(BolProcesStatus process_status_model_instance) ");
+                // dump($process_status_model_instance->status);
 
                 $this->zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_array);
                 // dump('in get_CSV_Offer_Export_PROD');
@@ -217,6 +222,7 @@ class OfferService
                         'fulfilmentType' => $key['fulfilmentType']
                         // mutationDateTime nog te doen, wat is dit format?
                     ]);
+
                 }
 
                 if(BolProduktieOffer::where( ['offerId' => $key['offerId'], 'ean' => $key['ean'] ])->first()->doesntExist() ){
@@ -249,7 +255,7 @@ class OfferService
                 return 'Geen bol produktie offers in lokale DB!';
             }
                 foreach($bol_prod_offers_in_db as $lokale_db_offers){
-                // "offerId":"38dff9a2-dc45-4201-85f2-cb0ae0cd80d5","ean":"7435156898868"  // dit is het produkt dat ik heb aangemaakt zonder catalog bekend ean
+
 
                 GetBolOffersJob::dispatch('prod', $lokale_db_offers->offerId);
 

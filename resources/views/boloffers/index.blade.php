@@ -20,7 +20,7 @@
             <table class="table is-narrow">
                 <thead>
                 <tr>
-
+                    <th>Image</th>
                     <th>offerId</th>
                     <th>EAN</th>
                     <th>Name</th>
@@ -39,7 +39,17 @@
                 <tbody>
                     @foreach ($bol_produktie_offers as $offer)
                         <tr>
+                            @if($offer->fileName)
+                            {{-- onderstaande werkt! --}}
+                            {{-- <td><img class="customVariants" src="/customVariants/{{ $offer->fileName }}" alt="Geen image!" width="100"> </td> --}}
 
+                            {{-- hieronder werkt ook! Maar er mogen  geen spaties in  scr="" staan, in: }}/{{ --}}
+                            {{-- dus src=" {{ url('customVariants') }} / {{ $offer->fileName }}" werkt niet,  door de spaties in }} / {{ !! --}}
+                            <td><img  src="{{ url('customVariants') }}/{{ $offer->fileName }}" alt="Geen image!" width="100"> </td>
+
+                            @else
+                            <td> geen image! </td>
+                            @endif
                             @if($offer->offerId)
                             <td>{{ $offer->offerId }} </td>
                             @else
