@@ -23,7 +23,8 @@ class BolProduktieOffer extends Model
         'fulfilmentConditionName',
         'fulfilmentConditionCategory',
         'notPublishableReasonsCode',
-        'notPublishableReasonsDescription'
+        'notPublishableReasonsDescription',
+        'mutationDateTime'
     ];
 }
 

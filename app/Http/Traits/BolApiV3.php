@@ -401,7 +401,7 @@ trait BolApiV3 {
 
                 }
                 if(strtoupper($method) == "DELETE" || strtoupper($method) == "PUT" || strtoupper($method) == "POST"){
-
+                    // kan natuurlijk ook met: else{} jaja
 
                     $bolresponse = $client->request($method, $rest_endpoint, ['http_errors' => false ,'headers' => $headers, 'body' => $requestBody]);
 

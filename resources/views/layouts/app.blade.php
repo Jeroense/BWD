@@ -7,9 +7,12 @@
             @yield('content')
         </div>
         <script src="{{ asset('js/app.js') }}"></script>
-        @yield('scripts')
+        {{-- @yield('scripts') --}}
     </div>
 </body>
+
+@yield('scripts')
+
 <script>
         $.ajaxSetup({
             headers: {

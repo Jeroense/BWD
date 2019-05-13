@@ -18,7 +18,7 @@ class CreateCustomVariantsTable extends Migration
             $table->integer('variantId')->unsigned()->nullable();   //record id van variants table
             $table->integer('smakeVariantId')->unsigned()->nullable(); // vanuit smake verkregen
             $table->string('variantName');                          // ook title voor bol
-            $table->string('ean');
+            $table->string('ean');                                  //  beter is om ean->unique() te maken
             $table->string('size');
             $table->double('price',8,2)->nullable();
             $table->double('tax',8,2)->nullable();
@@ -30,8 +30,8 @@ class CreateCustomVariantsTable extends Migration
             $table->integer('smakeCompositeMediaId')->unsigned()->nullable();
             $table->integer('productionMediaId')->unsigned();
             $table->integer('smakeProductionMediaId')->unsigned()->nullable();
-            // nog toevoegen: isInBolCatalog  (voor sftp produktinfo)
-            $table->boolean('isInBolCatalog');  // per 19-4 toegevoegd
+
+            $table->boolean('isInBolCatalog');  // per 19-4 toegevoegd (voor sftp produktinfo)
             $table->double('width_mm',5,1);
             $table->double('height_mm',5,1);
 

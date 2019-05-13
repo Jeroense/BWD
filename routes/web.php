@@ -73,6 +73,7 @@ Route::prefix('customers')->middleware('role:superadministrator|administrator')-
 
 Route::prefix('boloffers')->middleware('role:superadministrator|administrator')->group(function() {
     Route::get('/boloffers', 'BolProduktieOfferController@index')->name('boloffers.index');
+    Route::get('/boloffers-pagina-2', 'BolProduktieOfferController@twee')->name('boloffers.twee');
 });
 
 
@@ -98,8 +99,10 @@ Route::prefix('boltestserver')->middleware('role:superadministrator|administrato
 
     Route::get('/process-status/{id}', 'TestController@getProcessStatusById' );
     Route::get('/process-statusses', 'TestController@getProcessStatusses' );
-    // Route::get('/test-static-storage-class', 'TestController@test_Static_Storage'); // werkt niet, onthoudt static var niet bij andere route, is logisch
-    // Route::get('/test-boltoken-singleton', 'TestController@singletonWerkingVoorbeeldBoltokenData');
+
+    Route::get('/test-where-first-exists', 'TestController@test_if_exists');
+
+
     Route::get('/test-jobqeue-redis-throttling', 'TestController@testJobqeueRedisThrottling');
 });
 

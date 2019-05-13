@@ -11,8 +11,11 @@
         </div>
     </div>
     <hr class="m-t-0">
-    <div class="card">
-        <div class="card-content">
+    <div >
+            {{-- class="card"    --}}
+        <div >
+                {{-- class="card-content" --}}
+
             @if( count($bol_produktie_offers) == 0 )
                 <p>Geen Bol produktie offers in Lokale Database. </p>
             @endif
@@ -27,18 +30,21 @@
                     <th>OnHold</th>
                     <th>Price</th>
                     <th>Stock</th>
-                    <th>CorrectedStock</th>
+                    <th>Corr.Stock</th>
                     <th>Fulfil</th>
-                    <th>DeliveryCode</th>
+                    <th>Del.Code</th>
                     <th>Condition</th>
                     <th>Updated</th>
                     <th>Err-Code</th>
                     <th>Err-Mssg</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                     @foreach ($bol_produktie_offers as $offer)
-                        <tr>
+
+
+                        <tr class="message">
                             @if($offer->fileName)
                             {{-- onderstaande werkt! --}}
                             {{-- <td><img class="customVariants" src="/customVariants/{{ $offer->fileName }}" alt="Geen image!" width="100"> </td> --}}
@@ -72,17 +78,26 @@
                             <td>{{ $offer->fulfilmentDeliveryCode }}</td>
                             <td>{{ $offer->fulfilmentConditionName }}</td>
                             <td>{{ $offer->updated_at }}</td>
+
                             @isset($offer->notPublishableReasonsCode)
-                            <td>{{$offer->notPublishableReasonsCode}}</td>
+                            <td class="publisherrorcode">{{$offer->notPublishableReasonsCode}}</td>
                             @endisset
+
                             @isset($offer->notPublishableReasonsDescription)
-                            <td>{{$offer->notPublishableReasonsDescription}}</td>
+                            <td class="publisherrormessage">{{$offer->notPublishableReasonsDescription}}</td>
                             @endisset
                             <td class="has-text-right">
                                 {{-- <a class="button is-hovered is-small m-r-5" href="{{ route('customers.show', $customer->id) }}">View</a> --}}
                                 {{-- <a class="button is-hovered is-small" href="{{ route('customers.edit', $customer->id) }}">Edit</a> --}}
+
+                                {{-- <a class="button is-fullwidth m-t-6" style="color: white; background-color:#003040;" onclick="return confirm('Weet je zeker dat je {{ $offer->ean }} wilt updaten?')"
+                                href="{{ route('boloffers.twee') }}">Update</a>
+
+                                <a class="button is-fullwidth is-danger  m-t-6 m-b-6"  onclick="return confirm('Weet je zeker dat je {{ $offer->ean }} wilt verwijderen?')"
+                                href="{{ route('boloffers.twee') }}">Delete</a> --}}
                             </td>
                         </tr>
+
                     @endforeach
                 </tbody>
             </table>
@@ -92,4 +107,26 @@
 </div>
 
 
+@endsection
+
+@section('scripts')
+<script>
+    var tdElement = document.querySelectorAll(".publisherrorcode");
+    tdElement.forEach(function(element){
+
+        if(element.innerHTML != "0"){
+            element.classList.add("is-dark")
+        }
+    });
+
+
+    var tdElement2 = document.querySelectorAll(".publisherrormessage");
+    tdElement2.forEach(function(element){
+
+        if(element.innerHTML != "Is (to be) published. No errors!"){
+            element.classList.add("is-dark");
+        }
+    });
+
+</script>
 @endsection

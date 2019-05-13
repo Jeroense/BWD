@@ -35,7 +35,7 @@ class CreateBolProduktieOffersTable extends Migration
             $table->string('fulfilmentConditionCategory');
             $table->string('notPublishableReasonsCode')->nullable();
             $table->string('notPublishableReasonsDescription')->nullable();
-            $table->dateTimeTz('mutationDateTime')->nullable();
+            $table->string('mutationDateTime')->nullable();
             $table->timestamps();
 
 

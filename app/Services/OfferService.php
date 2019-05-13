@@ -124,10 +124,10 @@ class OfferService
             $latest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
 
             // if( $latest_create_offer_export_db_entry->exists() ){  // geeft error, dus met != null controleren
-            if( $latest_create_offer_export_db_entry != null ){  // geeft error, dus met != null controleren
+            if( $latest_create_offer_export_db_entry != null ){
 
                 if($latest_create_offer_export_db_entry->status = 'PENDING'){
-                    // $resp =  $this->make_V3_PlazaApiRequest('prod', "process-status/{$latest_create_offer_export_db_entry->process_status_id}");
+
                     $resp = $this->geefProcesStatusById('prod', $latest_create_offer_export_db_entry->process_status_id);
 
                     if($resp['bolstatuscode'] != 200){
@@ -207,37 +207,42 @@ class OfferService
         public function zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_arr){
 
 
-            foreach($csv_arr as $key ){
-                if( BolProduktieOffer::where( ['offerId' => $key['offerId'], 'ean' => $key['ean'] ])->first()->exists() ){
+            foreach($csv_arr as $arr ){
 
-                    $te_updaten_prod_offer = BolProduktieOffer::where( ['offerId' => $key['offerId'], 'ean' => $key['ean'] ])->first();
-                    $te_updaten_prod_offer->update([
+                $localOffer = BolProduktieOffer::where( ['offerId' => $arr['offerId'], 'ean' => $arr['ean'] ])->first();
 
-                        'fulfilmentConditionName' => $key['conditionName'],
-                        'fulfilmentConditionCategory' => $key['conditionCategory'],
-                        'bundlePricesPrice' => $key['bundlePricesPrice'],
-                        'fulfilmentDeliveryCode' => $key['fulfilmentDeliveryCode'],
-                        'stockAmount' => $key['stockAmount'],
-                        'onHoldByRetailer' => $key['onHoldByRetailer'] == 'true' ? true : false,
-                        'fulfilmentType' => $key['fulfilmentType']
-                        // mutationDateTime nog te doen, wat is dit format?
+                // if( BolProduktieOffer::where( ['offerId' => $arr['offerId'], 'ean' => $arr['ean'] ])->first()->exists() ){
+                    if($localOffer != null){
+
+                    // $te_updaten_prod_offer = BolProduktieOffer::where( ['offerId' => $arr['offerId'], 'ean' => $arr['ean'] ])->first();
+                    $localOffer->update([
+
+                        'fulfilmentConditionName' => $arr['conditionName'],
+                        'fulfilmentConditionCategory' => $arr['conditionCategory'],
+                        'bundlePricesPrice' => $arr['bundlePricesPrice'],
+                        'fulfilmentDeliveryCode' => $arr['fulfilmentDeliveryCode'],
+                        'stockAmount' => $arr['stockAmount'],
+                        'onHoldByRetailer' => $arr['onHoldByRetailer'] == 'true' ? true : false,
+                        'fulfilmentType' => $arr['fulfilmentType'],
+                        'mutationDateTime' =>  $arr['mutationDateTime']
                     ]);
 
                 }
 
-                if(BolProduktieOffer::where( ['offerId' => $key['offerId'], 'ean' => $key['ean'] ])->first()->doesntExist() ){
+                // if(BolProduktieOffer::where( ['offerId' => $arr['offerId'], 'ean' => $arr['ean'] ])->first()->doesntExist() ){
+                    if($localOffer == null){
 
                     BolProduktieOffer::create([
-                        'offerId' =>  $key['offerId'],
-                        'ean' =>  $key['ean'],
-                        'fulfilmentConditionName' =>  $key['conditionName'],
-                        'fulfilmentConditionCategory' =>  $key['conditionCategory'],
-                        'bundlePricesPrice' =>  $key['bundlePricesPrice'],
-                        'fulfilmentDeliveryCode' =>  $key['fulfilmentDeliveryCode'],
-                        'stockAmount' =>  $key['stockAmount'],
-                        'onHoldByRetailer' =>  $key['onHoldByRetailer'] == 'true' ? true : false,
-                        'fulfilmentType' =>  $key['fulfilmentType'],
-                         // mutationDateTime nog te doen, wat is dit format?
+                        'offerId' =>  $arr['offerId'],
+                        'ean' =>  $arr['ean'],
+                        'fulfilmentConditionName' =>  $arr['conditionName'],
+                        'fulfilmentConditionCategory' =>  $arr['conditionCategory'],
+                        'bundlePricesPrice' =>  $arr['bundlePricesPrice'],
+                        'fulfilmentDeliveryCode' =>  $arr['fulfilmentDeliveryCode'],
+                        'stockAmount' =>  $arr['stockAmount'],
+                        'onHoldByRetailer' =>  $arr['onHoldByRetailer'] == 'true' ? true : false,
+                        'fulfilmentType' =>  $arr['fulfilmentType'],
+                        'mutationDateTime' =>  $arr['mutationDateTime']
                     ]);
                 }
             }

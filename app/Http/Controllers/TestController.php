@@ -24,6 +24,20 @@ class TestController extends Controller
         return;
     }
 
+    public function test_if_exists(){
+
+        $offer = BolProduktieOffer::where(['ean' => '7435156898875', 'offerId' => '840ac44d-4348-27d8-e053-828b620a7e46'])->first();
+        if($offer->exists()){
+            dump('offer bestaat in DB!');dump($offer);
+        }
+        if($offer->doesntExist()){
+            dump('offer bestaat niet in DB!');
+        }
+    }
+
+
+
+
     public function test_JSON_and_Session_Data(Request $req){
         $testCustVariant = CustomVariant::find(2);
         $allCustVars = CustomVariant::all();

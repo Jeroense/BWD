@@ -358,5 +358,9 @@ class BolProduktieOfferController extends Controller
             }  // endforeach
     }
 
+    public function twee(){
+        return view('boloffers.twee');
+    }
+
 }
 
