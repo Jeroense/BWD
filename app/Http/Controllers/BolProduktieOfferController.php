@@ -44,8 +44,7 @@ class BolProduktieOfferController extends Controller
 
     public function dump_data_to_be_published_on_BOL(Request $req){
 
-        // $dereq = $req->input('stock'); $allreq = $req;
-        //  dd($req->all()["stockfor_7435156898868"]);
+
         $inputs_from_request = $req->all();
         if( \key_exists('_token', $inputs_from_request) ){
 
@@ -57,6 +56,7 @@ class BolProduktieOfferController extends Controller
 
         foreach($inputs_from_request as $key => $val){
             // dump($key, $val);
+
             $temp_array[$key] = $val;
 
             if( strpos($key, 'delivery') !== false ){      // moet hier !== gebruiken..
@@ -75,9 +75,10 @@ class BolProduktieOfferController extends Controller
            array_push($updated_hoofd_array, $arr);
         }
         //     dump($updated_hoofd_array); // array van arrays met offer-data
-        //   dump($hoofd_array);
-          $omgezet_in_json = $this->maak_JSON_voor_single_offer_BOL_from_Array($updated_hoofd_array);
-          dd( $omgezet_in_json);
+        //     dump($hoofd_array);
+
+          $array_met_alle_offer_objecten = $this->maak_ObjectenArray_voor_single_offer_BOL_from_Array($updated_hoofd_array);
+          dd( $array_met_alle_offer_objecten);
          dd($inputs_from_request);
         return view('boloffers.publish.dump', compact('dereq'));
     }

@@ -544,7 +544,7 @@ trait BolApiV3 {
 
 
 
-        public function maak_JSON_voor_single_offer_BOL_from_Array(array $offersData){
+        public function maak_ObjectenArray_voor_single_offer_BOL_from_Array(array $offersData){
         //     [
         //     2 => array:9 [▼
         //     "ean" => "8712626055143"
@@ -613,11 +613,11 @@ trait BolApiV3 {
 
                 array_push( $array_met_offer_objecten, $bolOfferObject);
             }
-            $offer_json_array = json_encode($array_met_offer_objecten);
 
-            $this->put_JSON_in_File('array_van_BolOffers-in-JSON.json', $offer_json_array);
 
-            return $offer_json_array;
+            // $this->put_JSON_in_File('array_van_BolOffers-in-JSON.json', $offer_json_array);
+
+            return $array_met_offer_objecten;
         }
 
 
