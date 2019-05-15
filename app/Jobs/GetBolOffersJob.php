@@ -57,7 +57,7 @@ class GetBolOffersJob implements ShouldQueue
                                 ['offerId' => $single_offer_as_stdclass->offerId, 'ean' => $single_offer_as_stdclass->ean])->first();
 
                         $product_title = '';
-                        $not_publishable_reason = 'Is (to be) published. No errors!';
+                        $not_publishable_reason = 'Is published. No errors!';
 
                         // ofwel de property: ->unknownProductTitle  ofwel property:  ->store->productTitle    is aanwezig in reply
                         if( isset($single_offer_as_stdclass->unknownProductTitle) ){

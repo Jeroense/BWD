@@ -22,14 +22,64 @@ class BolProduktieOfferController extends Controller
             $custVariant = CustomVariant::where(['ean' => $offer['ean']])->first();
 
             if($custVariant != null){
-                $imageName = $custVariant->fileName;
-                $offer['fileName'] = $imageName;
+
+                $offer['fileName'] = $custVariant->fileName;
             }
 
 
         }
 
         return view('boloffers.index', compact('bol_produktie_offers'));
+    }
+
+
+    public function select_customvariants_to_publish_on_BOL(){
+
+        $notYetPublishedCustomVariants = CustomVariant::where('isPublishedAtBol',  '!=',  'published')->orWhere('isPublishedAtBol',  '=', null)->get();
+
+        return view('boloffers.publish.select', ['cvars' => $notYetPublishedCustomVariants] );
+    }
+
+
+
+    public function dump_data_to_be_published_on_BOL(Request $req){
+
+        // $dereq = $req->input('stock'); $allreq = $req;
+        //  dd($req->all()["stockfor_7435156898868"]);
+        $inputs_from_request = $req->all();
+        if( \key_exists('_token', $inputs_from_request) ){
+
+            unset($inputs_from_request['_token'] );
+        }
+
+        $hoofd_array = [];      $temp_array = [];
+        $updated_hoofd_array = [];  $updated_temp_array = [];
+
+        foreach($inputs_from_request as $key => $val){
+            // dump($key, $val);
+            $temp_array[$key] = $val;
+
+            if( strpos($key, 'delivery') !== false ){      // moet hier !== gebruiken..
+
+                array_push($hoofd_array, $temp_array);
+                    $temp_array = [];
+            }
+        }
+
+        foreach($hoofd_array as $arr){
+
+            foreach($arr as $key => $val){
+                $arr[substr($key, 0, 3)] = $val;
+                unset($arr[$key]);
+            }
+           array_push($updated_hoofd_array, $arr);
+        }
+        //     dump($updated_hoofd_array); // array van arrays met offer-data
+        //   dump($hoofd_array);
+          $omgezet_in_json = $this->maak_JSON_voor_single_offer_BOL_from_Array($updated_hoofd_array);
+          dd( $omgezet_in_json);
+         dd($inputs_from_request);
+        return view('boloffers.publish.dump', compact('dereq'));
     }
 
 

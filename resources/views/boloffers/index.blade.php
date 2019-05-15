@@ -123,7 +123,7 @@
     var tdElement2 = document.querySelectorAll(".publisherrormessage");
     tdElement2.forEach(function(element){
 
-        if(element.innerHTML != "Is (to be) published. No errors!"){
+        if(element.innerHTML != "Is published. No errors!"){
             element.classList.add("is-dark");
         }
     });

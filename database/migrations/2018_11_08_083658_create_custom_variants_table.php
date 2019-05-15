@@ -39,7 +39,7 @@ class CreateCustomVariantsTable extends Migration
             $table->string('boldeliverycode');              // table erbij levertijden/deliverycodes selectbox
             $table->string('boldescription')->nullable();               // onduidelijk of required, alleen gebruikt als condition != 'new'
 
-            $table->string('isPublishedAtBol')->nullable(); // initiated, pending, published, Failure
+            $table->string('isPublishedAtBol')->nullable(); // initiated, pending, published, failure, not_yet_in_catalog
             $table->timestamps();
 
             $table->foreign('variantId')

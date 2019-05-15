@@ -493,13 +493,13 @@ trait BolApiV3 {
             return;
         }
 
-        public function maak_JSON_voor_single_offer_BOL(CustomVariant $custvar, $publish = true){
+        public function maak_JSON_voor_single_offer_BOL(CustomVariant $custvar, $publish = true, $destock = 100){
 
-            $refcode = 'test123';
+            $refcode = "tshirt-{$custvar->variantName}-{$custvar->baseColor}-{$custvar->size}";
             $onHoldByRetailer = !$publish;
-            $unKnownProductTitle = $custvar->variantName;
 
-            $stock = 100;
+
+            $stock = $destock;
 
             $fulFillment = 'FBR';
 
@@ -541,6 +541,85 @@ trait BolApiV3 {
 
             return $singleBolOffer_JSON_body;
         }
+
+
+
+        public function maak_JSON_voor_single_offer_BOL_from_Array(array $offersData){
+        //     [
+        //     2 => array:9 [▼
+        //     "ean" => "8712626055143"
+        //     "siz" => "XL"
+        //     "sto" => "6"
+        //     "onh" => "on"
+        //     "pub" => "on"
+        //     "var" => "bol demo dummy produktnaam 2"
+        //     "bas" => "Stone Blue"
+        //     "sal" => "40"
+        //     "del" => "3-5d"
+        //   ]
+        //   3 => array:7 [▼
+        //     "ean" => "8804269223123"
+        //     "siz" => "XL"
+        //     "sto" => "2"
+        //     "var" => "bol demo dummy produktnaam 3"
+        //     "bas" => "Stone Blue"
+        //     "sal" => "40"
+        //     "del" => "3-5d"
+        //   ]
+        //  ]
+            $array_met_offer_objecten = [];
+
+            foreach($offersData as $offerData){
+
+                $refcode = "tshirt-{$offerData['var']}-{$offerData['bas']}-{$offerData['siz']}";
+
+                $onHoldByRetailer = key_exists('onh', $offerData) ? true : false;
+
+
+                $stock = $offerData['sto'];
+
+                $fulFillment = 'FBR';
+
+
+                $bolConditionObject = new \stdClass();
+                $bolConditionObject->name = 'NEW';       //  Enum:"NEW" "AS_NEW" "GOOD" "REASONABLE" "MODERATE"
+                $bolConditionObject->category = 'NEW';   //  Enum:"NEW" "SECONDHAND"
+
+                $bolQtyPrice = new \stdClass();
+                $bolQtyPrice->quantity = 1;
+                $bolQtyPrice->price = $offerData['sal'];
+
+                $bolPricingBundle = new \stdClass();
+                $bolPricingBundle->bundlePrices = [$bolQtyPrice];
+
+                $bolStockObject = new \stdClass();
+                $bolStockObject->amount = $stock;
+                $bolStockObject->managedByRetailer = true;
+
+                $bolFulFillmentObject = new \stdClass();
+                $bolFulFillmentObject->type = $fulFillment;
+                $bolFulFillmentObject->deliveryCode = $offerData['del'];
+
+                $bolOfferObject = new \stdClass();
+                $bolOfferObject->ean = $offerData['ean'];
+                $bolOfferObject->condition = $bolConditionObject;
+                $bolOfferObject->referenceCode = $refcode;
+                $bolOfferObject->onHoldByRetailer = $onHoldByRetailer;
+                $bolOfferObject->unknownProductTitle =  $offerData['var'];
+                $bolOfferObject->pricing = $bolPricingBundle;
+                $bolOfferObject->stock = $bolStockObject;
+                $bolOfferObject->fulfilment = $bolFulFillmentObject;
+
+
+                array_push( $array_met_offer_objecten, $bolOfferObject);
+            }
+            $offer_json_array = json_encode($array_met_offer_objecten);
+
+            $this->put_JSON_in_File('array_van_BolOffers-in-JSON.json', $offer_json_array);
+
+            return $offer_json_array;
+        }
+
 
 //     Request body voorbeeld van bol ReDoc
 

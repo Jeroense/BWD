@@ -73,21 +73,22 @@ Route::prefix('customers')->middleware('role:superadministrator|administrator')-
 
 Route::prefix('boloffers')->middleware('role:superadministrator|administrator')->group(function() {
     Route::get('/boloffers', 'BolProduktieOfferController@index')->name('boloffers.index');
+    Route::get('/select-to-publish-on-bol', 'BolProduktieOfferController@select_customvariants_to_publish_on_BOL')->name('boloffers.publish.select');
+    Route::post('/dump-published-on-bol', 'BolProduktieOfferController@dump_data_to_be_published_on_BOL')->name('boloffers.publish.dump');
+
     Route::get('/boloffers-pagina-2', 'BolProduktieOfferController@twee')->name('boloffers.twee');
 });
 
 
-// app()->singleton('boltokendata', function(){     // kun je eventueel hier zetten, conventie is in AppSericeProvider.php..
-                                                    // singletons persisteren geen data tussen requests! elke req wordt app opnieuw doorlopen.
-//     return new \App\boltokendata();
-// });
+
 
 Route::prefix('boltestserver')->middleware('role:superadministrator|administrator')->group(function() {
     Route::get('/boloauth', 'TestController@getBolOauth');
     Route::get('/jsonoffer-en-session-data', 'TestController@test_JSON_and_Session_Data');
 
     Route::get('/bolofferupload-v3', 'TestController@uploadSingleOfferToBolV3_DEMO');
-    // Route::get('/bolmultipleofferupload-v3', 'TestController@uploadMultipleOffersToBolV3_DEMO');
+    // Route::get('/bolmultipleofferupload-v3', 'TestController@uploadMultipleOffersToBolV3_DEMO');  // werkt niet bij  bol
+
     Route::get('/getbolorders-v3', 'TestController@getBolOrdersV3');
 
     Route::get('/getbolorders-v3-async', 'RefactoredTestBolOrdersAsyncController@getOrdersFromBol');  // via job/async
