@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 
 use App\BolToken;
+use PhpParser\Node\Expr\Cast\Double;
 
 trait BolApiV3 {
 
@@ -544,7 +545,7 @@ trait BolApiV3 {
 
 
 
-        public function maak_ObjectenArray_voor_single_offer_BOL_from_Array(array $offersData){
+        public function maak_ObjectenArray_voor_single_offers_BOL_from_Array(array $offersData){
         //     [
         //     2 => array:9 [▼
         //     "ean" => "8712626055143"
@@ -571,49 +572,53 @@ trait BolApiV3 {
 
             foreach($offersData as $offerData){
 
-                $refcode = "tshirt-{$offerData['var']}-{$offerData['bas']}-{$offerData['siz']}";
+                if(key_exists('pub', $offerData)){
 
-                $onHoldByRetailer = key_exists('onh', $offerData) ? true : false;
+                    $short_shirt_name = substr($offerData['var'], 0 , 4);
 
+                    $refcode = "{$short_shirt_name}-{$offerData['bas']}-{$offerData['siz']}"; // ref-code length:  max 20 chars
 
-                $stock = $offerData['sto'];
-
-                $fulFillment = 'FBR';
-
-
-                $bolConditionObject = new \stdClass();
-                $bolConditionObject->name = 'NEW';       //  Enum:"NEW" "AS_NEW" "GOOD" "REASONABLE" "MODERATE"
-                $bolConditionObject->category = 'NEW';   //  Enum:"NEW" "SECONDHAND"
-
-                $bolQtyPrice = new \stdClass();
-                $bolQtyPrice->quantity = 1;
-                $bolQtyPrice->price = $offerData['sal'];
-
-                $bolPricingBundle = new \stdClass();
-                $bolPricingBundle->bundlePrices = [$bolQtyPrice];
-
-                $bolStockObject = new \stdClass();
-                $bolStockObject->amount = $stock;
-                $bolStockObject->managedByRetailer = true;
-
-                $bolFulFillmentObject = new \stdClass();
-                $bolFulFillmentObject->type = $fulFillment;
-                $bolFulFillmentObject->deliveryCode = $offerData['del'];
-
-                $bolOfferObject = new \stdClass();
-                $bolOfferObject->ean = $offerData['ean'];
-                $bolOfferObject->condition = $bolConditionObject;
-                $bolOfferObject->referenceCode = $refcode;
-                $bolOfferObject->onHoldByRetailer = $onHoldByRetailer;
-                $bolOfferObject->unknownProductTitle =  $offerData['var'];
-                $bolOfferObject->pricing = $bolPricingBundle;
-                $bolOfferObject->stock = $bolStockObject;
-                $bolOfferObject->fulfilment = $bolFulFillmentObject;
+                    $onHoldByRetailer = key_exists('onh', $offerData) ? true : false;
 
 
-                array_push( $array_met_offer_objecten, $bolOfferObject);
+                    $stock = isset($offerData['sto']) ? (int)$offerData['sto'] : 0;
+
+                    $fulFillment = 'FBR';
+
+
+                    $bolConditionObject = new \stdClass();
+                    $bolConditionObject->name = 'NEW';       //  Enum:"NEW" "AS_NEW" "GOOD" "REASONABLE" "MODERATE"
+                    $bolConditionObject->category = 'NEW';   //  Enum:"NEW" "SECONDHAND"
+
+                    $bolQtyPrice = new \stdClass();
+                    $bolQtyPrice->quantity = 1;
+                    $bolQtyPrice->price = (Double)$offerData['sal'];
+
+                    $bolPricingBundle = new \stdClass();
+                    $bolPricingBundle->bundlePrices = [$bolQtyPrice];
+
+                    $bolStockObject = new \stdClass();
+                    $bolStockObject->amount = $stock;
+                    $bolStockObject->managedByRetailer = true;
+
+                    $bolFulFillmentObject = new \stdClass();
+                    $bolFulFillmentObject->type = $fulFillment;
+                    $bolFulFillmentObject->deliveryCode = $offerData['del'];
+
+                    $bolOfferObject = new \stdClass();
+                    $bolOfferObject->ean = $offerData['ean'];
+                    $bolOfferObject->condition = $bolConditionObject;
+                    $bolOfferObject->referenceCode = $refcode;
+                    $bolOfferObject->onHoldByRetailer = $onHoldByRetailer;
+                    $bolOfferObject->unknownProductTitle =  $offerData['var'];
+                    $bolOfferObject->pricing = $bolPricingBundle;
+                    $bolOfferObject->stock = $bolStockObject;
+                    $bolOfferObject->fulfilment = $bolFulFillmentObject;
+
+
+                    array_push( $array_met_offer_objecten, $bolOfferObject);
+                }
             }
-
 
             // $this->put_JSON_in_File('array_van_BolOffers-in-JSON.json', $offer_json_array);
 

@@ -4,16 +4,15 @@
 
 
 
-<div class="container column is-10 pull-left">
+<div class="container pull-left">
+        {{-- columns is-10 pull-left --}}
     <div class="columns m-t-5">
-        <div class="column">
-            {{-- <a href="{{ route('customers.create') }}" class="button is-danger is-pulled-right"><i class="fa fa-user-plus m-r-10"></i>Nieuwe klant aanmaken</a> --}}
-        </div>
-    </div>
+
+    {{-- </div> --}}
     <hr class="m-t-0">
-    <div >
+    <div class="column is-four-fifth">
             {{-- class="card"    --}}
-        <div >
+        {{-- <div > --}}
                 {{-- class="card-content" --}}
 
             @if( count($bol_produktie_offers) == 0 )

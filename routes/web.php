@@ -74,7 +74,7 @@ Route::prefix('customers')->middleware('role:superadministrator|administrator')-
 Route::prefix('boloffers')->middleware('role:superadministrator|administrator')->group(function() {
     Route::get('/boloffers', 'BolProduktieOfferController@index')->name('boloffers.index');
     Route::get('/select-to-publish-on-bol', 'BolProduktieOfferController@select_customvariants_to_publish_on_BOL')->name('boloffers.publish.select');
-    Route::post('/dump-published-on-bol', 'BolProduktieOfferController@dump_data_to_be_published_on_BOL')->name('boloffers.publish.dump');
+    Route::post('/dump-published-on-bol', 'BolProduktieOfferController@dump_and_upload_offers_to_be_published_on_BOL')->name('boloffers.publish.dump');
 
     Route::get('/boloffers-pagina-2', 'BolProduktieOfferController@twee')->name('boloffers.twee');
 });

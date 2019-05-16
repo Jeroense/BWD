@@ -6,6 +6,7 @@ use App\BolProduktieOffer;
 use App\BolProcesStatus;
 use App\CustomVariant;
 use App\Jobs\GetBolOffersJob;
+use App\Jobs\UploadBolOffersJob;
 use Illuminate\Http\Request;
 use App\Http\Traits\BolApiV3;
 use function GuzzleHttp\json_decode;
@@ -42,7 +43,8 @@ class BolProduktieOfferController extends Controller
 
 
 
-    public function dump_data_to_be_published_on_BOL(Request $req){
+    public function dump_and_upload_offers_to_be_published_on_BOL(Request $req){
+
 
 
         $inputs_from_request = $req->all();
@@ -51,11 +53,11 @@ class BolProduktieOfferController extends Controller
             unset($inputs_from_request['_token'] );
         }
 
-        $hoofd_array = [];      $temp_array = [];
+        $arr_van_te_valideren_stockfor_input_namen = [];
+        $hoofd_array = [];          $temp_array = [];
         $updated_hoofd_array = [];  $updated_temp_array = [];
 
         foreach($inputs_from_request as $key => $val){
-            // dump($key, $val);
 
             $temp_array[$key] = $val;
 
@@ -65,6 +67,27 @@ class BolProduktieOfferController extends Controller
                     $temp_array = [];
             }
         }
+        // dump($hoofd_array);
+
+        // om te bepalen wat de namen zijn van de stockfor_  input velden, die validated moeten worden..
+        foreach($hoofd_array as $arr){
+            $arrkeys = array_keys($arr);
+            foreach($arrkeys as $key){
+                if( strpos($key, 'publish') !== false){
+                    $de_publish_key_naam = $key;
+                    $de_bijhorende_stockfor_input_naam = \str_replace('publish', 'stockfor', $de_publish_key_naam );
+                    array_push($arr_van_te_valideren_stockfor_input_namen, $de_bijhorende_stockfor_input_naam);
+                }
+            }
+        }
+        // dump($arr_van_te_valideren_stockfor_input_namen);
+
+        // valideren van alleen de stockfor_ inputs bij offers, die een key: publish_ hebben..
+            foreach($arr_van_te_valideren_stockfor_input_namen as $stockfor_input_naam){
+                $req->validate([
+                                $stockfor_input_naam => 'required|integer|max:999',
+                                ]);
+            }
 
         foreach($hoofd_array as $arr){
 
@@ -74,13 +97,19 @@ class BolProduktieOfferController extends Controller
             }
            array_push($updated_hoofd_array, $arr);
         }
-        //     dump($updated_hoofd_array); // array van arrays met offer-data
-        //     dump($hoofd_array);
 
-          $array_met_alle_offer_objecten = $this->maak_ObjectenArray_voor_single_offer_BOL_from_Array($updated_hoofd_array);
-          dd( $array_met_alle_offer_objecten);
-         dd($inputs_from_request);
-        return view('boloffers.publish.dump', compact('dereq'));
+
+        $array_met_alle_offer_objecten = $this->maak_ObjectenArray_voor_single_offers_BOL_from_Array($updated_hoofd_array);
+
+        session(['offer_arr' => $array_met_alle_offer_objecten]);
+
+        foreach($array_met_alle_offer_objecten as $offer){
+
+            $json_offer = json_encode($offer);
+            UploadBolOffersJob::dispatch($json_offer);
+        }
+
+        return view('boloffers.publish.dump', compact('array_met_alle_offer_objecten'));
     }
 
 

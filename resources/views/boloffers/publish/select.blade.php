@@ -15,7 +15,7 @@
                 {{-- class="card-content" --}}
 
             @if( count($cvars) == 0 )
-                <p>Nog geen custom varianten aangemaakt voor publicatie op BOL. </p>
+                <p>Geen custom varianten aanwezig met status 'not published' voor publicatie op BOL. </p>
             @endif
             @if( count($cvars) > 0 )
 
@@ -89,7 +89,7 @@
                             <td>
                                 <div class="field">
                                     <div class="control">
-                                    <input name="stockfor_{{$cvar->ean}}" class="input is-primary" type="number" placeholder="Stock" style="width: 100;" required>
+                                    <input name="stockfor_{{$cvar->ean}}" class="input is-primary" type="number" placeholder="Stock" style="width: 100;" >
                                     </div>
                                 </div>
                             </td>
@@ -130,13 +130,28 @@
                     @endforeach
                 </tbody>
             </table>
-            <button class="button" type="submit">Publish</button>
+            <button class="button" type="submit" onclick="return confirm('customvarianten publiceren?')">Publish</button>
             </form>
 
             @endif
+
+            @if ($errors->any())
+            <div class="is-danger">
+                    @foreach ($errors->all() as $error)
+                        <a class="button is-danger m-t-6">{{ $error }}</a>
+                    @endforeach
+                {{-- <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul> --}}
+            </div>
+             @endif
+
         </div>
     </div>
 </div>
+
 
 
 @endsection
