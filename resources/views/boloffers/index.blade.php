@@ -89,11 +89,11 @@
                                 {{-- <a class="button is-hovered is-small m-r-5" href="{{ route('customers.show', $customer->id) }}">View</a> --}}
                                 {{-- <a class="button is-hovered is-small" href="{{ route('customers.edit', $customer->id) }}">Edit</a> --}}
 
-                                {{-- <a class="button is-fullwidth m-t-6" style="color: white; background-color:#003040;" onclick="return confirm('Weet je zeker dat je {{ $offer->ean }} wilt updaten?')"
-                                href="{{ route('boloffers.twee') }}">Update</a>
-
-                                <a class="button is-fullwidth is-danger  m-t-6 m-b-6"  onclick="return confirm('Weet je zeker dat je {{ $offer->ean }} wilt verwijderen?')"
+                                {{-- {{-- <a class="button is-fullwidth m-t-6" style="color: white; background-color:#003040;" onclick="return confirm('Weet je zeker dat je {{ $offer->ean }} wilt verwijderen?')"
                                 href="{{ route('boloffers.twee') }}">Delete</a> --}}
+
+                                <a class="button is-fullwidth is-danger  m-t-6 m-b-6"  onclick="return confirm('Weet je zeker dat je {{ $offer->ean }} van bol wilt verwijderen?')"
+                                href="{{ route('boloffers.offer.delete', $offer) }}">Delete</a>
                             </td>
                         </tr>
 

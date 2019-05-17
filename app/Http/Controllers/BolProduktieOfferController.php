@@ -7,6 +7,7 @@ use App\BolProcesStatus;
 use App\CustomVariant;
 use App\Jobs\GetBolOffersJob;
 use App\Jobs\UploadBolOffersJob;
+use App\Jobs\DeleteBolOffersJob;
 use Illuminate\Http\Request;
 use App\Http\Traits\BolApiV3;
 use function GuzzleHttp\json_decode;
@@ -438,8 +439,12 @@ class BolProduktieOfferController extends Controller
             }  // endforeach
     }
 
-    public function twee(){
-        return view('boloffers.twee');
+    public function deleteBolOffer(BolProduktieOffer $offer){
+
+        // dump($offer);
+        DeleteBolOffersJob::dispatch($offer);
+
+        return view('boloffers.offerdeleted', compact('offer'));
     }
 
 }

@@ -10,9 +10,16 @@
     </div>
     <hr class="m-t-0">
     <div class="card">
-            {{-- class="card"    --}}
+
         <div class="card-content">
-                {{-- class="card-content" --}}
+
+                @if ($errors->any())
+                    <div class="is-danger">
+                        @foreach ($errors->all() as $error)
+                            <a class="button is-danger m-t-6">{{ $error }}</a>
+                        @endforeach
+                    </div>
+                @endif
 
             @if( count($cvars) == 0 )
                 <p>Geen custom varianten aanwezig met status 'not published' voor publicatie op BOL. </p>
@@ -89,21 +96,25 @@
                             <td>
                                 <div class="field">
                                     <div class="control">
-                                    <input name="stockfor_{{$cvar->ean}}" class="input is-primary" type="number" placeholder="Stock" style="width: 100;" >
+                                    <input name="stockfor_{{$cvar->ean}}" class="input is-primary" type="number" placeholder="Stock" style="width: 100;" value="{{ old('stockfor_' . $cvar->ean)}}">
                                     </div>
+
                                 </div>
+
                             </td>
 
                             <td>
                                 <label class="checkbox">
-                                    <input name="onhold_{{$cvar->ean}}" type="checkbox">
+                                    <input name="onhold_{{$cvar->ean}}" type="checkbox"
+                                    @if( (old('onhold_' . $cvar->ean)) ) checked @endif>
                                             Hold?
                                 </label>
                             </td>
 
                             <td>
                                 <label class="checkbox">
-                                        <input name="publish_{{$cvar->ean}}" type="checkbox">
+                                        <input name="publish_{{$cvar->ean}}" type="checkbox"
+                                        @if( (old('publish_' . $cvar->ean)) ) checked @endif>
                                         Publish on BOL.
                                 </label>
                             </td>
@@ -136,16 +147,11 @@
             @endif
 
             @if ($errors->any())
-            <div class="is-danger">
+                <div class="is-danger">
                     @foreach ($errors->all() as $error)
                         <a class="button is-danger m-t-6">{{ $error }}</a>
                     @endforeach
-                {{-- <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul> --}}
-            </div>
+                </div>
              @endif
 
         </div>
