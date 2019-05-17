@@ -54,8 +54,8 @@ class DeleteBolOffersJob implements ShouldQueue
 
     public function update_BolProcessStatus_Table(array $bol_response){
 
-        if( $bol_response['bolstatuscode'] == 202 && isset( $bol_response['bolbody'] )) {
-            // && strpos( $bol_response['bolheaders']['Content-Type'][0], 'json' ) !== false ){
+        if( $bol_response['bolstatuscode'] == 202 && isset( $bol_response['bolbody'] )
+            && strpos( $bol_response['bolheaders']['Content-Type'][0], 'json' ) !== false ){
                 dump('in de update_bol_processStatus_Table functie!!');
                 $resp_object = json_decode($bol_response['bolbody']);
 
