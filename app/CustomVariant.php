@@ -32,7 +32,7 @@ class CustomVariant extends Model
         'width_mm',
         'height_mm',
         'salePrice',
-
+        'isPublishedAtBol',
         'boldeliverycode',
         'boldescription'
     ];

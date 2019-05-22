@@ -179,7 +179,7 @@ class TestController extends Controller
 
     public function getBolOrderByIdV3(){
         // demo orderId's zijn: "orderId":"7616222250"   "orderId":"7616222700"  en  "orderId":"7616247328"
-        $this->get_Order_From_BOL_V3_by_Id('demo',  "7616222700");
+        $this->get_Order_From_BOL_V3_by_Id('demo',  "7616222250");
     }
 
     // public function getProcStatus_EntId_EventType_PRODSERVER(){

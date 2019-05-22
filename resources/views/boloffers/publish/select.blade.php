@@ -96,7 +96,7 @@
                             <td>
                                 <div class="field">
                                     <div class="control">
-                                    <input name="stockfor_{{$cvar->ean}}" class="input is-primary" type="number" placeholder="Stock" style="width: 100;" value="{{ old('stockfor_' . $cvar->ean)}}">
+                                    <input name="stockfor_{{$cvar->ean}}" class="input is-primary" type="number" placeholder="Stock" style="width: 30;" value="{{ old('stockfor_' . $cvar->ean)}}">
                                     </div>
 
                                 </div>

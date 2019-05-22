@@ -196,14 +196,28 @@ trait BolApiV3 {
         // Dit doet hij ook voor de 1e kolom (['EAN' => 'EAN', 'Condition' => 'Condition']).  Dit array is meestal overbodig
         // Dus 1e array-element in hoofd-array weghalen met array_shift()
 
-        if( !file_exists( storage_path("app/public") . '/' . $csvFileName) ){
-            return 'no csv file!';
-        }
 
-        // if( file_exists( storage_path("app/public") . '/' . $csvFileName) ){
+        // controleren of de csv-file bestaat, en of er minimaal 2 regels niet NULL zijn in de file. r1 is de header,
+        // vanaf r2 is er data, data vanaf r2, bevat de string 'UTC'
+        if( (!file_exists( storage_path("app/public") . '/' . $csvFileName)) || ( file_exists( storage_path("app/public") . '/' . $csvFileName ) &&
+            strpos( file(storage_path("app/public") . '/' . $csvFileName)[1], 'UTC') === false)  ){
+
+            dump('no csv file, or no data in csv file!');
+
+            file_put_contents( storage_path( 'app/public') . '/' . 'csvexport-to-array-error.txt', ((string)date('D, d M Y H:i:s') . "\r\n" . 'error' . "\r\n\r\n"), FILE_APPEND );
+
+            return 'no csv file, or no data in csv file!';
+        }
+        //
+
+        // $csv_file_path = storage_path("app/public") . '/' . $csvFileName;
+        // $csv_file_as_array = file($csv_file_path);  // een array met key = line-number   & val = line-content
+        // dump($csv_file_as_array);
+
+
 
             $my_csv_array = array_map('str_getcsv', file(storage_path("app/public") . '/' . $csvFileName ));
-                // dd(storage_path('app/public') . '/' . $csvFileName);
+
 
             array_walk($my_csv_array, function(&$a) use ($my_csv_array) {
             $a = array_combine($my_csv_array[0], $a);

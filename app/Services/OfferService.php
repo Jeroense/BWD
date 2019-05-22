@@ -38,9 +38,9 @@ class OfferService
                // na ::where([])->latest()->first(), kreeg ik hier errors met ->exists() dus dan maar met != null controleren of aanwezig
                if($latest_proc_status_db_entry != null){
 
-                $this->update_Bol_Process_Status($process_status_object);
+                $this->update_Bol_Process_Status($process_status_object, $latest_proc_status_db_entry);
                }
-               else{
+               if($latest_proc_status_db_entry == null){
                 $this->create_Bol_Process_Status_after_POST_Make_offer_Export_CSV($process_status_object);
                }
 
@@ -71,24 +71,29 @@ class OfferService
         }
 
 
-        public function update_Bol_Process_Status(\stdClass $process_status_object){
+        public function update_Bol_Process_Status(\stdClass $process_status_object, $process_status_entry){
 
             // geen "entityId" aanwezig in response proces status na, POST/opdracht creeren prod-offer-csv-export.
-            $de_BolProcesStatus = BolProcesStatus::where(['process_status_id' => $process_status_object->id,
-                                                        //   'entityId' => isset($process_status_object->entityId) ? $process_status_object->entityId : null,
-                                                          'eventType' => $process_status_object->eventType ])->first();
+            // $de_BolProcesStatus = BolProcesStatus::where(['process_status_id' => $process_status_object->id,
+            //                                               'eventType' => $process_status_object->eventType ])->first();
+
 
             // als er nieuwe data in $process_status_object aanwezig is: zet dit in 'bol_proces_statuses', zo niet? zet de oude waarde terug.
-            $de_BolProcesStatus->update([
+            // $de_BolProcesStatus->update([
+                $process_status_entry->update([
                                     //  'process_status_id' => $process_status_object->id,
-                                    'entityId' => isset( $process_status_object->entityId) ? $process_status_object->entityId : $de_BolProcesStatus->entityId,
+                                    'entityId' => isset( $process_status_object->entityId) ? $process_status_object->entityId : $process_status_entry->entityId,
                                      'eventType' => $process_status_object->eventType,
-                                     'description' => isset($process_status_object->description) ? $process_status_object->description : $de_BolProcesStatus->description,
+                                     'description' => isset($process_status_object->description) ? $process_status_object->description : $process_status_entry->description,
                                      'status' => $process_status_object->status,
-                                     'errorMessage' => isset($process_status_object->errorMessage) ? $process_status_object->errorMessage : $de_BolProcesStatus->errorMessage,
+                                     'errorMessage' => isset($process_status_object->errorMessage) ? $process_status_object->errorMessage : $process_status_entry->errorMessage,
                                     //  'link_to_self' => $process_status_object->links[0]->href,
                                     //  'method_to_self' => $process_status_object->links[0]->method
                                      ]);
+                                     dump('In: update_Bol_Process_Status. $process_status_object is:');
+                                     dump($process_status_object);
+                                     dump('In: update_Bol_Process_Status. De ge-update BolProcessStatus entry is:');
+                                     dump($process_status_entry);
             return;
         }
 
@@ -112,21 +117,24 @@ class OfferService
                 return 'lege response body';
             }
 
+            $proces_status_entry = BolProcesStatus::where(["process_status_id" => $process_status_id, "eventType" => "CREATE_OFFER_EXPORT"])->first();
+
             $process_status_body_as_object = json_decode($process_status_response['bolbody']);
-            $this->update_Bol_Process_Status($process_status_body_as_object);
+            $this->update_Bol_Process_Status($process_status_body_as_object, $proces_status_entry);
 
             return;
         }
 
 
         public function update_process_status_create_offer_export(){
+            $this->putResponseInFile('descheduler-log.txt', 'update_process_status_create_offer_export aangeroepen!', 'jaja', 'zeker');
 
             $latest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
 
             // if( $latest_create_offer_export_db_entry->exists() ){  // geeft error, dus met != null controleren
             if( $latest_create_offer_export_db_entry != null ){
 
-                if($latest_create_offer_export_db_entry->status = 'PENDING'){
+                if($latest_create_offer_export_db_entry->status == 'PENDING'){
 
                     $resp = $this->geefProcesStatusById('prod', $latest_create_offer_export_db_entry->process_status_id);
 
@@ -150,7 +158,7 @@ class OfferService
 
                 // nu het volgende: een flag in proces_statuses table zetten, of dat er vanuit deze db_entry al eens een offer-export-csv
                 // succesvol opgehaald is (geweest).
-                if($ltest_create_offer_export_db_entry != null && $ltest_create_offer_export_db_entry->status = 'SUCCESS' && $ltest_create_offer_export_db_entry->csv_success == false){
+                if($ltest_create_offer_export_db_entry != null && $ltest_create_offer_export_db_entry->status == 'SUCCESS' && $ltest_create_offer_export_db_entry->csv_success == false){
 
                     // dump('in: update_process_status_create_offer_export()');
                     // dump($ltest_create_offer_export_db_entry->status);
