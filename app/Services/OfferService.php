@@ -127,7 +127,7 @@ class OfferService
 
 
         public function update_process_status_create_offer_export(){
-            $this->putResponseInFile('descheduler-log.txt', 'update_process_status_create_offer_export aangeroepen!', 'jaja', 'zeker');
+            // $this->putResponseInFile('descheduler-log.txt', 'update_process_status_create_offer_export aangeroepen!', 'jaja', 'zeker');
 
             $latest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
 
@@ -193,8 +193,8 @@ class OfferService
 
                 $csv_array = $this->zet_CSV_export_file_om_in_array($csvFileName);
 
-                if($csv_array == 'no csv file!'){
-                    return 'no csv file!';
+                if($csv_array == 'no csv file, or no data in csv file!'){
+                    return 'no csv file, or no data in csv file!';
                 }
 
                 // hier wellicht goed punt in code om: de flag: "csv_success" op true te zetten.

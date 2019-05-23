@@ -204,7 +204,7 @@ trait BolApiV3 {
 
             dump('no csv file, or no data in csv file!');
 
-            file_put_contents( storage_path( 'app/public') . '/' . 'csvexport-to-array-error.txt', ((string)date('D, d M Y H:i:s') . "\r\n" . 'error' . "\r\n\r\n"), FILE_APPEND );
+            file_put_contents( storage_path( 'app/public') . '/' . 'csvexport-to-array-error.txt', ((string)date('D, d M Y H:i:s') . "\r\n" . 'no csv file, or no data in csv file!' . "\r\n\r\n"), FILE_APPEND );
 
             return 'no csv file, or no data in csv file!';
         }
@@ -366,80 +366,62 @@ trait BolApiV3 {
 
 
 
+    public function make_V3_PlazaApiRequest($server_type, $rest_endpoint ,$method = "get", $requestBody = null, bool $isGETForCSVExport = false){
 
 
 
+            $headers = $this->giveBolV3Headers($method, $isGETForCSVExport);
+            $server_root_url = '';
+
+            switch($server_type){
+                case 'prod':
+                $server_root_url = env('BOL_URI_V3', ''); break;
+                case 'demo':
+                $server_root_url = env('BOL_URI_TEST_V3', ''); break;
+                default: return 'Geef aan welke server, produktie of demo!';
+            }
+
+
+            $client = new Client(['base_uri' => $server_root_url]);
+
+            $options_array_for_client = ['headers' => $headers, 'http_errors' => false];
+
+            if(strtoupper($method) == "PUT" || strtoupper($method) == "POST"){
+
+                $options_array_for_client['body'] =  $requestBody;
+            }
 
 
 
+                $bolresponse = $client->request($method, $rest_endpoint,  $options_array_for_client);
 
 
-        public function make_V3_PlazaApiRequest($server_type, $rest_endpoint ,$method = "get", $requestBody = null, bool $isGETForCSVExport = false){
-
-
-            // dump($rest_endpoint, $server_type);
-
-
-                $headers = $this->giveBolV3Headers($method, $isGETForCSVExport);
-                $server_root_url = '';
-
-                switch($server_type){
-                    case 'prod':
-                    $server_root_url = env('BOL_URI_V3', ''); break;
-                    case 'demo':
-                    $server_root_url = env('BOL_URI_TEST_V3', ''); break;
-                    default: return 'Geef aan welke server, produktie of demo!';
-                }
-
-
-                $client = new Client(['base_uri' => $server_root_url]);
-
-
-                if(strtoupper($method) == "GET"){
-                    // sync
-                    $bolresponse = $client->request($method, $rest_endpoint,  ['headers' => $headers, 'http_errors' => false]);
-                    // sync
-
-
-
-
-                    return              ['bolheaders' => $bolresponse->getHeaders(),
-                                        'bolbody' => (string)$bolresponse->getBody(),
-                                        'bolstatuscode' => $bolresponse->getStatusCode(),
-                                        'bolreasonphrase' => $bolresponse->getReasonPhrase(),
-                                        'requestheaders' => $headers,
-                                        'x_ratelimit_limit' => $bolresponse->getHeader('X-RateLimit-Limit')[0],
-                                        'x_ratelimit_remaining' => $bolresponse->getHeader('X-RateLimit-Remaining')[0],
-                                        'x_ratelimit_reset' => $bolresponse->getHeader('X-RateLimit-Reset')[0]
-                                        ];
-
-
-                }
-                if(strtoupper($method) == "DELETE" || strtoupper($method) == "PUT" || strtoupper($method) == "POST"){
-                    // kan natuurlijk ook met: else{} jaja
-
-                    $bolresponse = $client->request($method, $rest_endpoint, ['http_errors' => false ,'headers' => $headers, 'body' => $requestBody]);
-
-                    $bol_resp_body = (string)$bolresponse->getBody();
-                    $bol_resp_headers = $bolresponse->getHeaders();
-                    $bol_response_code = $bolresponse->getStatusCode();
-                    $bol_reason_phrase = $bolresponse->getReasonPhrase();
-
-                    return              ['bolheaders' => $bol_resp_headers,
-                                        'bolbody' => $bol_resp_body,
-                                        'bolstatuscode' => $bol_response_code,
-                                        'bolreasonphrase' => $bol_reason_phrase,
-                                        'requestheaders' => $headers,
-                                        'requestbody' => $requestBody,
-                                        'x_ratelimit_limit' => $bolresponse->getHeader('X-RateLimit-Limit')[0],
-                                        'x_ratelimit_remaining' => $bolresponse->getHeader('X-RateLimit-Remaining')[0],
-                                        'x_ratelimit_reset' => $bolresponse->getHeader('X-RateLimit-Reset')[0]
-                                        ];
+                return              ['bolheaders' => $bolresponse->getHeaders(),
+                                    'bolbody' => (string)$bolresponse->getBody(),
+                                    'bolstatuscode' => $bolresponse->getStatusCode(),
+                                    'bolreasonphrase' => $bolresponse->getReasonPhrase(),
+                                    'requestheaders' => $headers,
+                                    'x_ratelimit_limit' => $bolresponse->getHeader('X-RateLimit-Limit')[0],
+                                    'x_ratelimit_remaining' => $bolresponse->getHeader('X-RateLimit-Remaining')[0],
+                                    'x_ratelimit_reset' => $bolresponse->getHeader('X-RateLimit-Reset')[0]
+                                    ];
 
 
             }
 
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public function make_V3_PlazaApiRequest_FOR_CSV_EXPORT_PROD_SERVER($rest_endpoint ,$method = "get"){
 
@@ -797,3 +779,70 @@ trait BolApiV3 {
     //     return $csv_response_array;
     // }
     }
+
+            // public function make_V3_PlazaApiRequest($server_type, $rest_endpoint ,$method = "get", $requestBody = null, bool $isGETForCSVExport = false){
+
+
+        //     // dump($rest_endpoint, $server_type);
+
+
+        //         $headers = $this->giveBolV3Headers($method, $isGETForCSVExport);
+        //         $server_root_url = '';
+
+        //         switch($server_type){
+        //             case 'prod':
+        //             $server_root_url = env('BOL_URI_V3', ''); break;
+        //             case 'demo':
+        //             $server_root_url = env('BOL_URI_TEST_V3', ''); break;
+        //             default: return 'Geef aan welke server, produktie of demo!';
+        //         }
+
+
+        //         $client = new Client(['base_uri' => $server_root_url]);
+
+
+        //         if(strtoupper($method) == "GET"){
+        //             // sync
+        //             $bolresponse = $client->request($method, $rest_endpoint,  ['headers' => $headers, 'http_errors' => false]);
+        //             // sync
+
+
+
+
+        //             return              ['bolheaders' => $bolresponse->getHeaders(),
+        //                                 'bolbody' => (string)$bolresponse->getBody(),
+        //                                 'bolstatuscode' => $bolresponse->getStatusCode(),
+        //                                 'bolreasonphrase' => $bolresponse->getReasonPhrase(),
+        //                                 'requestheaders' => $headers,
+        //                                 'x_ratelimit_limit' => $bolresponse->getHeader('X-RateLimit-Limit')[0],
+        //                                 'x_ratelimit_remaining' => $bolresponse->getHeader('X-RateLimit-Remaining')[0],
+        //                                 'x_ratelimit_reset' => $bolresponse->getHeader('X-RateLimit-Reset')[0]
+        //                                 ];
+
+
+        //         }
+        //         if(strtoupper($method) == "DELETE" || strtoupper($method) == "PUT" || strtoupper($method) == "POST"){
+        //             // kan natuurlijk ook met: else{} jaja
+
+        //             $bolresponse = $client->request($method, $rest_endpoint, ['http_errors' => false ,'headers' => $headers, 'body' => $requestBody]);
+
+        //             $bol_resp_body = (string)$bolresponse->getBody();
+        //             $bol_resp_headers = $bolresponse->getHeaders();
+        //             $bol_response_code = $bolresponse->getStatusCode();
+        //             $bol_reason_phrase = $bolresponse->getReasonPhrase();
+
+        //             return              ['bolheaders' => $bol_resp_headers,
+        //                                 'bolbody' => $bol_resp_body,
+        //                                 'bolstatuscode' => $bol_response_code,
+        //                                 'bolreasonphrase' => $bol_reason_phrase,
+        //                                 'requestheaders' => $headers,
+        //                                 'requestbody' => $requestBody,
+        //                                 'x_ratelimit_limit' => $bolresponse->getHeader('X-RateLimit-Limit')[0],
+        //                                 'x_ratelimit_remaining' => $bolresponse->getHeader('X-RateLimit-Remaining')[0],
+        //                                 'x_ratelimit_reset' => $bolresponse->getHeader('X-RateLimit-Reset')[0]
+        //                                 ];
+
+
+        //     }
+
+        // }
