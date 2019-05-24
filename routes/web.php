@@ -77,6 +77,8 @@ Route::prefix('boloffers')->middleware('role:superadministrator|administrator')-
     Route::post('/dump-published-on-bol', 'BolProduktieOfferController@dump_and_upload_offers_to_be_published_on_BOL')->name('boloffers.publish.dump');
 
     Route::get('/boloffer-verwijderen/{offer}', 'BolProduktieOfferController@deleteBolOffer')->name('boloffers.offer.delete');
+    Route::get('/boloffer-update/{offer}', 'BolProduktieOfferController@updateBolOffer')->name('boloffers.offer.update');
+    Route::post('/boloffer-updated', 'BolProduktieOfferController@updatedBolOffer')->name('boloffers.offer.updated');
 });
 
 

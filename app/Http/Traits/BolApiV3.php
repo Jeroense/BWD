@@ -116,7 +116,7 @@ trait BolApiV3 {
             dump('BolToken table is nog leeg. Nieuw token opgevraagd bij bol!');
         }
 
-        // $basic_auth_header = 'Bearer ' . $this->request_BOL_Oauth_Token();
+
 
 
         $headers = [

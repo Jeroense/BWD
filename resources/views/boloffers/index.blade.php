@@ -94,6 +94,9 @@
 
                                 <a class="button is-fullwidth is-danger  m-t-6 m-b-6"  onclick="return confirm('Weet je zeker dat je {{ $offer->ean }} van bol wilt verwijderen?')"
                                 href="{{ route('boloffers.offer.delete', $offer) }}">Delete</a>
+
+                                <a class="button is-fullwidth is-info  m-t-6 m-b-6"  onclick="return confirm('Weet je zeker dat je {{ $offer->ean }} van bol wilt updaten?')"
+                                    href="{{ route('boloffers.offer.update', $offer) }}">Update</a>
                             </td>
                         </tr>
 

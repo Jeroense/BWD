@@ -43,6 +43,34 @@ class BolProduktieOfferController extends Controller
     }
 
 
+    public function updateBolOffer(BolProduktieOffer $offer){
+
+        $custVariant = CustomVariant::where(['ean' => $offer['ean']])->first();
+
+        if($custVariant != null){
+
+            $offer['fileName'] = $custVariant->fileName;
+        }
+
+        return view('boloffers.update', compact('offer'));
+    }
+
+
+    public function updatedBolOffer(Request $req){
+
+        dd($req);
+        // return view('boloffers.updated', compact('offer'));
+    }
+
+    public function deleteBolOffer(BolProduktieOffer $offer){
+
+        // dump($offer);
+        DeleteBolOffersJob::dispatch($offer);
+
+        return view('boloffers.offerdeleted', compact('offer'));
+    }
+
+
 
     public function dump_and_upload_offers_to_be_published_on_BOL(Request $req){
 
@@ -439,13 +467,6 @@ class BolProduktieOfferController extends Controller
             }  // endforeach
     }
 
-    public function deleteBolOffer(BolProduktieOffer $offer){
-
-        // dump($offer);
-        DeleteBolOffersJob::dispatch($offer);
-
-        return view('boloffers.offerdeleted', compact('offer'));
-    }
 
 }
 
