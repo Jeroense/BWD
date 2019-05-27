@@ -10,6 +10,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Traits\BolApiV3;
+use App\Customer;
+use App\PostAddress;
+use App\OrderItem;
+use App\CustomVariant;
 
 class GetBolOrdersJob implements ShouldQueue
 {
@@ -82,7 +86,7 @@ class GetBolOrdersJob implements ShouldQueue
         dump('in GetBolOrdersJob@newOrder functie. regel 82');
         dump($order);
 
-        if($this->erIsTenminsteEenOrderItemZonderCancelRequest){
+        // if($this->erIsTenminsteEenOrderItemZonderCancelRequest){
             $customerAdressDataFromBolOrderResp =   ['firstName' => $order["customerDetails"]["billingDetails"]["firstName"],
                                                     'lastName' => $order["customerDetails"]["billingDetails"]["surName"],
                                                     'postalCode' => $order["customerDetails"]["billingDetails"]["zipCode"],
@@ -218,7 +222,7 @@ class GetBolOrdersJob implements ShouldQueue
                 }
             }
             dump($this->erIsTenminsteEenOrderItemZonderCancelRequest);
-        }
+        // }
         return;
     }
 
