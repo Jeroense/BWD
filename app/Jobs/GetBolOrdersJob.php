@@ -145,9 +145,9 @@ class GetBolOrdersJob implements ShouldQueue
                     $salutationStringCustomer = 'De heer\Mevrouw';
                 break;
                 case null:
-                    $salutationStringCustomer = null;
+                    $salutationStringCustomer = 'De heer\Mevrouw';
                 break;
-                default: $salutationStringCustomer = null;
+                default: $salutationStringCustomer = 'De heer\Mevrouw';
             }
 
             switch($order["customerDetails"]["shipmentDetails"]["salutationCode"]){
@@ -162,16 +162,15 @@ class GetBolOrdersJob implements ShouldQueue
                     $salutationStringShipment = 'De heer\Mevrouw';
                 break;
                 case null:
-                    $salutationStringShipment = null;
+                    $salutationStringShipment = 'De heer\Mevrouw';
                 break;
-                default: $salutationStringShipment = null;
+                default: $salutationStringShipment = 'De heer\Mevrouw';
             }
 
 
 
 
             $allCustomerDataFromBolOrderResp =      ['salutation' => $salutationStringCustomer,
-                                                    // 'salutation' => isset($order["customerDetails"]["billingDetails"]["salutationCode"]) ? $order["customerDetails"]["billingDetails"]["salutationCode"] : null,
                                                     'firstName' => $order["customerDetails"]["billingDetails"]["firstName"],
                                                     'lastName' => $order["customerDetails"]["billingDetails"]["surName"],
                                                     'street' => $order["customerDetails"]["billingDetails"]["streetName"],

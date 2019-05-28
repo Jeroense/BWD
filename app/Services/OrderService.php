@@ -30,11 +30,11 @@ class OrderService
 
 
 
-    public function getOrdersFromBol(){
+    public function getOrdersFromBol($serverType){
 
 
 
-        $bolOrdersResponse = $this->make_V3_PlazaApiRequest('demo',  'orders?fulfilment-method=FBR', 'get');
+        $bolOrdersResponse = $this->make_V3_PlazaApiRequest($serverType,  'orders?fulfilment-method=FBR', 'get');
 
         if($bolOrdersResponse['bolstatuscode'] != 200){     // checken op http-errors/codes
             $this->checkAndLogBolErrorResponse($bolOrdersResponse);
@@ -42,9 +42,15 @@ class OrderService
         }
 
         if($bolOrdersResponse['bolstatuscode'] == 200){
-            // $order_resp_code = $bolOrdersResponse['bolstatuscode'];
-            // $order_resp_phrase = $bolOrdersResponse['bolreasonphrase'];
-            // $order_resp_body = $bolOrdersResponse['bolbody'];
+
+
+            if( strpos( $bolOrdersResponse['bolheaders']['Content-Type'][0], 'json') === false ){
+
+                return 'Geen JSON in bol-orders-response!';
+            }
+
+            $this->putResponseInFile("bolGetOrdersResponse-{$serverType}.txt", $bolOrdersResponse['bolstatuscode'],
+                $bolOrdersResponse['bolreasonphrase'], $bolOrdersResponse['bolbody']);
 
             $bolRespBodystdClassObject = json_decode($bolOrdersResponse['bolbody']);
 
@@ -93,7 +99,7 @@ class OrderService
                     }
 
 
-                    GetBolOrdersJob::dispatch($order, 'demo');
+                    GetBolOrdersJob::dispatch($order, $serverType);
 
                 }
             }
@@ -303,7 +309,8 @@ class OrderService
             $feed_header .= $product->product_attribute_key ."\t";
         }
 
-        $file = fopen( env('CONTENTFEED_PATH', '') . '/' .  $feed_file_name  . '.txt', 'w');
+        // $file = fopen( env('CONTENTFEED_PATH', '') . '/' .  $feed_file_name  . '.txt', 'w');
+        $file = fopen( public_path('contentFeed') . '/' .  $feed_file_name  . '.txt', 'w');
         fwrite($file, $feed_header . PHP_EOL);
 
         foreach($customVariantIds as $id) {
@@ -311,7 +318,7 @@ class OrderService
             $shirt = CustomVariant::find($id);
 
             foreach($products as $product) {
-                if(strpos($product->attrValues->attr_value, '->') != false) {
+                if(strpos($product->attrValues->attr_value, '->') !== false) {  // dit moet volgens php manual !== zijn, geen !=
                     $column = substr($product->attrValues->attr_value, strpos($product->attrValues->attr_value, '>') + 1);
                     $product_data .= strtoupper($shirt->$column) != 'XXXL' ? $shirt->$column . "\t" : $product_data .= '3XL' . "\t";
                 } else {

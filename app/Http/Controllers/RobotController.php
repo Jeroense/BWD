@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Services\OrderService;
 use App\Services\OfferService;
 use App\Http\Traits\DebugLog;
-use app\Test;
+use App\Test;
+use App\BolProcesStatus;
+use App\Jobs\GetBolProcesStatusJob;
 
 // scheduler trigger de robotcontroller, die triggert de orderservice, mijn code moet in de orderservice
 class RobotController extends Controller
@@ -52,7 +54,7 @@ class RobotController extends Controller
     {
 
         // $bolOrders = $this->autoOrder->getOrdersFromBol();
-        $this->autoOrder->getOrdersFromBol();
+        $this->autoOrder->getOrdersFromBol('demo');
 
         // if(count($bolOrders) < 1) {
         //     return 0;
@@ -86,6 +88,19 @@ class RobotController extends Controller
         $updates = $this->autoOrder->orderProgress();
         $status = $this->updateBolOrderStatus($updates);
         return $status;
+    }
+
+    public function updatePendingProcessStatusses()
+    {
+        $pending_process_statusses_in_db = BolProcesStatus::where(['status' => 'PENDING'])->get();
+
+        if($pending_process_statusses_in_db->count() == 0){
+            return;
+        }
+
+        foreach($pending_process_statusses_in_db as $proces_status){
+            GetBolProcesStatusJob::dispatch($proces_status);
+        }
     }
 
 }
