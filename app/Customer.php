@@ -13,6 +13,7 @@ class Customer extends Model
     }
 
     protected $fillable = [
+        'salutation',
         'firstName',
         'lnPrefix',
         'lastName',

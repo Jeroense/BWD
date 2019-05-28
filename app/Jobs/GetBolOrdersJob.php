@@ -58,7 +58,32 @@ class GetBolOrdersJob implements ShouldQueue
                 return 'http error-codes aanwezig';
             }
 
+            if( strpos( $bol_single_order_resp['bolheaders']['Content-Type'][0], 'json') === false ){
+                return 'Geen JSON in bol-single-order-response!';
+            }
+
+            $this->putResponseInFile("bolGetOrderResponseByID-{$this->servertype}.txt", $bol_single_order_resp['bolstatuscode'],
+            $bol_single_order_resp['bolreasonphrase'], $bol_single_order_resp['bolbody']);
+
             $reply_body_data = json_decode($bol_single_order_resp['bolbody'], true); // naar assoc_arr
+
+            // check of er de minimale billing & shipment gegevens in de order-by-order-id response aanwezig zijn
+            if(!isset($reply_body_data["customerDetails"]["billingDetails"]["firstName"]) ||
+                !isset($reply_body_data["customerDetails"]["billingDetails"]["surName"] ) ||
+                !isset($reply_body_data["customerDetails"]["billingDetails"]["streetName"]) ||
+                !isset($reply_body_data["customerDetails"]["billingDetails"]["houseNumber"]) ||
+                !isset($reply_body_data["customerDetails"]["billingDetails"]["zipCode"]) ||
+                !isset($reply_body_data["customerDetails"]["billingDetails"]["city"]) ||
+                !isset($reply_body_data["customerDetails"]["shipmentDetails"]["firstName"]) ||
+                !isset($reply_body_data["customerDetails"]["shipmentDetails"]["surName"] ) ||
+                !isset($reply_body_data["customerDetails"]["shipmentDetails"]["streetName"]) ||
+                !isset($reply_body_data["customerDetails"]["shipmentDetails"]["houseNumber"]) ||
+                !isset($reply_body_data["customerDetails"]["shipmentDetails"]["zipCode"]) ||
+                !isset($reply_body_data["customerDetails"]["shipmentDetails"]["city"])
+            ){
+                return 'Minimale customer details qua billing-gegevens en of shipment gegevens ontbreken!';
+            }
+
 
             if(isset($reply_body_data['orderId']) && isset( $reply_body_data["orderItems"][0]["orderItemId"] ) ){
                 // dump('op regel 59 in GetBolOrdersJob class!');
@@ -83,7 +108,7 @@ class GetBolOrdersJob implements ShouldQueue
 
 
 
-        dump('in GetBolOrdersJob@newOrder functie. regel 82');
+        dump('in GetBolOrdersJob@newOrder functie. regel 93');
         dump($order);
 
         // if($this->erIsTenminsteEenOrderItemZonderCancelRequest){
@@ -92,6 +117,8 @@ class GetBolOrdersJob implements ShouldQueue
                                                     'postalCode' => $order["customerDetails"]["billingDetails"]["zipCode"],
                                                     'houseNr' => $order["customerDetails"]["billingDetails"]["houseNumber"],
                                                     // 'houseNrPostfix' => $order["customerDetails"]["billingDetails"]["houseNumberExtended"]
+                                                    'city' => $order["customerDetails"]["billingDetails"]["city"],
+                                                    'street' => $order["customerDetails"]["billingDetails"]["streetName"]
                                                 ];
 
 
@@ -100,28 +127,73 @@ class GetBolOrdersJob implements ShouldQueue
                                                     'postalCode' => $order["customerDetails"]["shipmentDetails"]["zipCode"],
                                                     'houseNr' => $order["customerDetails"]["shipmentDetails"]["houseNumber"],
                                                     // 'houseNrPostfix' => $order["customerDetails"]["shipmentDetails"]["houseNumberExtended"]
+                                                    'city' => $order["customerDetails"]["shipmentDetails"]["city"],
+                                                    'street' => $order["customerDetails"]["shipmentDetails"]["streetName"]
                                                 ];
 
+            $salutationStringCustomer = ''; $salutationStringShipment = '';
 
-            $allCustomerDataFromBolOrderResp =      ['firstName' => $order["customerDetails"]["billingDetails"]["firstName"],
+            switch($order["customerDetails"]["billingDetails"]["salutationCode"]){
+
+                case '01':
+                    $salutationStringCustomer = 'De heer';
+                break;
+                case '02':
+                    $salutationStringCustomer = 'Mevrouw';
+                break;
+                case '03':
+                    $salutationStringCustomer = 'De heer\Mevrouw';
+                break;
+                case null:
+                    $salutationStringCustomer = null;
+                break;
+                default: $salutationStringCustomer = null;
+            }
+
+            switch($order["customerDetails"]["shipmentDetails"]["salutationCode"]){
+
+                case '01':
+                    $salutationStringShipment = 'De heer';
+                break;
+                case '02':
+                    $salutationStringShipment = 'Mevrouw';
+                break;
+                case '03':
+                    $salutationStringShipment = 'De heer\Mevrouw';
+                break;
+                case null:
+                    $salutationStringShipment = null;
+                break;
+                default: $salutationStringShipment = null;
+            }
+
+
+
+
+            $allCustomerDataFromBolOrderResp =      ['salutation' => $salutationStringCustomer,
+                                                    // 'salutation' => isset($order["customerDetails"]["billingDetails"]["salutationCode"]) ? $order["customerDetails"]["billingDetails"]["salutationCode"] : null,
+                                                    'firstName' => $order["customerDetails"]["billingDetails"]["firstName"],
                                                     'lastName' => $order["customerDetails"]["billingDetails"]["surName"],
                                                     'street' => $order["customerDetails"]["billingDetails"]["streetName"],
                                                     'postalCode' => $order["customerDetails"]["billingDetails"]["zipCode"],
                                                     'houseNr' => $order["customerDetails"]["billingDetails"]["houseNumber"],
                                                     // 'houseNrPostfix' => $order["customerDetails"]["billingDetails"]["houseNumberExtended"],
                                                     'city' => $order["customerDetails"]["billingDetails"]["city"],
-                                                    'countryCode' => $order["customerDetails"]["billingDetails"]["countryCode"],
-                                                    'email' => $order["customerDetails"]["billingDetails"]["email"]  ];
+                                                    'countryCode' => isset($order["customerDetails"]["billingDetails"]["countryCode"]) ? $order["customerDetails"]["billingDetails"]["countryCode"] : null,
+                                                    'email' => isset($order["customerDetails"]["billingDetails"]["email"]) ? $order["customerDetails"]["billingDetails"]["email"] : null
+                                                   ];
 
-            $allShipmentDataFromBolOrderResp =      ['firstName' => $order["customerDetails"]["shipmentDetails"]["firstName"],
+            $allShipmentDataFromBolOrderResp =      ['salutation' => $salutationStringShipment,
+                                                    'firstName' => $order["customerDetails"]["shipmentDetails"]["firstName"],
                                                     'lastName' => $order["customerDetails"]["shipmentDetails"]["surName"],
                                                     'street' => $order["customerDetails"]["shipmentDetails"]["streetName"],
                                                     'postalCode' => $order["customerDetails"]["shipmentDetails"]["zipCode"],
                                                     'houseNr' => $order["customerDetails"]["shipmentDetails"]["houseNumber"],
                                                     // 'houseNrPostfix' => $order["customerDetails"]["shipmentDetails"]["houseNumberExtended"],
                                                     'city' => $order["customerDetails"]["shipmentDetails"]["city"],
-                                                    'countryCode' => $order["customerDetails"]["shipmentDetails"]["countryCode"],
-                                                    'email' => $order["customerDetails"]["shipmentDetails"]["email"] ];
+                                                    'countryCode' => isset($order["customerDetails"]["shipmentDetails"]["countryCode"]) ? $order["customerDetails"]["shipmentDetails"]["countryCode"] : null,
+                                                    'email' => isset($order["customerDetails"]["shipmentDetails"]["email"]) ? $order["customerDetails"]["shipmentDetails"]["email"] : null
+                                                 ];
 
                 // als er geen huisnummer-extensie is, geef bol deze property niet mee, dus op controleren:
                 if( isset($order["customerDetails"]["billingDetails"]["houseNumberExtended"]) ){
@@ -221,7 +293,7 @@ class GetBolOrdersJob implements ShouldQueue
                     }
                 }
             }
-            dump($this->erIsTenminsteEenOrderItemZonderCancelRequest);
+            // dump($this->erIsTenminsteEenOrderItemZonderCancelRequest);
         // }
         return;
     }

@@ -56,9 +56,9 @@ class OfferService
                                      'description' => isset($process_status_object->description) ? $process_status_object->description : null,
                                      'status' => $process_status_object->status,
                                      'errorMessage' => isset($process_status_object->errorMessage) ? $process_status_object->errorMessage : null,
-                                     'createTimestamp' => $process_status_object->createTimestamp,
-                                     'link_to_self' => $process_status_object->links[0]->href,
-                                     'method_to_self' => $process_status_object->links[0]->method
+                                     'createTimestamp' => isset($process_status_object->createTimestamp) ? $process_status_object->createTimestamp : 'onbekend',
+                                     'link_to_self' => isset($process_status_object->links[0]->href) ? $process_status_object->links[0]->href : 'onbekend',
+                                     'method_to_self' => isset($process_status_object->links[0]->method) ? $process_status_object->links[0]->method : 'onbekend'
                                      ]);
 
             // in de hoop, dat de bol api in staat is, direct na de initiele process-status response na een POST opdracht tot

@@ -12,6 +12,7 @@ class PostAddress extends Model
 
     protected $fillable = [
         'customerId',
+        'salutation',
         'firstName',
         'lnPrefix',
         'lastName',

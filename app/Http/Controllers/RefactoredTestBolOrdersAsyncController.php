@@ -52,6 +52,16 @@ class RefactoredTestBolOrdersAsyncController extends Controller{
             // $order_resp_phrase = $bolOrdersResponse['bolreasonphrase'];
             // $order_resp_body = $bolOrdersResponse['bolbody'];
 
+            if( strpos( $bolOrdersResponse['bolheaders']['Content-Type'][0], 'json') === false ){
+
+                return 'Geen JSON in bol-orders-response!';
+            }
+
+            $this->putResponseInFile("bolGetOrdersResponse-demo.txt", $bolOrdersResponse['bolstatuscode'],
+                $bolOrdersResponse['bolreasonphrase'], $bolOrdersResponse['bolbody']);
+
+            dump($bolOrdersResponse['bolbody']);
+
             $bolRespBodystdClassObject = json_decode($bolOrdersResponse['bolbody']);
 
             if(!isset($bolRespBodystdClassObject->orders) || !isset($bolRespBodystdClassObject->orders[0]->orderId)){
@@ -74,7 +84,8 @@ class RefactoredTestBolOrdersAsyncController extends Controller{
                     $this->nietBestaandeOrderIDSinOrderResponse = true;
                     dump($this->nullOrEmptyOrderIDsArePresent);
                 }
-                dump('Zijn er lege orderIds? : ', \in_array('ispresent', $this->nullOrEmptyOrderIDsArePresent) ? 'Ja' : 'Nee');
+                dump('Zijn er lege orderIds? : ' , \in_array('ispresent', $this->nullOrEmptyOrderIDsArePresent) ? 'Ja' : 'Nee');
+
             }
 
             if($this->nietBestaandeOrderIDSinOrderResponse){

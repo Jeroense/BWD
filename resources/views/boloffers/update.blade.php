@@ -113,13 +113,15 @@
                         <td>
                             <div class="field">
                                 <label class="checkbox">
-                                    <input name="onhold_{{$offer->ean}}" type="checkbox" class="is-checkradio is-info" id="onholdcheckbox"
-                                                                        {{-- @if( (old('onhold_' . $offer->ean)) ) checked @endif> --}}
+                                    <input name="onhold_{{$offer->ean}}" type="checkbox" class=" " id="onholdcheckbox"
+
                                     @if( $offer->onHoldByRetailer ) checked @endif>
                                         is on hold
                                 </label>
 
                             </div>
+
+
                         </td>
 
 
@@ -144,6 +146,8 @@
         </form>
 
         </div>
+
+
     </div>
 </div>
 
