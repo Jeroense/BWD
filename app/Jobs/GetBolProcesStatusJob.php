@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Http\Traits\BolApiV3;
 use App\BolProcesStatus;
+use Illuminate\Support\Facades\Redis;
 
 class GetBolProcesStatusJob implements ShouldQueue
 {
@@ -34,7 +35,7 @@ class GetBolProcesStatusJob implements ShouldQueue
     {
         Redis::throttle('checking_pending_process_statusses')->allow(5)->every(1)->then(function () {
 
-            // file_put_contents( storage_path( 'app/public') . '/' . 'BolOffersUploadThrottling_log.txt', ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) . "\r\n" . $this->bol_offer . "\r\n\r\n"), FILE_APPEND );
+
                 dump('checking_pending_process_status for: ', $this->bol_process_status->process_status_id, $this->bol_process_status->eventType);
 
                 $bol_proc_status_response =  $this->make_V3_PlazaApiRequest_for_process_status_Full_URL($this->bol_process_status->link_to_self,
@@ -53,7 +54,7 @@ class GetBolProcesStatusJob implements ShouldQueue
             }, function () {
                 // Could not obtain lock...
 
-                file_put_contents( storage_path( 'app/public') . '/' . 'TestRedisThrottling_log.txt', ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) .  "\r\n" . "Could not obtain lock.." . "\r\n\r\n"), FILE_APPEND );
+                file_put_contents( storage_path( 'app/public') . '/' . 'GetBolProcesStatusJob_eror_no_lock_log.txt', ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) .  "\r\n" . "Could not obtain lock.." . "\r\n\r\n"), FILE_APPEND );
 
                  return $this->release(3);
             });
@@ -79,39 +80,55 @@ class GetBolProcesStatusJob implements ShouldQueue
 
 
 
-                $process_status_in_db = BolProcesStatus::where(['process_status_id' => $resp_object->id,
-                                                                'eventType' => $resp_object->eventType,
 
-                                                               ])->first();
 
-                if($process_status_in_db != null){
-
-                    $process_status_in_db->update([
-                        'entityId' => isset($resp_object->entityId) ? $resp_object->entityId : $process_status_in_db->entityId,
-                        'eventType' => $resp_object->eventType,
-                        'description' => isset($resp_object->description) ? $resp_object->description : $process_status_in_db->description,
-                        'status' => $resp_object->status,
-                        'errorMessage' => isset($resp_object->errorMessage) ? $resp_object->errorMessage : $process_status_in_db->errorMessage,
-                        'createTimestamp' => isset($resp_object->createTimestamp) ? $resp_object->createTimestamp : $process_status_in_db->createTimestamp,
-                        'link_to_self' => isset($resp_object->links[0]->href) ? $resp_object->links[0]->href : $process_status_in_db->link_to_self,
-                        'method_to_self' => isset($resp_object->links[0]->method) ? $resp_object->links[0]->method : $process_status_in_db->method_to_self,
+                $this->bol_process_status->update([
+                    'entityId' => isset($resp_object->entityId) ? $resp_object->entityId : $this->bol_process_status->entityId,
+                    'eventType' => $resp_object->eventType,
+                    'description' => isset($resp_object->description) ? $resp_object->description : $this->bol_process_status->description,
+                    'status' => $resp_object->status,
+                    'errorMessage' => isset($resp_object->errorMessage) ? $resp_object->errorMessage : $this->bol_process_status->errorMessage,
+                    'createTimestamp' => isset($resp_object->createTimestamp) ? $resp_object->createTimestamp : $this->bol_process_status->createTimestamp,
+                    'link_to_self' => isset($resp_object->links[0]->href) ? $resp_object->links[0]->href : $this->bol_process_status->link_to_self,
+                    'method_to_self' => isset($resp_object->links[0]->method) ? $resp_object->links[0]->method : $this->bol_process_status->method_to_self,
                     ]);
-                }
 
-                if($process_status_in_db == null){
 
-                    BolProcesStatus::create([
-                        'process_status_id' => $resp_object->id,
-                        'entityId' => isset($resp_object->entityId) ? $resp_object->entityId : null,
-                        'eventType' => $resp_object->eventType,
-                        'description' => isset($resp_object->description) ? $resp_object->description : null,
-                        'status' => $resp_object->status,
-                        'errorMessage' => isset($resp_object->errorMessage) ? $resp_object->errorMessage : null,
-                        'createTimestamp' => isset($resp_object->createTimestamp) ? $resp_object->createTimestamp : 'createTimestamp_is_empty',
-                        'link_to_self' => isset($resp_object->links[0]->href) ? $resp_object->links[0]->href : 'link_to_self_empty',
-                        'method_to_self' => isset($resp_object->links[0]->method) ? $resp_object->links[0]->method : 'method_to_self_empty',
-                    ]);
-                }
+
+
+                // $process_status_in_db = BolProcesStatus::where(['process_status_id' => $resp_object->id,
+                //                                                 'eventType' => $resp_object->eventType,
+
+                //                                                ])->first();
+
+                // if($process_status_in_db != null){
+
+                //     $process_status_in_db->update([
+                //         'entityId' => isset($resp_object->entityId) ? $resp_object->entityId : $process_status_in_db->entityId,
+                //         'eventType' => $resp_object->eventType,
+                //         'description' => isset($resp_object->description) ? $resp_object->description : $process_status_in_db->description,
+                //         'status' => $resp_object->status,
+                //         'errorMessage' => isset($resp_object->errorMessage) ? $resp_object->errorMessage : $process_status_in_db->errorMessage,
+                //         'createTimestamp' => isset($resp_object->createTimestamp) ? $resp_object->createTimestamp : $process_status_in_db->createTimestamp,
+                //         'link_to_self' => isset($resp_object->links[0]->href) ? $resp_object->links[0]->href : $process_status_in_db->link_to_self,
+                //         'method_to_self' => isset($resp_object->links[0]->method) ? $resp_object->links[0]->method : $process_status_in_db->method_to_self,
+                //     ]);
+                // }
+
+                // if($process_status_in_db == null){
+
+                //     BolProcesStatus::create([
+                //         'process_status_id' => $resp_object->id,
+                //         'entityId' => isset($resp_object->entityId) ? $resp_object->entityId : null,
+                //         'eventType' => $resp_object->eventType,
+                //         'description' => isset($resp_object->description) ? $resp_object->description : null,
+                //         'status' => $resp_object->status,
+                //         'errorMessage' => isset($resp_object->errorMessage) ? $resp_object->errorMessage : null,
+                //         'createTimestamp' => isset($resp_object->createTimestamp) ? $resp_object->createTimestamp : 'createTimestamp_is_empty',
+                //         'link_to_self' => isset($resp_object->links[0]->href) ? $resp_object->links[0]->href : 'link_to_self_empty',
+                //         'method_to_self' => isset($resp_object->links[0]->method) ? $resp_object->links[0]->method : 'method_to_self_empty',
+                //     ]);
+                // }
 
         }
     }

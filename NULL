@@ -19243,3 +19243,241 @@ array:3 [
   2 => "38dff9a2-dc45-4201-85f2-cb0ae0cd80d5,7435156898868,NEW,NEW,,40.00,3-5d,100,true,FBR,2019-04-16 20:17:23.221 UTC\n"
 ]
 No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Wed, 29 May 2019 10:00:00 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "10"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559127601"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "9"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "1283d10e-184d-43c8-8f7b-5ec8f21703cb"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":134655431,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-05-29T12:00:01.476+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/134655431","method":"GET"}]}"
+  "bolstatuscode" => 202
+  "bolreasonphrase" => "Accepted"
+  "requestheaders" => array:3 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTkxMjQzMDEsImlhdCI6MTU1OTEyNDAwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiZDI0YmY0ZmEtMTQ1Ny00MDBjLWI4NDktNTVlNTIwZDQ5NTFkIn0.HFq0h_MCDZBNbtG2inO5JcuN56t1yn-RTP0I3x_W_eZX1NUaz7L34RM4b_oda0FIhSz97B5JuQg8tP9FrWnzbK6b_LeXhmAEDC9wEG996ZeqxzqDiiWWZ-4byI54AmJOnaZTo8eW0mJUsm-d5YZ-O1Z7OhLjOBXcP6AZtoZrh_L7P0hcowE6Oxo1Ma-Gps3ienaMVrUJDX5i5M5_PzgAsan9JR1ORI9eRxTU9ORNoDg_P2sV6G4Um6Ix6vbK-FmUSye_3KBkBJzw7fXwRNP8_QNY9GPQ54reIXevr6cmSlvIcGFLj_xy__9fPfMgA1LUxN3l8VzF0TkV91qMAvrZ-Q"
+    "Content-Type" => "application/vnd.retailer.v3+json"
+  ]
+  "x_ratelimit_limit" => "10"
+  "x_ratelimit_remaining" => "9"
+  "x_ratelimit_reset" => "1559127601"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Wed, 29 May 2019 10:00:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559124002"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "660d3a62-3752-4e57-a7b3-ff69c160f933"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":134655431,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-05-29T12:00:01.476482+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/134655431","method":"GET"}]}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTkxMjQzMDEsImlhdCI6MTU1OTEyNDAwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiZDI0YmY0ZmEtMTQ1Ny00MDBjLWI4NDktNTVlNTIwZDQ5NTFkIn0.HFq0h_MCDZBNbtG2inO5JcuN56t1yn-RTP0I3x_W_eZX1NUaz7L34RM4b_oda0FIhSz97B5JuQg8tP9FrWnzbK6b_LeXhmAEDC9wEG996ZeqxzqDiiWWZ-4byI54AmJOnaZTo8eW0mJUsm-d5YZ-O1Z7OhLjOBXcP6AZtoZrh_L7P0hcowE6Oxo1Ma-Gps3ienaMVrUJDX5i5M5_PzgAsan9JR1ORI9eRxTU9ORNoDg_P2sV6G4Um6Ix6vbK-FmUSye_3KBkBJzw7fXwRNP8_QNY9GPQ54reIXevr6cmSlvIcGFLj_xy__9fPfMgA1LUxN3l8VzF0TkV91qMAvrZ-Q"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559124002"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Wed, 29 May 2019 10:10:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559124602"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "9e42e8e3-b208-4b2b-9114-c25cd3aa8f41"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":134655431,"entityId":"a7910b1d-2708-4540-ba7a-044fbbc0fccc","eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"SUCCESS","createTimestamp":"2019-05-29T12:00:01.476482+02:00"}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTkxMjQ5MDEsImlhdCI6MTU1OTEyNDYwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiYTEwY2FiNmItYzk2YS00ZDQ4LTgyNmQtNTFkMTcxNzEwMWQ5In0.Vfk0ICfhRpSypkGY6etgXy9E-hAnybp0pleMdtR-y9C-OJIjH7sQwtnKm2zAl95ilCpXoXU1D_ES01zIRhHfutCaxu9Pf-YC-9l-u6-_SDAD0rZyAcC_a09pUp7eBiqvYCEz8ddjnk7--G5saf-jRHTPCM8TPRwQ9JVsHzJbzLXXL7eiGcYMADkIto81XhWX_8iRwdwZ56PeudtcRHNE81muY_oImGWyCiCs2B0nQ-yDHKwtcFGMaAkXUezk_W2PTpcOifhn_NfeX5saXy0miiD5GHMrJQzALBLbwVwdAbqnzwnFuR9xDwuvxckoL04rb7Uq781JtKALrmpjhd6ZWg"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559124602"
+]
+"Alle x_ratelimit headers in response aanwezig"
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
