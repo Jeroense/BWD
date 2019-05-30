@@ -21,8 +21,7 @@
                 </div>
         </div>
 
-        <form method="POST" action="{{ route('boloffers.offer.updated') }}">
-            @csrf
+
 
         <table class="table is-narrow">
             <thead>
@@ -35,8 +34,9 @@
                 <th>Price</th>
                 <th>Fulfil</th>
                 <th>Del.Code</th>
-                <th>Stock</th>
                 <th>Hold?</th>
+                <th>Stock</th>
+
 
             </tr>
             </thead>
@@ -66,12 +66,16 @@
 
 
                         <td>
-                            <div class="field">
-                                <div class="control">
-                                    <input type="number" name="salePrice_{{$offer->ean}}" value="{{$offer->bundlePricesPrice}}"
-                                     class="input is-primary" style="width: 100px" step="0.01" required>
-                                </div>
-                            </div>
+                            <form method="POST" action="{{ route('boloffers.offer.offerprice_updated', $offer) }}">
+                                @csrf
+                                    <div class="field">
+                                        <div class="control">
+                                            <input type="number" name="salePrice" value="{{$offer->bundlePricesPrice}}"
+                                            class="input is-primary" style="width: 100px" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <button class="button" type="submit" onclick="return confirm('Prijs van offer {{$offer->ean}} updaten?')">Update</button>
+                            </form>
                         </td>
 
                         <td>FBR</td>
@@ -80,54 +84,64 @@
                         @isset($offer->fulfilmentDeliveryCode)
 
                             <td>
-                            <div class="field">
-                                <div class="control">
-                                <div class="select is-primary">
-                                    <select name="deliveryCode_{{$offer->ean}}">
-                                    <option>3-5d</option>
-                                    <option>1-2d</option>
-                                    <option>2-3d</option>
-                                    <option>4-8d</option>
-                                    <option>1-8d</option>
-                                    </select>
-                                </div>
-                                </div>
-                            </div>
+                                <form method="POST" action="{{ route('boloffers.offer.onhold_and_deliverycode_updated', $offer) }}">
+                                    @csrf
+                                    <div class="field">
+                                        <div class="control">
+                                        <div class="select is-primary">
+                                            <select name="deliveryCode">
+                                            <option>3-5d</option>
+                                            <option>1-2d</option>
+                                            <option>2-3d</option>
+                                            <option>4-8d</option>
+                                            <option>1-8d</option>
+                                            </select>
+                                        </div>
+                                        </div>
+                                    </div>
+
                             </td>
                         @endisset
 
-                        <input type="hidden" name="ean_{{$offer->ean}}" value="{{$offer->ean}}">
+                            <td>
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input name="onhold" type="checkbox" class=" " id="onholdcheckbox"
 
+                                        @if( $offer->onHoldByRetailer ) checked @endif>
+                                            is on hold
+                                    </label>
 
-                        <td>
-                            <div class="field">
-                                <div class="control">
-                                    <input name="stockfor_{{$offer->ean}}" class="input is-primary" type="number" placeholder="Stock"
-                                     style="width: 100px;" value="{{ old('stockfor_' . $offer->ean)}}">
                                 </div>
+                                    <button class="button" type="submit" onclick="return confirm('Delivery code en Onhold van offer {{$offer->ean}} updaten?')">Update</button>
+                                </form>
+                            </td>
 
-                            </div>
 
-                        </td>
+
+                        {{-- <input type="hidden" name="ean" value="{{$offer->ean}}"> --}}
+
 
                         <td>
-                            <div class="field">
-                                <label class="checkbox">
-                                    <input name="onhold_{{$offer->ean}}" type="checkbox" class=" " id="onholdcheckbox"
-
-                                    @if( $offer->onHoldByRetailer ) checked @endif>
-                                        is on hold
-                                </label>
-
-                            </div>
-
-
+                            <form method="POST" action="{{ route('boloffers.offer.stock_updated', $offer) }}">
+                                @csrf
+                                    <div class="field">
+                                        <div class="control">
+                                            <input name="stock" class="input is-primary" type="number" placeholder="Stock"
+                                            style="width: 100px;" value="{{ old('stockfor_' . $offer->ean)}}">
+                                        </div>
+                                    </div>
+                                <button class="button" type="submit" onclick="return confirm('Stock van offer {{$offer->ean}} updaten?')">Update</button>
+                            </form>
                         </td>
 
 
 
-                    <input type="hidden" name="variantName_{{$offer->ean}}" value="{{$offer->unknownProductTitle}}">
 
+
+                    {{-- <input type="hidden" name="variantName_{{$offer->ean}}" value="{{$offer->unknownProductTitle}}"> --}}
+
+                    {{-- <input type="hidden" name="variantName" value="{{$offer->unknownProductTitle}}"> --}}
 
 
 
@@ -142,11 +156,19 @@
 
             </tbody>
         </table>
-        <button class="button" type="submit" onclick="return confirm('offer {{$offer->ean}} updaten?')">Update</button>
-        </form>
+
 
         </div>
 
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
     </div>
 </div>

@@ -78,7 +78,10 @@ Route::prefix('boloffers')->middleware('role:superadministrator|administrator')-
 
     Route::get('/boloffer-verwijderen/{offer}', 'BolProduktieOfferController@deleteBolOffer')->name('boloffers.offer.delete');
     Route::get('/boloffer-update/{offer}', 'BolProduktieOfferController@updateBolOffer')->name('boloffers.offer.update');
-    Route::post('/boloffer-updated', 'BolProduktieOfferController@updatedBolOffer')->name('boloffers.offer.updated');
+    // Route::post('/boloffer-updated', 'BolProduktieOfferController@updatedBolOffer')->name('boloffers.offer.updated');
+    Route::post('/boloffer-price-updated/{offer}', 'BolProduktieOfferController@update_price_BolOffer')->name('boloffers.offer.offerprice_updated');
+    Route::post('/boloffer-onhold-deliverycode-updated/{offer}', 'BolProduktieOfferController@update_onhold_and_deliverycode_BolOffer')->name('boloffers.offer.onhold_and_deliverycode_updated');
+    Route::post('/boloffer-stock-updated/{offer}', 'BolProduktieOfferController@update_stock_BolOffer')->name('boloffers.offer.stock_updated');
 });
 
 

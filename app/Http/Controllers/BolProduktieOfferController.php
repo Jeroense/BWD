@@ -11,19 +11,23 @@ use App\Jobs\DeleteBolOffersJob;
 use Illuminate\Http\Request;
 use App\Http\Traits\BolApiV3;
 use function GuzzleHttp\json_decode;
+use function GuzzleHttp\json_encode;
 
 class BolProduktieOfferController extends Controller
 {
     use BolApiV3;
 
-    public function index(){
+    public function index()
+    {
 
         $bol_produktie_offers = BolProduktieOffer::all();
 
-        foreach($bol_produktie_offers as $offer){
+        foreach($bol_produktie_offers as $offer)
+        {
             $custVariant = CustomVariant::where(['ean' => $offer['ean']])->first();
 
-            if($custVariant != null){
+            if($custVariant != null)
+            {
 
                 $offer['fileName'] = $custVariant->fileName;
             }
@@ -35,7 +39,8 @@ class BolProduktieOfferController extends Controller
     }
 
 
-    public function select_customvariants_to_publish_on_BOL(){
+    public function select_customvariants_to_publish_on_BOL()
+    {
 
         $notYetPublishedCustomVariants = CustomVariant::where('isPublishedAtBol',  '!=',  'published')->orWhere('isPublishedAtBol',  '=', null)->get();
 
@@ -43,11 +48,13 @@ class BolProduktieOfferController extends Controller
     }
 
 
-    public function updateBolOffer(BolProduktieOffer $offer){
+    public function updateBolOffer(BolProduktieOffer $offer)
+    {
 
         $custVariant = CustomVariant::where(['ean' => $offer['ean']])->first();
 
-        if($custVariant != null){
+        if($custVariant != null)
+        {
 
             $offer['fileName'] = $custVariant->fileName;
         }
@@ -56,13 +63,182 @@ class BolProduktieOfferController extends Controller
     }
 
 
-    public function updatedBolOffer(Request $req){
+    public function update_price_BolOffer(BolProduktieOffer $offer, Request $req)
+    {  // regex:/^\d+(\.\d{1,2})?$/  voor 2 decimalen achter de .
+        $req->validate([
+                         "salePrice" => "numeric|required|regex:/^\d+(\.\d{1,2})?$/|max:9999"
+        ]);
 
-        dd($req);
-        // return view('boloffers.updated', compact('offer'));
+
+        $new_price = (float)$req['salePrice'];
+
+        $price_object = new \stdClass();
+        $price_object->quantity = 1;   // dit is standaard, en alleen 1 is nu toegestaan door bol
+        $price_object->price = $new_price;
+
+        $bundle_prices_object = new \stdClass();
+        $bundle_prices_object->bundlePrices = [$price_object];
+
+
+        $update_price_body_object = new \stdClass();
+        $update_price_body_object->pricing = $bundle_prices_object;
+
+        $put_body_for_price_update = json_encode($update_price_body_object);
+
+        dump( $put_body_for_price_update );
+        dump($offer); dump($req->all()); dump( (float)$req['salePrice']);
+
+        $bol_prijs_update_response = $this->make_V3_PlazaApiRequest("prod", "offers/{$offer->offerId}/price", "put", $put_body_for_price_update);
+
+        // log antwoord vanuit bol, je krijgt een proces-status terug
+        $this->putResponseInFile("updateProduktieOfferPrijs-response-prod.txt", $bol_prijs_update_response['bolstatuscode'],
+                                $bol_prijs_update_response['bolreasonphrase'], $bol_prijs_update_response['bolbody']);
+        //
+
+        // dan BolProcesStatus table updaten met de response
+        if($bol_prijs_update_response['bolstatuscode'] != 202 || !isset($bol_prijs_update_response['bolbody']))
+        {
+            return;
+        }
+
+        $process_status_info = json_decode($bol_prijs_update_response['bolbody']);
+
+        BolProcesStatus::create([
+            'process_status_id' => $process_status_info->id,
+            'entityId' => $process_status_info->entityId,
+            'eventType' => $process_status_info->eventType,
+            'description' => $process_status_info->description,
+            'status' => $process_status_info->status,
+            'errorMessage' => isset($process_status_info->errorMessage) ? $process_status_info->errorMessage : null,
+            'createTimestamp' => $process_status_info->createTimestamp,
+            'link_to_self' => $process_status_info->links[0]->href,
+            'method_to_self' => $process_status_info->links[0]->method
+
+        ]);
+        //
     }
 
-    public function deleteBolOffer(BolProduktieOffer $offer){
+
+    public function update_onhold_and_deliverycode_BolOffer(BolProduktieOffer $offer, Request $req)
+    {
+        $req->validate([
+            "deliveryCode" => "required"
+        ]);
+
+        // is input met naam 'onhold' aanwezig? dan value  'on' in $req aanwezig, zo niet dan ''off - not on hold'
+         $onhold = $req->input('onhold', 'off - not on hold');
+        //
+
+        // maak body aan voor put request om dit bol-offer te updaten voor 'onhold' en 'deliverycode'
+        $fulfilment_object = new \stdClass();
+        $fulfilment_object->type = 'FBR';
+        $fulfilment_object->deliveryCode = $req->input('deliveryCode');
+
+        $update_onhold_and_deliveryCode_object_voor_put = new \stdClass();
+        $update_onhold_and_deliveryCode_object_voor_put->onHoldByRetailer = $onhold == 'on' ? true : false;
+        $update_onhold_and_deliveryCode_object_voor_put->fulfilment = $fulfilment_object;
+
+        $json_put_body = json_encode($update_onhold_and_deliveryCode_object_voor_put);
+        //
+
+        // maak update request naar bol-produktie ivm update deliveryCode en 'onhold by retailer'
+        $bol_offer_update_resp = $this->make_V3_PlazaApiRequest("prod", "offers/{$offer->offerId}", "put", $json_put_body);
+        //
+
+
+        // log antwoord vanuit bol, je krijgt een proces-status terug
+        $this->putResponseInFile("updateProduktieOffer-OnHold-DeliveryCode-response-prod.txt", $bol_offer_update_resp['bolstatuscode'],
+        $bol_offer_update_resp['bolreasonphrase'], $bol_offer_update_resp['bolbody']);
+        //
+
+        // dan BolProcesStatus table updaten met de response
+        if($bol_offer_update_resp['bolstatuscode'] != 202 || !isset($bol_offer_update_resp['bolbody']))
+        {
+            return;
+        }
+
+        $process_status_info = json_decode($bol_offer_update_resp['bolbody']);
+
+        BolProcesStatus::create([
+            'process_status_id' => $process_status_info->id,
+            'entityId' => $process_status_info->entityId,
+            'eventType' => $process_status_info->eventType,
+            'description' => $process_status_info->description,
+            'status' => $process_status_info->status,
+            'errorMessage' => isset($process_status_info->errorMessage) ? $process_status_info->errorMessage : null,
+            'createTimestamp' => $process_status_info->createTimestamp,
+            'link_to_self' => $process_status_info->links[0]->href,
+            'method_to_self' => $process_status_info->links[0]->method
+
+        ]);
+
+
+        dump($offer); dump($req->all()); dump($onhold);
+    }
+
+
+    public function update_stock_BolOffer(BolProduktieOffer $offer, Request $req)
+    {
+        // nog te doen: 'managedByRetailer' !  voorlopig zet ik dit op: true
+        $req->validate([
+            "stock" => "numeric|required|max:999"
+        ]);
+
+        // maak put-body-object aan voor updaten van stock op bol
+        $stock_object = new \stdClass();
+        $stock_object->amount = $req->input('stock');
+        $stock_object->managedByRetailer = true;
+
+        $put_body = json_encode($stock_object);
+        //
+
+        // maak update request naar bol-produktie ivm stock update voor dit bol-offer
+        $bol_offer_update_resp = $this->make_V3_PlazaApiRequest("prod", "offers/{$offer->offerId}/stock", "put", $put_body);
+        //
+
+        // log antwoord vanuit bol, je krijgt een proces-status terug
+        $this->putResponseInFile("updateProduktieOffer-Stock-response-prod.txt", $bol_offer_update_resp['bolstatuscode'],
+        $bol_offer_update_resp['bolreasonphrase'], $bol_offer_update_resp['bolbody']);
+        //
+
+                // dan BolProcesStatus table updaten met de response
+                if($bol_offer_update_resp['bolstatuscode'] != 202 || !isset($bol_offer_update_resp['bolbody']))
+                {
+                    return;
+                }
+
+                $process_status_info = json_decode($bol_offer_update_resp['bolbody']);
+
+                BolProcesStatus::create([
+                    'process_status_id' => $process_status_info->id,
+                    'entityId' => $process_status_info->entityId,
+                    'eventType' => $process_status_info->eventType,
+                    'description' => $process_status_info->description,
+                    'status' => $process_status_info->status,
+                    'errorMessage' => isset($process_status_info->errorMessage) ? $process_status_info->errorMessage : null,
+                    'createTimestamp' => $process_status_info->createTimestamp,
+                    'link_to_self' => $process_status_info->links[0]->href,
+                    'method_to_self' => $process_status_info->links[0]->method
+
+                ]);
+
+
+        dump($offer); dump($req->all());
+    }
+
+
+
+    // public function updatedBolOffer(Request $req)
+    // {
+
+    //     dd($req);
+    //     // return view('boloffers.updated', compact('offer'));
+    // }
+
+
+
+    public function deleteBolOffer(BolProduktieOffer $offer)
+    {
 
         // dump($offer);
         DeleteBolOffersJob::dispatch($offer);
@@ -72,12 +248,14 @@ class BolProduktieOfferController extends Controller
 
 
 
-    public function dump_and_upload_offers_to_be_published_on_BOL(Request $req){
+    public function dump_and_upload_offers_to_be_published_on_BOL(Request $req)
+    {
 
 
 
         $inputs_from_request = $req->all();
-        if( \key_exists('_token', $inputs_from_request) ){
+        if( \key_exists('_token', $inputs_from_request) )
+        {
 
             unset($inputs_from_request['_token'] );
         }
@@ -86,11 +264,13 @@ class BolProduktieOfferController extends Controller
         $hoofd_array = [];          $temp_array = [];
         $updated_hoofd_array = [];  $updated_temp_array = [];
 
-        foreach($inputs_from_request as $key => $val){
+        foreach($inputs_from_request as $key => $val)
+        {
 
             $temp_array[$key] = $val;
 
-            if( strpos($key, 'delivery') !== false ){      // moet hier !== gebruiken..
+            if( strpos($key, 'delivery') !== false )    // moet hier !== gebruiken..
+            {
 
                 array_push($hoofd_array, $temp_array);
                     $temp_array = [];
@@ -99,10 +279,13 @@ class BolProduktieOfferController extends Controller
         // dump($hoofd_array);
 
         // om te bepalen wat de namen zijn van de stockfor_  input velden, die validated moeten worden..
-        foreach($hoofd_array as $arr){
+        foreach($hoofd_array as $arr)
+        {
             $arrkeys = array_keys($arr);
-            foreach($arrkeys as $key){
-                if( strpos($key, 'publish') !== false){
+            foreach($arrkeys as $key)
+            {
+                if( strpos($key, 'publish') !== false)
+                {
                     $de_publish_key_naam = $key;
                     $de_bijhorende_stockfor_input_naam = \str_replace('publish', 'stockfor', $de_publish_key_naam );
                     array_push($arr_van_te_valideren_stockfor_input_namen, $de_bijhorende_stockfor_input_naam);
@@ -112,15 +295,18 @@ class BolProduktieOfferController extends Controller
         // dump($arr_van_te_valideren_stockfor_input_namen);
 
         // valideren van alleen de stockfor_ inputs bij offers, die een key: publish_ hebben..
-            foreach($arr_van_te_valideren_stockfor_input_namen as $stockfor_input_naam){
+            foreach($arr_van_te_valideren_stockfor_input_namen as $stockfor_input_naam)
+            {
                 $req->validate([
                                 $stockfor_input_naam => 'required|integer|max:999',
                                 ]);
             }
 
-        foreach($hoofd_array as $arr){
+        foreach($hoofd_array as $arr)
+        {
 
-            foreach($arr as $key => $val){
+            foreach($arr as $key => $val)
+            {
                 $arr[substr($key, 0, 3)] = $val;
                 unset($arr[$key]);
             }
@@ -132,7 +318,8 @@ class BolProduktieOfferController extends Controller
 
         session(['offer_arr' => $array_met_alle_offer_objecten]);
 
-        foreach($array_met_alle_offer_objecten as $offer){
+        foreach($array_met_alle_offer_objecten as $offer)
+        {
 
             $json_offer = json_encode($offer);
             UploadBolOffersJob::dispatch($json_offer);
@@ -311,7 +498,7 @@ class BolProduktieOfferController extends Controller
         $latest_succesfull_made_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT', 'status' => 'SUCCESS'])->latest()->first();
 
         if( $latest_succesfull_made_offer_export_db_entry->exists() ){  // nu werkt ->exists() WEL..met ->latest()->first().. ???
-            dump('regel 175 werkt! $latest_succesfull_made_offer_export_db_entry->exists() geeft geen error..');
+            dump('regel 333 werkt! $latest_succesfull_made_offer_export_db_entry->exists() geeft geen error..');
 
             $latest_csv_offer_export_id = $latest_succesfull_made_offer_export_db_entry->entityId;
 

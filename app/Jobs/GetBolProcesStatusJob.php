@@ -64,7 +64,7 @@ class GetBolProcesStatusJob implements ShouldQueue
     public function update_BolProcessStatus_Table(array $bol_response)
     {
 
-        if( $bol_response['bolstatuscode'] == 200 && isset( $bol_response['bolbody'] )
+        if( $bol_response['bolstatuscode'] == 200 && isset( $bol_response['bolbody'] )   // wat dubbel, maar goed
             && strpos( $bol_response['bolheaders']['Content-Type'][0], 'json' ) !== false )
             {
                 dump('in de update_bol_processStatus_Table functie!!');
@@ -92,6 +92,17 @@ class GetBolProcesStatusJob implements ShouldQueue
                     'link_to_self' => isset($resp_object->links[0]->href) ? $resp_object->links[0]->href : $this->bol_process_status->link_to_self,
                     'method_to_self' => isset($resp_object->links[0]->method) ? $resp_object->links[0]->method : $this->bol_process_status->method_to_self,
                     ]);
+
+
+
+
+
+
+        }
+    }
+}
+
+
 
 
 
@@ -129,7 +140,3 @@ class GetBolProcesStatusJob implements ShouldQueue
                 //         'method_to_self' => isset($resp_object->links[0]->method) ? $resp_object->links[0]->method : 'method_to_self_empty',
                 //     ]);
                 // }
-
-        }
-    }
-}

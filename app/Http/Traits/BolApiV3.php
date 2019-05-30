@@ -34,15 +34,14 @@ trait BolApiV3 {
 
                     ];
 
-                    // dump($headers);
+
 
                     $client = new Client(['base_uri' => $bol_token_server, '']);
                     $bol_outh_response = $client->request('post', '/token?grant_type=client_credentials', ['headers' => $headers, 'http_errors' => false]);
 
                     dump('Status-code token-server: ');
                     dump($bol_outh_response->getStatusCode());
-                    // dump('Response-headers van de bol oauth login token server: ');
-                    // dump($bol_outh_response->getHeaders());
+
                     // bol oauth token server geeft geen x-ratelimit headers!
 
                     $resp_code = $bol_outh_response->getStatusCode();
@@ -56,26 +55,23 @@ trait BolApiV3 {
                     //The response EntityBody can be cast to a string, or you can pass true to this method to retrieve the body as a string.
                     // https://guzzle3.readthedocs.io/http-client/response.html
                     // dump((string)$resp_body);
-                    // You can easily parse and use a JSON response as an array using the json() method of a response. // WERKT NIET!!
+                    // You can easily parse and use a JSON response as an array using the json() method of a response.
                     // This method will always return an array if the response is valid JSON or if the response body is empty.
                     // You will get an exception if you call this method and the response is not valid JSON.
 
-                    // $js = $bol_outh_response->json();
-                    // dump($js);
 
-                    // dump( $bol_outh_response->getHeaders() );
-
-
-                    if($resp_code !== 200){
+                    if($resp_code !== 200)
+                    {
                         return 'error. status code not 200';
                     }
-                    if($resp_body == null){
+                    if($resp_body == null)
+                    {
                         return 'error. empty response body';
                     }
 
 
 
-                    if($resp_body != null && strpos($bol_outh_response->getHeaders()['Content-Type'][0], 'json') !== false ){
+                    if( strpos($bol_outh_response->getHeaders()['Content-Type'][0], 'json') !== false ){
 
                             $this->oauth_access_token = json_decode($resp_body, true);
                             BolToken::truncate();
@@ -94,52 +90,56 @@ trait BolApiV3 {
 
 
 
-    public function giveBolV3Headers($requestType, bool $getPreparedOfferExportinCSV = false){
+    public function giveBolV3Headers($requestType, bool $getPreparedOfferExportinCSV = false)
+    {
 
-        if(BolToken::all()->count() > 0){
+        if(BolToken::all()->count() > 0)
+        {
             $last_db_token = BolToken::latest()->first();
 
             $db_bol_access_token_geldig_tot = $last_db_token->at_unix_time + ($last_db_token->seconds_valid - 10);
 
-            if(time() - $db_bol_access_token_geldig_tot < 0){  // DB token nog geldig
-
+            if(time() - $db_bol_access_token_geldig_tot < 0)   // DB token nog geldig
+            {
                 $token = $last_db_token->access_token;
                 $basic_auth_header = 'Bearer ' . $token;
                 dump('DB token nog geldig. Gebruikt hier access-token uit de DB');
-                // dump($basic_auth_header);
             }
-            else{
+
+            else
+            {
                 $basic_auth_header = 'Bearer ' . $this->request_BOL_Oauth_Token();
                 dump('Oude DB token is expired. Nieuw token opgevraagd bij bol!');
             }
         }
-        else{
+        else
+        {
             $basic_auth_header = 'Bearer ' . $this->request_BOL_Oauth_Token();
             dump('BolToken table is nog leeg. Nieuw token opgevraagd bij bol!');
         }
 
 
-
-
         $headers = [
                     'Accept'  => 'application/vnd.retailer.v3+json',
                     'Authorization' => $basic_auth_header,
-                 ];
+                   ];
 
-        if($getPreparedOfferExportinCSV){
+        if($getPreparedOfferExportinCSV)
+        {
 
             $headers = [
-                'Accept'  => 'application/vnd.retailer.v3+csv',
-                'Authorization' => $basic_auth_header,
-                'Content-Type' => 'application/x-www-form-urlencoded'
-             ];
+                        'Accept'  => 'application/vnd.retailer.v3+csv',
+                        'Authorization' => $basic_auth_header,
+                        'Content-Type' => 'application/x-www-form-urlencoded'
+                       ];
              return $headers;
         }
 
-        if(strtoupper($requestType) !== 'GET'){
+        if(strtoupper($requestType) !== 'GET')
+        {
 
             $headers['Content-Type'] = 'application/vnd.retailer.v3+json';
-            }
+        }
 
         return $headers;
     }
@@ -148,7 +148,8 @@ trait BolApiV3 {
 
 
 
-    public function prepare_CSV_Offers_export($serverType){
+    public function prepare_CSV_Offers_export($serverType)
+    {
 
         $csv_endpoint = 'offers/export';
         $post_body = new \stdClass();
@@ -167,7 +168,8 @@ trait BolApiV3 {
 
 
 
-    public function getCSVOfferExportPROD($serverType ,$offerexportid){
+    public function getCSVOfferExportPROD($serverType ,$offerexportid)
+    {
 
         $endpoint = "offers/export/{$offerexportid}";
         $csv_file_name = "bol-get-csv-export-response-{$serverType}.csv";
@@ -176,7 +178,8 @@ trait BolApiV3 {
 
         // dump( $bol_response );
 
-        if($bol_response['bolstatuscode'] != 200){
+        if($bol_response['bolstatuscode'] != 200)
+        {
             return 'status niet 200';
         }
 
@@ -189,7 +192,8 @@ trait BolApiV3 {
     }
 
 
-    public function zet_CSV_export_file_om_in_array( $csvFileName){
+    public function zet_CSV_export_file_om_in_array( $csvFileName)
+    {
 
         // Handy one liner to parse a CSV file into an array: de waarden van elke row uit de csv-(file!) wordt een array.
         // $my_csv_array = array_map('str_getcsv', file(storage_path('app/public') . '\AllOffersOnBol'  . '.csv'));
@@ -202,7 +206,8 @@ trait BolApiV3 {
         // controleren of de csv-file bestaat, en of er minimaal 2 regels niet NULL zijn in de file. r1 is de header,
         // vanaf r2 is er data, data vanaf r2, bevat de string 'UTC'
         if( (!file_exists( storage_path("app/public") . '/' . $csvFileName)) || ( file_exists( storage_path("app/public") . '/' . $csvFileName ) &&
-            strpos( file(storage_path("app/public") . '/' . $csvFileName)[1], 'UTC') === false)  ){
+            strpos( file(storage_path("app/public") . '/' . $csvFileName)[1], 'UTC') === false)  )
+        {
 
             dump('no csv file, or no data in csv file!');
 
@@ -210,12 +215,6 @@ trait BolApiV3 {
 
             return 'no csv file, or no data in csv file!';
         }
-        //
-
-        // $csv_file_path = storage_path("app/public") . '/' . $csvFileName;
-        // $csv_file_as_array = file($csv_file_path);  // een array met key = line-number   & val = line-content
-        // dump($csv_file_as_array);
-
 
 
             $my_csv_array = array_map('str_getcsv', file(storage_path("app/public") . '/' . $csvFileName ));
@@ -225,7 +224,7 @@ trait BolApiV3 {
             $a = array_combine($my_csv_array[0], $a);
             });
             array_shift($my_csv_array);  // nu zijn de booleans wel omgezet in string! "TRUE" of "FALSE" ! rekening mee houden bij opslaan in model
-            //---------------------------
+
 
             return $my_csv_array;
 
@@ -236,7 +235,8 @@ trait BolApiV3 {
 
 
 
-    public function geefProcesStatusById($serverType, $id){
+    public function geefProcesStatusById($serverType, $id)
+    {
 
         $endpoint = "process-status/{$id}";
         $bol_response_array = $this->make_V3_PlazaApiRequest($serverType, $endpoint, 'get');
@@ -244,9 +244,10 @@ trait BolApiV3 {
         // dump($bol_response_array['x_ratelimit_limit']);
         // dump($bol_response_array['x_ratelimit_remaining']);
         // dump($bol_response_array['x_ratelimit_reset']);
-        if($bol_response_array['bolstatuscode'] !== 200){
+        if($bol_response_array['bolstatuscode'] !== 200)
+        {
 
-            $this->putResponseInFile("bol-proces-status-response-{$serverType}.txt", $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
+            $this->putResponseInFile("bol-proces-status-response-error-{$serverType}.txt", $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
             $bol_response_array['bolbody'], $bol_response_array['x_ratelimit_limit'], $bol_response_array['x_ratelimit_reset'], $bol_response_array['x_ratelimit_remaining'], (string)time());
 
 
@@ -273,12 +274,14 @@ trait BolApiV3 {
     //     return;
     // }
 
-    public function upload_Single_Offer_To_BOL_V3_DEMO($customVariantId){
+    public function upload_Single_Offer_To_BOL_V3_DEMO($customVariantId)
+    {
 
         try {
         $custVar = CustomVariant::findOrFail($customVariantId);
         }
-        catch(ModelNotFoundException $ex){
+        catch(ModelNotFoundException $ex)
+        {
 
             $error_mssg = "Custom variant met ID: {$customVariantId} niet in DB gevonden." .  "\r\n" . $ex->getMessage();
 

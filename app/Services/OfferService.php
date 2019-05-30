@@ -18,12 +18,14 @@ class OfferService
 
 
         // doe initiele opdracht tot aanmaken csv-offer-export-file, en zet de process-status response in 'bol_proces_statuses'
-        public function prepare_CSV_Offer_Export($serverType){
+        public function prepare_CSV_Offer_Export($serverType)
+        {
 
             $bol_generate_offers_csv_resp = $this->prepare_CSV_Offers_export($serverType);
 
 
-            if( ($bol_generate_offers_csv_resp['bolstatuscode'] != 202) ||  (!isset($bol_generate_offers_csv_resp['bolbody']) ) ){
+            if( ($bol_generate_offers_csv_resp['bolstatuscode'] != 202) ||  (!isset($bol_generate_offers_csv_resp['bolbody']) ) )
+            {
 
                 dump( 'response op de aanmaak request voor een offer-export is niet 202!');
 
@@ -36,11 +38,14 @@ class OfferService
                'eventType' => $process_status_object->eventType ])->latest()->first();
 
                // na ::where([])->latest()->first(), kreeg ik hier errors met ->exists() dus dan maar met != null controleren of aanwezig
-               if($latest_proc_status_db_entry != null){
+               if($latest_proc_status_db_entry != null)
+               {
 
                 $this->update_Bol_Process_Status($process_status_object, $latest_proc_status_db_entry);
                }
-               if($latest_proc_status_db_entry == null){
+
+               if($latest_proc_status_db_entry == null)
+               {
                 $this->create_Bol_Process_Status_after_POST_Make_offer_Export_CSV($process_status_object);
                }
 
@@ -48,7 +53,8 @@ class OfferService
         }
 
 
-        public function create_Bol_Process_Status_after_POST_Make_offer_Export_CSV(\stdClass $process_status_object){
+        public function create_Bol_Process_Status_after_POST_Make_offer_Export_CSV(\stdClass $process_status_object)
+        {
 
             BolProcesStatus::create(['process_status_id' => $process_status_object->id,
                                      'entityId' => isset( $process_status_object->entityId) ? $process_status_object->entityId : null,
@@ -126,8 +132,9 @@ class OfferService
         }
 
 
-        public function update_process_status_create_offer_export(){
-            // $this->putResponseInFile('descheduler-log.txt', 'update_process_status_create_offer_export aangeroepen!', 'jaja', 'zeker');
+        public function update_process_status_create_offer_export()
+        {
+
 
             $latest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
 
@@ -177,23 +184,21 @@ class OfferService
         public function get_CSV_Offer_Export_PROD(BolProcesStatus $process_status_model_instance){
 
 
-            // $latest_succesfull_made_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT', 'status' => 'SUCCESS'])->latest()->first();
 
-            // if( $latest_succesfull_made_offer_export_db_entry->exists() ){
-
-                // $latest_csv_offer_export_id = $latest_succesfull_made_offer_export_db_entry->entityId;
                 $latest_csv_offer_export_id = $process_status_model_instance->entityId;
 
                 // slaat, bij 200, de verkregen csv offer export data op in file: storage_path( 'app/public') . '/' .  bol-get-csv-export-response-{$serverType}.csv
                 $csvFileName = $this->getCSVOfferExportPROD('prod', $latest_csv_offer_export_id);
 
-                if($csvFileName == 'status niet 200'){
+                if($csvFileName == 'status niet 200')
+                {
                     return 'BOL response-code voor reply vanuit laatste DB offer-export entry is geen 200!';
                 }
 
                 $csv_array = $this->zet_CSV_export_file_om_in_array($csvFileName);
 
-                if($csv_array == 'no csv file, or no data in csv file!'){
+                if($csv_array == 'no csv file, or no data in csv file!')
+                {
                     return 'no csv file, or no data in csv file!';
                 }
 
@@ -205,54 +210,57 @@ class OfferService
                 // dump($process_status_model_instance->status);
 
                 $this->zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_array);
-                // dump('in get_CSV_Offer_Export_PROD');
+
 
                 return;
-            // }
+
         }
 
 
         public function zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_arr){
 
 
-            foreach($csv_arr as $arr ){
+            foreach($csv_arr as $arr )
+            {
 
                 $localOffer = BolProduktieOffer::where( ['offerId' => $arr['offerId'], 'ean' => $arr['ean'] ])->first();
 
                 // if( BolProduktieOffer::where( ['offerId' => $arr['offerId'], 'ean' => $arr['ean'] ])->first()->exists() ){
-                    if($localOffer != null){
+                    if($localOffer != null)
+                    {
 
-                    // $te_updaten_prod_offer = BolProduktieOffer::where( ['offerId' => $arr['offerId'], 'ean' => $arr['ean'] ])->first();
-                    $localOffer->update([
 
-                        'fulfilmentConditionName' => $arr['conditionName'],
-                        'fulfilmentConditionCategory' => $arr['conditionCategory'],
-                        'bundlePricesPrice' => $arr['bundlePricesPrice'],
-                        'fulfilmentDeliveryCode' => $arr['fulfilmentDeliveryCode'],
-                        'stockAmount' => $arr['stockAmount'],
-                        'onHoldByRetailer' => $arr['onHoldByRetailer'] == 'true' ? true : false,
-                        'fulfilmentType' => $arr['fulfilmentType'],
-                        'mutationDateTime' =>  $arr['mutationDateTime']
-                    ]);
+                        $localOffer->update([
 
-                }
+                            'fulfilmentConditionName' => $arr['conditionName'],
+                            'fulfilmentConditionCategory' => $arr['conditionCategory'],
+                            'bundlePricesPrice' => $arr['bundlePricesPrice'],
+                            'fulfilmentDeliveryCode' => $arr['fulfilmentDeliveryCode'],
+                            'stockAmount' => $arr['stockAmount'],
+                            'onHoldByRetailer' => $arr['onHoldByRetailer'] == 'true' ? true : false,
+                            'fulfilmentType' => $arr['fulfilmentType'],
+                            'mutationDateTime' =>  $arr['mutationDateTime']
+                        ]);
+
+                    }
 
                 // if(BolProduktieOffer::where( ['offerId' => $arr['offerId'], 'ean' => $arr['ean'] ])->first()->doesntExist() ){
-                    if($localOffer == null){
+                    if($localOffer == null)
+                    {
 
-                    BolProduktieOffer::create([
-                        'offerId' =>  $arr['offerId'],
-                        'ean' =>  $arr['ean'],
-                        'fulfilmentConditionName' =>  $arr['conditionName'],
-                        'fulfilmentConditionCategory' =>  $arr['conditionCategory'],
-                        'bundlePricesPrice' =>  $arr['bundlePricesPrice'],
-                        'fulfilmentDeliveryCode' =>  $arr['fulfilmentDeliveryCode'],
-                        'stockAmount' =>  $arr['stockAmount'],
-                        'onHoldByRetailer' =>  $arr['onHoldByRetailer'] == 'true' ? true : false,
-                        'fulfilmentType' =>  $arr['fulfilmentType'],
-                        'mutationDateTime' =>  $arr['mutationDateTime']
-                    ]);
-                }
+                        BolProduktieOffer::create([
+                            'offerId' =>  $arr['offerId'],
+                            'ean' =>  $arr['ean'],
+                            'fulfilmentConditionName' =>  $arr['conditionName'],
+                            'fulfilmentConditionCategory' =>  $arr['conditionCategory'],
+                            'bundlePricesPrice' =>  $arr['bundlePricesPrice'],
+                            'fulfilmentDeliveryCode' =>  $arr['fulfilmentDeliveryCode'],
+                            'stockAmount' =>  $arr['stockAmount'],
+                            'onHoldByRetailer' =>  $arr['onHoldByRetailer'] == 'true' ? true : false,
+                            'fulfilmentType' =>  $arr['fulfilmentType'],
+                            'mutationDateTime' =>  $arr['mutationDateTime']
+                        ]);
+                    }
             }
             $this->get_BolOffers_By_Id();
         }
@@ -260,21 +268,30 @@ class OfferService
 
         // om de bol_produktie_offers table te updaten, het best NA een succesvol verwerkte get-CSV-offer-export request.
         // de toegelaten rate van deze request is: ca. 28 requests per 3 seconden, is ca. 9 req/ sec
-        public function get_BolOffers_By_Id(){
+        public function get_BolOffers_By_Id()
+        {
 
             $bol_prod_offers_in_db = BolProduktieOffer::all();
 
-            if($bol_prod_offers_in_db->count() == 0){
+            if($bol_prod_offers_in_db->count() == 0)
+            {
                 return 'Geen bol produktie offers in lokale DB!';
             }
-                foreach($bol_prod_offers_in_db as $lokale_db_offers){
+                foreach($bol_prod_offers_in_db as $lokale_db_offers)
+                {
 
-
-                GetBolOffersJob::dispatch('prod', $lokale_db_offers->offerId);
-
+                    GetBolOffersJob::dispatch('prod', $lokale_db_offers->offerId);
 
                 }
         }
+}
+
+
+
+
+
+
+
 
 
                 // public function check_if_CSV_Offer_Export_RDY($serverType){
@@ -309,6 +326,3 @@ class OfferService
         //         }
         //     }
         // }
-
-
-}
