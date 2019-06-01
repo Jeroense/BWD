@@ -30,22 +30,22 @@ class Kernel extends ConsoleKernel
         // $schedule->call('App\Http\Controllers\RobotController@processBolOrders')->everyThirtyMinutes();
 
         $schedule->call('App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile')
-          ->weekdays()
+        //   ->weekdays()
           ->everyThirtyMinutes()
-          ->timezone('Europe/Amsterdam')
-          ->between('8:00', '18:00');
+          ->timezone('Europe/Amsterdam');
+        //   ->between('8:00', '18:00');
 
         $schedule->call('App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB')
-        ->weekdays()
+        // ->weekdays()
         ->everyTenMinutes()
-        ->timezone('Europe/Amsterdam')
-        ->between('8:15', '18:15');
+        ->timezone('Europe/Amsterdam');
+        // ->between('8:15', '18:15');
 
         $schedule->call('App\Http\Controllers\RobotController@updatePendingProcessStatusses')
-        ->weekdays()
+        // ->weekdays()
         ->everyFiveMinutes()
-        ->timezone('Europe/Amsterdam')
-        ->between('8:15', '18:15');
+        ->timezone('Europe/Amsterdam');
+        // ->between('8:15', '18:15');
 
         // $schedule->call('App\Http\Controllers\RobotController@publishProducts')->everyMinute();
         // $schedule->call('App\Http\Controllers\RobotController@statusCheck')->everyMinute();

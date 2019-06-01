@@ -68,8 +68,9 @@ class OfferService
                                      ]);
 
             // in de hoop, dat de bol api in staat is, direct na de initiele process-status response na een POST opdracht tot
-            // het aanmaken van een offer-export-csv, om een geupdate process-status te geven, met een 'entityId'. neen. duurt langer. Heeft geen zin!
-            // $this->getUpdatedProcessStatusFrom_prepare_CSV_Offer_Export_Response('prod', $process_status_object->id);
+            // het aanmaken van een offer-export-csv, om een geupdate process-status te geven, met een 'entityId'.
+            // NEE!. duurt langer. Heeft geen zin!
+
 
             file_put_contents( storage_path( 'app/public') . '/' . 'scheduler-log.txt', ((string)date('D, d M Y H:i:s') . "\r\n" . 'create_Bol_Process_Status_after_POST_Make_offer_Export_CSV is aangeroepen!'), FILE_APPEND );
 
@@ -77,12 +78,11 @@ class OfferService
         }
 
 
-        public function update_Bol_Process_Status(\stdClass $process_status_object, $process_status_entry){
+        // deze functie wordt (in het algemeen) niet bereikt. Voor zekerheid aangemaakt..
+        public function update_Bol_Process_Status(\stdClass $process_status_object, $process_status_entry)
+        {
 
             // geen "entityId" aanwezig in response proces status na, POST/opdracht creeren prod-offer-csv-export.
-            // $de_BolProcesStatus = BolProcesStatus::where(['process_status_id' => $process_status_object->id,
-            //                                               'eventType' => $process_status_object->eventType ])->first();
-
 
             // als er nieuwe data in $process_status_object aanwezig is: zet dit in 'bol_proces_statuses', zo niet? zet de oude waarde terug.
             // $de_BolProcesStatus->update([
@@ -102,24 +102,28 @@ class OfferService
                                      dump($process_status_entry);
             return;
         }
+        //------------------------------------------------------------------------------------
 
 
 
+        // als response(code) na opdracht tot aanmaak csv export 202 is, niet gelijk een GET doen naar 'link_to_self' uit deze response.
+        // je krijgt pas een 'entityId' als deze proces status "SUCCESS" is. na ca 5-10 min. het 'entityId', dit is hier: het offerexportId.
 
-        // als response(code) na opdracht tot aanmaak csv export 202 is, gelijk een GET doen naar 'link_to_self' uit deze response.
-        // de response uit deze GET bevat, bij 200, als het goed is, het 'entityId', dit is hier: het offerexportId.
         // throttling: reqs 100/minuut toegestaan, nog.. geen job aanmaken , is maar 1 request
-        public function getUpdatedProcessStatusFrom_prepare_CSV_Offer_Export_Response($serverType ,$process_status_id){
+        public function getUpdatedProcessStatusFrom_prepare_CSV_Offer_Export_Response($serverType ,$process_status_id)
+        {
 
             $endpoint = "process-status/{$process_status_id}";
             $process_status_response = $this->make_V3_PlazaApiRequest($serverType, $endpoint);
             $bolStatusCode = $process_status_response['bolstatuscode'];
 
-            if($bolStatusCode != 200){
+            if($bolStatusCode != 200)
+            {
                 return "process-status/{$process_status_id} response statuscode is: {$bolStatusCode}";
             }
 
-            if( !isset($process_status_response['bolbody']) ){
+            if( !isset($process_status_response['bolbody']) )
+            {
                 return 'lege response body';
             }
 
@@ -165,7 +169,8 @@ class OfferService
 
                 // nu het volgende: een flag in proces_statuses table zetten, of dat er vanuit deze db_entry al eens een offer-export-csv
                 // succesvol opgehaald is (geweest).
-                if($ltest_create_offer_export_db_entry != null && $ltest_create_offer_export_db_entry->status == 'SUCCESS' && $ltest_create_offer_export_db_entry->csv_success == false){
+                if($ltest_create_offer_export_db_entry != null && $ltest_create_offer_export_db_entry->status == 'SUCCESS' &&
+                     $ltest_create_offer_export_db_entry->csv_success == false){
 
                     // dump('in: update_process_status_create_offer_export()');
                     // dump($ltest_create_offer_export_db_entry->status);

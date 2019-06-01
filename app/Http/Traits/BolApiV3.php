@@ -300,21 +300,7 @@ trait BolApiV3 {
     }
 
 
-    public function get_Bol_Offer_by_Id_PROD($serverType ,$id){
 
-        $endpoint = "offers/{$id}";
-
-        $bol_response_array = $this->make_V3_PlazaApiRequest('prod', $endpoint, 'get');
-        dump($bol_response_array);
-        // echo('unix-epoch timeis: ' . time() );
-        // echo( "\r\n");
-        // echo('x_ratelimit_reset: ' . $bol_response_array['x_ratelimit_reset']);
-
-        $this->putResponseInFile("bol-offer-response-by-id-{$serverType}.txt", $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
-        $bol_response_array['bolbody'], $bol_response_array['x_ratelimit_limit'], $bol_response_array['x_ratelimit_reset'], $bol_response_array['x_ratelimit_remaining'], (string)time());
-
-        return $bol_response_array;
-    }
 
 
     public function upload_Single_Offer_To_BOL_V3_PROD($customVariantId){
@@ -671,6 +657,22 @@ trait BolApiV3 {
                 }
 }
 
+
+
+
+// public function get_Bol_Offer_by_Id($serverType ,$id){
+
+//     $endpoint = "offers/{$id}";
+
+//     $bol_response_array = $this->make_V3_PlazaApiRequest('prod', $endpoint, 'get');
+//     dump($bol_response_array);
+
+
+//     $this->putResponseInFile("bol-offer-response-by-id-{$serverType}.txt", $bol_response_array['bolstatuscode'], $bol_response_array['bolreasonphrase'],
+//     $bol_response_array['bolbody'], $bol_response_array['x_ratelimit_limit'], $bol_response_array['x_ratelimit_reset'], $bol_response_array['x_ratelimit_remaining'], (string)time());
+
+//     return $bol_response_array;
+// }
 
 
 

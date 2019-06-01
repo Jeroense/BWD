@@ -92,7 +92,11 @@ class RobotController extends Controller
 
     public function updatePendingProcessStatusses()
     {
-        $pending_process_statusses_in_db = BolProcesStatus::where(['status' => 'PENDING'])->get();
+        // alle proces statussen , uitgezonderd die met eventType 'CREATE_OFFER_EXPORT', daar is een andere schedule-functie,
+        // en flow voor.
+        $pending_process_statusses_in_db = BolProcesStatus::where([ ['status', '=', 'PENDING'],
+                                                                    ['eventType', '!=', 'CREATE_OFFER_EXPORT']
+                                                                    ])->get();
 
         if($pending_process_statusses_in_db->count() == 0){
             return;

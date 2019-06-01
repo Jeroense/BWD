@@ -16,14 +16,16 @@ class UploadBolOffersJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, BolApiV3;
 
     private $bol_offer;
+    private $server_type;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($offer)
+    public function __construct($server ,$offer)
     {
         $this->bol_offer = $offer;
+        $this->server_type = $server;
     }
 
     /**
@@ -33,12 +35,12 @@ class UploadBolOffersJob implements ShouldQueue
      */
     public function handle()
     {
-        Redis::throttle('upload_bol_offer')->allow(1)->every(2)->then(function () {
+        Redis::throttle('upload_bol_offer')->allow(1)->every(1)->then(function () {
 
         // file_put_contents( storage_path( 'app/public') . '/' . 'BolOffersUploadThrottling_log.txt', ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) . "\r\n" . $this->bol_offer . "\r\n\r\n"), FILE_APPEND );
             dump('Uploading to bol: ', $this->bol_offer);
 
-            $bolOfferResponse =  $this->make_V3_PlazaApiRequest('demo', 'offers', 'post', $this->bol_offer);
+            $bolOfferResponse =  $this->make_V3_PlazaApiRequest($this->server_type, 'offers', 'post', $this->bol_offer);
 
             dump("Bol response code: ", $bolOfferResponse['bolstatuscode']);
 

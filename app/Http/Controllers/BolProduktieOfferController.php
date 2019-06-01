@@ -322,7 +322,7 @@ class BolProduktieOfferController extends Controller
         {
 
             $json_offer = json_encode($offer);
-            UploadBolOffersJob::dispatch($json_offer);
+            UploadBolOffersJob::dispatch('prod', $json_offer);
         }
 
         return view('boloffers.publish.dump', compact('array_met_alle_offer_objecten'));

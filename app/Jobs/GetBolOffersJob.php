@@ -40,7 +40,13 @@ class GetBolOffersJob implements ShouldQueue
             // Job logic...
 
                 // blijkt 28 reqs/sec toegestaan  retailer/offers/{offer_id}
-                $bol_offer_by_id_response_array = $this->get_Bol_Offer_by_Id_PROD($this->serverType, $this->offerId);
+                // $bol_offer_by_id_response_array = $this->get_Bol_Offer_by_Id($this->serverType, $this->offerId);
+                $bol_offer_by_id_response_array = $this->make_V3_PlazaApiRequest($this->serverType, "offers/{$this->offerId}");
+
+                // response loggen
+                $this->putResponseInFile("bol-offer-response-by-id-{$this->serverType}.txt", $bol_offer_by_id_response_array['bolstatuscode'], $bol_offer_by_id_response_array['bolreasonphrase'],
+                $bol_offer_by_id_response_array['bolbody'], $bol_offer_by_id_response_array['x_ratelimit_limit'], $bol_offer_by_id_response_array['x_ratelimit_reset'], $bol_offer_by_id_response_array['x_ratelimit_remaining'], (string)time());
+                //
 
                 if($bol_offer_by_id_response_array['bolstatuscode'] != 200){
 
