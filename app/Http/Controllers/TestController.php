@@ -35,7 +35,27 @@ class TestController extends Controller
         }
     }
 
+    public function voorbeeld_latest_first()
+    {
+        $stati1 = \App\BolProcesStatus::where([['eventType', '=', 'UPDATE_OFFER']])->latest()->first();
+        $stati2 = \App\BolProcesStatus::where([['eventType', '=', 'UPDATE_OFFER']])->first();
+        $smurf = \App\BolProcesStatus::where([['eventType', '=', 'SMURF']])->first();
+        dump($stati1);dump($stati1->doesntExist()); dump($stati1 === null); dump($smurf);dump($stati2);
 
+        $arr = [ ['ean' => '123456789', 'name' => 'jantje'],
+                 ['ean' => '345678912', 'name' => 'freggel'],
+                 ['ean' => '7625626233', 'name' => 'hans']
+               ];
+        $collection = collect($arr); dump($collection);
+        $to_arr = $collection->toArray(); dump($to_arr);
+        $eans = $collection->pluck('ean'); dump($eans);
+        $eans_to_arr = $eans->toArray(); dump($eans_to_arr);
+        dump('-----------');
+        $prodoffereans = BolProduktieOffer::all()->pluck('ean'); dump($prodoffereans);
+        dump('------');
+        $eans2 = ['1234567890123', '234567893', '7435156898868'];
+        $wherenotineans = BolProduktieOffer::whereNotIn('ean', $eans2)->get(); dump($wherenotineans);
+    }
 
 
     public function test_JSON_and_Session_Data(Request $req){

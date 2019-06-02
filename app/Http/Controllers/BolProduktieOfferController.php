@@ -241,7 +241,7 @@ class BolProduktieOfferController extends Controller
     {
 
         // dump($offer);
-        DeleteBolOffersJob::dispatch($offer);
+        DeleteBolOffersJob::dispatch($offer, 'prod');
 
         return view('boloffers.offerdeleted', compact('offer'));
     }

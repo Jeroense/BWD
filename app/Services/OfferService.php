@@ -11,6 +11,7 @@ use App\BolProcesStatus;
 use App\Jobs\GetBolOffersJob;
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
+use App\CustomVariant;
 
 class OfferService
 {
@@ -143,17 +144,25 @@ class OfferService
             $latest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
 
             // if( $latest_create_offer_export_db_entry->exists() ){  // geeft error, dus met != null controleren
-            if( $latest_create_offer_export_db_entry != null ){
+            if( $latest_create_offer_export_db_entry != null )
+            {
 
-                if($latest_create_offer_export_db_entry->status == 'PENDING'){
+                if($latest_create_offer_export_db_entry->status == 'PENDING')
+                {
 
                     $resp = $this->geefProcesStatusById('prod', $latest_create_offer_export_db_entry->process_status_id);
 
-                    if($resp['bolstatuscode'] != 200){
-                            return;
+                    if($resp['bolstatuscode'] != 200)
+                    {
+                        return;
                     }
 
                     $status_data = json_decode($resp['bolbody']);
+
+                    if(!isset($status_data->entityId))
+                    {
+                        return;
+                    }
 
                     $latest_create_offer_export_db_entry->update([
                         'entityId' => isset( $status_data->entityId) ? $status_data->entityId : $latest_create_offer_export_db_entry->entityId,
@@ -165,17 +174,19 @@ class OfferService
                     ]);
                 }
 
-                $ltest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
+                $latest_create_offer_export_db_entry->refresh();
+                // $ltest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
 
                 // nu het volgende: een flag in proces_statuses table zetten, of dat er vanuit deze db_entry al eens een offer-export-csv
                 // succesvol opgehaald is (geweest).
-                if($ltest_create_offer_export_db_entry != null && $ltest_create_offer_export_db_entry->status == 'SUCCESS' &&
-                     $ltest_create_offer_export_db_entry->csv_success == false){
+                // if($ltest_create_offer_export_db_entry != null && $ltest_create_offer_export_db_entry->status == 'SUCCESS' &&
+                //      $ltest_create_offer_export_db_entry->csv_success == false){
 
-                    // dump('in: update_process_status_create_offer_export()');
-                    // dump($ltest_create_offer_export_db_entry->status);
+                if($latest_create_offer_export_db_entry->status == 'SUCCESS' &&
+                    $latest_create_offer_export_db_entry->csv_success == false)
+                {
 
-                    $this->get_CSV_Offer_Export_PROD($ltest_create_offer_export_db_entry);
+                    $this->get_CSV_Offer_Export_PROD($latest_create_offer_export_db_entry);
                 }
 
                 return;
@@ -211,8 +222,7 @@ class OfferService
                 // op dit punt is is er een up-to-date csv-file aangemaakt.
                 $process_status_model_instance->update(['csv_success' => 1]);   // boolean = tinyint  true is 1
 
-                // dump("in: get_CSV_Offer_Export_PROD(BolProcesStatus process_status_model_instance) ");
-                // dump($process_status_model_instance->status);
+
 
                 $this->zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_array);
 
@@ -225,12 +235,39 @@ class OfferService
         public function zet_CSV_array_Data_in_BOL_produktie_offers_table($csv_arr){
 
 
+            // eerst checken, of er nog BolProduktieOffers in de BolProduktieOffer-table staan, die niet (meer) in het meest recente
+            // $csv_arr staan, die dus, door ons deleted zijn:
+            $offersCollection = collect($csv_arr);
+            $up_to_date_eans_collection = $offersCollection->pluck('ean');
+            $up_to_date_eans = $up_to_date_eans_collection->toArray();
+
+            // delete uit BolProduktieOffers-table alle entries/records waar het ean niet overeenkomt met het $up_to_date_eans array.
+            $marked_for_delete = BolProduktieOffer::whereNotIn('ean', $up_to_date_eans)->get();
+
+            // zet dan de status van de bijbehorende customVariants op 'unpublished'
+            if($marked_for_delete->count() > 0)
+            {
+                foreach($marked_for_delete as $unpublished_offer)
+                {
+                    $custVariant = CustomVariant::where(['ean' => $unpublished_offer['ean']])->first();
+                    if($custVariant != null) // voor de zekerheid, normaliter moet deze custvariant natuurlijk bestaan
+                    {
+                        $custVariant->update(['isPublishedAtBol' => 'unpublished_at_api']);
+                    }
+
+                }
+            }
+            // dan delete deze BolProduktieOffer entries
+            BolProduktieOffer::whereNotIn('ean', $up_to_date_eans)->delete();
+            //
+
+            // dan de published offers updaten of creeren
             foreach($csv_arr as $arr )
             {
 
                 $localOffer = BolProduktieOffer::where( ['offerId' => $arr['offerId'], 'ean' => $arr['ean'] ])->first();
 
-                // if( BolProduktieOffer::where( ['offerId' => $arr['offerId'], 'ean' => $arr['ean'] ])->first()->exists() ){
+                // if( $localOffer->exists() ){
                     if($localOffer != null)
                     {
 
@@ -249,7 +286,7 @@ class OfferService
 
                     }
 
-                // if(BolProduktieOffer::where( ['offerId' => $arr['offerId'], 'ean' => $arr['ean'] ])->first()->doesntExist() ){
+                // if($localOffer->doesntExist() ){
                     if($localOffer == null)
                     {
 
@@ -267,6 +304,19 @@ class OfferService
                         ]);
                     }
             }
+            // alvast bij de bijhorende  customVariants de 'isPublishedAtBol' status updaten/zetten op: 'published_at_api'
+            $customVarianten_waar_status_op_published_at_api_moet = CustomVariant::whereIn('ean', $up_to_date_eans)->get();
+
+            if($customVarianten_waar_status_op_published_at_api_moet->count() > 0) // voor zekerheid he..
+            {
+                foreach($customVarianten_waar_status_op_published_at_api_moet as $cv)
+                {
+                    $cv->update(['isPublishedAtBol' => 'published_at_api']);
+                }
+
+            }
+
+            // dan verdere details ophalen (offer-info per id) om de BolproduktieOffer-table te completeren
             $this->get_BolOffers_By_Id();
         }
 

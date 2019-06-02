@@ -18,14 +18,16 @@ class DeleteBolOffersJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, BolApiV3;
 
     protected $bol_offer;
+    protected $server_type;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(BolProduktieOffer $offer)
+    public function __construct(BolProduktieOffer $offer, $server)
     {
         $this->bol_offer = $offer;
+        $this->server_type = $server;
     }
 
     /**
@@ -40,7 +42,7 @@ class DeleteBolOffersJob implements ShouldQueue
             // file_put_contents( storage_path( 'app/public') . '/' . 'BolOffersUploadThrottling_log.txt', ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) . "\r\n" . $this->bol_offer . "\r\n\r\n"), FILE_APPEND );
                 dump('Sending DELETE request to bol for: ', $this->bol_offer->offerId);
 
-                $bol_Delete_OfferResponse =  $this->make_V3_PlazaApiRequest('demo', "offers/{$this->bol_offer->offerId}", 'delete');
+                $bol_Delete_OfferResponse =  $this->make_V3_PlazaApiRequest($this->server_type, "offers/{$this->bol_offer->offerId}", 'delete');
 
                 dump($bol_Delete_OfferResponse['bolstatuscode'])  ;dump($bol_Delete_OfferResponse['bolbody']);
 

@@ -110,6 +110,8 @@ Route::prefix('boltestserver')->middleware('role:superadministrator|administrato
 
 
     Route::get('/test-jobqeue-redis-throttling', 'TestController@testJobqeueRedisThrottling');
+
+    Route::get('/latest-first', 'TestController@voorbeeld_latest_first');
 });
 
 
