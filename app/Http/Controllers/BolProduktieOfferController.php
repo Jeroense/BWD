@@ -42,7 +42,8 @@ class BolProduktieOfferController extends Controller
     public function select_customvariants_to_publish_on_BOL()
     {
 
-        $notYetPublishedCustomVariants = CustomVariant::where('isPublishedAtBol',  '!=',  'published')->orWhere('isPublishedAtBol',  '=', null)->get();
+        $notYetPublishedCustomVariants = CustomVariant::where('isPublishedAtBol',  '!=',  'published_at_api')
+        ->orWhere('isPublishedAtBol',  '=', null)->get();
 
         return view('boloffers.publish.select', ['cvars' => $notYetPublishedCustomVariants] );
     }
