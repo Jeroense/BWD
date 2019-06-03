@@ -104,7 +104,7 @@
                     @endforeach
                 </tbody>
             </table>
-            <a class="button is-danger is-outlined" href="{{ route('boloffers.index') }}">Terug</a>
+            <a class="button is-danger is-outlined" href="{{ route('boloffers.publish.select') }}">Terug</a>
 
 
             @endif

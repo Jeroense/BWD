@@ -42,8 +42,10 @@ class BolProduktieOfferController extends Controller
     public function select_customvariants_to_publish_on_BOL()
     {
 
-        $notYetPublishedCustomVariants = CustomVariant::where('isPublishedAtBol',  '!=',  'published_at_api')
-        ->orWhere('isPublishedAtBol',  '=', null)->get();
+
+        $notYetPublishedCustomVariants = CustomVariant::where('isPublishedAtBol',  '=',  null)
+                ->orWhere('isPublishedAtBol',  '=',  '')->orWhere('isPublishedAtBol',  '=',  'unpublish_initialized')->get();
+
 
         return view('boloffers.publish.select', ['cvars' => $notYetPublishedCustomVariants] );
     }
@@ -364,7 +366,8 @@ class BolProduktieOfferController extends Controller
 
         foreach($array_met_alle_offer_objecten as $offer)
         {
-            $offer->fileName = CustomVariant::where(['ean' => $offer->ean])->select('fileName')->first();
+            $offer->fileName = CustomVariant::where(['ean' => $offer->ean])->value('fileName'); // dit werkt..
+            // dump($offer);
         }
 
         return view('boloffers.publish.sent',  ['sent' => $array_met_alle_offer_objecten]);
