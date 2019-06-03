@@ -531,28 +531,35 @@ trait BolApiV3 {
 
 
         public function maak_ObjectenArray_voor_single_offers_BOL_from_Array(array $offersData){
-        //     [
-        //     2 => array:9 [▼
-        //     "ean" => "8712626055143"
-        //     "siz" => "XL"
-        //     "sto" => "6"
-        //     "onh" => "on"
-        //     "pub" => "on"
-        //     "var" => "bol demo dummy produktnaam 2"
-        //     "bas" => "Stone Blue"
-        //     "sal" => "40"
-        //     "del" => "3-5d"
+
+        // het format van array $offersData is:
+        //     array:5 [▼
+        //     0 => array:9 [▼
+        //       "sal" => "40.99"
+        //       "del" => "1-8d"
+        //       "ean" => "8712626055150"
+        //       "siz" => "XL"
+        //       "sto" => "13"
+        //       "onh" => "on"
+        //       "pub" => "on"
+        //       "var" => "star wars trilogy"
+        //       "bas" => "Stone Blue"
+        //     ]
+        //     1 => array:8 [▼
+        //       "sal" => "34.5"
+        //       "del" => "4-8d"
+        //       "ean" => "8712626055143"
+        //       "siz" => "XL"
+        //       "sto" => "45"
+        //       "onh" => "on"
+        //       "var" => "bol demo dummy produktnaam 2"
+        //       "bas" => "Stone Blue"
+        //     ]
+        //     2 => array:7 [▶]
+        //     3 => array:7 [▶]
+        //     4 => array:7 [▶]
         //   ]
-        //   3 => array:7 [▼
-        //     "ean" => "8804269223123"
-        //     "siz" => "XL"
-        //     "sto" => "2"
-        //     "var" => "bol demo dummy produktnaam 3"
-        //     "bas" => "Stone Blue"
-        //     "sal" => "40"
-        //     "del" => "3-5d"
-        //   ]
-        //  ]
+
             $array_met_offer_objecten = [];
 
             foreach($offersData as $offerData){

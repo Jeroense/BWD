@@ -15,16 +15,16 @@ class UploadBolOffersJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, BolApiV3;
 
-    private $bol_offer;
+    private $bol_single_offer_json_body;
     private $server_type;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($server ,$offer)
+    public function __construct($server , $single_offer_json_body)
     {
-        $this->bol_offer = $offer;
+        $this->bol_single_offer_json_body = $single_offer_json_body;
         $this->server_type = $server;
     }
 
@@ -37,14 +37,32 @@ class UploadBolOffersJob implements ShouldQueue
     {
         Redis::throttle('upload_bol_offer')->allow(1)->every(1)->then(function () {
 
-        // file_put_contents( storage_path( 'app/public') . '/' . 'BolOffersUploadThrottling_log.txt', ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) . "\r\n" . $this->bol_offer . "\r\n\r\n"), FILE_APPEND );
-            dump('Uploading to bol: ', $this->bol_offer);
+        // file_put_contents( storage_path( 'app/public') . '/' . 'BolPostOfferResponse_log.txt', ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) . "\r\n" . $this->bol_offer . "\r\n\r\n"), FILE_APPEND );
+            dump('Uploading to bol: ', $this->bol_single_offer_json_body);
 
-            $bolOfferResponse =  $this->make_V3_PlazaApiRequest($this->server_type, 'offers', 'post', $this->bol_offer);
+            $bolOfferResponse =  $this->make_V3_PlazaApiRequest($this->server_type, 'offers', 'post', $this->bol_single_offer_json_body);
 
             dump("Bol response code: ", $bolOfferResponse['bolstatuscode']);
 
+            if($bolOfferResponse['bolstatuscode'] != 202)
+            {
+                return;
+            }
+
+            // log response in text-file
+            file_put_contents( storage_path( 'app/public') . '/' . "BolPostOfferResponse-{$this->server_type}.txt", ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) . "\r\n" . $bolOfferResponse['bolbody'] . "\r\n\r\n"), FILE_APPEND );
+
             $this->update_BolProcessStatus_Table($bolOfferResponse);
+
+            // zet na een 202, de bijhorende customVariant, het veld: 'isPublishedAtBol' op: 'publish_at_api_initialized'
+            $single_offer_json_body_decoded = json_decode($this->bol_single_offer_json_body);
+            $het_ean = $single_offer_json_body_decoded->ean;
+            $custVar = \App\CustomVariant::where(['ean' => $het_ean])->first();
+
+            if($custVar != null)   // voor zekerheid, tja...
+            {
+                $custVar->update(['isPublishedAtBol' => 'publish_at_api_initialized']);
+            }
 
         }, function () {
             // Could not obtain lock...

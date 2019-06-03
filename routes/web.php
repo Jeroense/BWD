@@ -74,10 +74,12 @@ Route::prefix('customers')->middleware('role:superadministrator|administrator')-
 Route::prefix('boloffers')->middleware('role:superadministrator|administrator')->group(function() {
     Route::get('/boloffers', 'BolProduktieOfferController@index')->name('boloffers.index');
     Route::get('/select-to-publish-on-bol', 'BolProduktieOfferController@select_customvariants_to_publish_on_BOL')->name('boloffers.publish.select');
-    Route::post('/dump-published-on-bol', 'BolProduktieOfferController@dump_and_upload_offers_to_be_published_on_BOL')->name('boloffers.publish.dump');
+    Route::post('/dump-published-on-bol', 'BolProduktieOfferController@dump_and_upload_offers_to_be_published_on_BOL')->name('boloffers.publish.published');
 
     Route::get('/boloffer-verwijderen/{offer}', 'BolProduktieOfferController@deleteBolOffer')->name('boloffers.offer.delete');
     Route::get('/boloffer-update/{offer}', 'BolProduktieOfferController@updateBolOffer')->name('boloffers.offer.update');
+    Route::get('/boloffer-check-initial-status', 'BolProduktieOfferController@checkBolOffersStatus')->name('boloffers.offer.checkinitialstatus');
+
     // Route::post('/boloffer-updated', 'BolProduktieOfferController@updatedBolOffer')->name('boloffers.offer.updated');
     Route::post('/boloffer-price-updated/{offer}', 'BolProduktieOfferController@update_price_BolOffer')->name('boloffers.offer.offerprice_updated');
     Route::post('/boloffer-onhold-deliverycode-updated/{offer}', 'BolProduktieOfferController@update_onhold_and_deliverycode_BolOffer')->name('boloffers.offer.onhold_and_deliverycode_updated');

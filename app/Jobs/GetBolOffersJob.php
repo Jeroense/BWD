@@ -36,7 +36,7 @@ class GetBolOffersJob implements ShouldQueue
     public function handle()
     {
 
-        Redis::throttle('getboloffers')->allow(10)->every(1)->then(function () {   // 20 job per 1 seconden
+        Redis::throttle('getboloffers')->allow(10)->every(1)->then(function () {   // 10 job per 1 seconden
             // Job logic...
 
                 // blijkt 28 reqs/sec toegestaan  retailer/offers/{offer_id}
@@ -106,6 +106,15 @@ class GetBolOffersJob implements ShouldQueue
                         ]);
                         dump('In GetBolOffersJob!   bol_produktie_offers table succesvol geupdated voor offer-id: ');
                         dump($single_offer_as_stdclass->offerId);
+
+                        // ook maar gelijk de bijhorende customVariant velden 'salePrice' en 'boldeliverycode' updaten aan hand van de response:
+                        $custVariant = \App\CustomVariant::where(['ean' => $single_offer_as_stdclass->ean])->first();
+                        if($custVariant != null)
+                        {
+                            $custVariant->update(['salePrice' => $single_offer_as_stdclass->pricing->bundlePrices[0]->price,
+                                                'boldeliverycode' => $single_offer_as_stdclass->fulfilment->deliveryCode
+                                                ]);
+                        }
                     }
 
         }, function () {

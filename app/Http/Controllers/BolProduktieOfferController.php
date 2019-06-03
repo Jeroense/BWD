@@ -260,8 +260,12 @@ class BolProduktieOfferController extends Controller
 
             unset($inputs_from_request['_token'] );
         }
+        // dd($inputs_from_request);
 
         $arr_van_te_valideren_stockfor_input_namen = [];
+        $arr_van_te_valideren_salePrice_input_namen = [];
+        $arr_van_te_valideren_deliveryCode_input_namen = [];
+
         $hoofd_array = [];          $temp_array = [];
         $updated_hoofd_array = [];  $updated_temp_array = [];
 
@@ -270,16 +274,16 @@ class BolProduktieOfferController extends Controller
 
             $temp_array[$key] = $val;
 
-            if( strpos($key, 'delivery') !== false )    // moet hier !== gebruiken..
+            if( strpos($key, 'baseColor') !== false )    // moet hier !== gebruiken..
             {
 
                 array_push($hoofd_array, $temp_array);
                     $temp_array = [];
             }
         }
-        // dump($hoofd_array);
+        // dd($hoofd_array);
 
-        // om te bepalen wat de namen zijn van de stockfor_  input velden, die validated moeten worden..
+        // om te bepalen wat de namen zijn van de stockfor_ , salePrice_ en deliveryCode_  input velden, die validated moeten worden..
         foreach($hoofd_array as $arr)
         {
             $arrkeys = array_keys($arr);
@@ -289,7 +293,12 @@ class BolProduktieOfferController extends Controller
                 {
                     $de_publish_key_naam = $key;
                     $de_bijhorende_stockfor_input_naam = \str_replace('publish', 'stockfor', $de_publish_key_naam );
+                    $de_bijhorende_salePrice_input_naam = \str_replace('publish', 'salePrice', $de_publish_key_naam );
+                    $de_bijhorende_deliveryCode_input_naam = \str_replace('publish', 'deliveryCode', $de_publish_key_naam );
+
                     array_push($arr_van_te_valideren_stockfor_input_namen, $de_bijhorende_stockfor_input_naam);
+                    array_push($arr_van_te_valideren_salePrice_input_namen, $de_bijhorende_salePrice_input_naam);
+                    array_push($arr_van_te_valideren_deliveryCode_input_namen, $de_bijhorende_deliveryCode_input_naam);
                 }
             }
         }
@@ -303,6 +312,24 @@ class BolProduktieOfferController extends Controller
                                 ]);
             }
 
+            foreach($arr_van_te_valideren_salePrice_input_namen as $salePrice_input_naam)
+            {
+                $req->validate([
+                                 $salePrice_input_naam => 'numeric|required|regex:/^\d+(\.\d{1,2})?$/|max:9999',
+                                ]);
+            }
+
+            foreach($arr_van_te_valideren_deliveryCode_input_namen as $deliveryCode_input_naam)
+            {
+                $req->validate([
+                                $deliveryCode_input_naam => 'required|string',
+                                ]);
+            }
+
+            // dump($arr_van_te_valideren_deliveryCode_input_namen);
+            // dump($arr_van_te_valideren_salePrice_input_namen);
+            // dd($arr_van_te_valideren_stockfor_input_namen);
+
         foreach($hoofd_array as $arr)
         {
 
@@ -314,21 +341,41 @@ class BolProduktieOfferController extends Controller
            array_push($updated_hoofd_array, $arr);
         }
 
+        // dd($updated_hoofd_array);
 
         $array_met_alle_offer_objecten = $this->maak_ObjectenArray_voor_single_offers_BOL_from_Array($updated_hoofd_array);
 
         session(['offer_arr' => $array_met_alle_offer_objecten]);
 
+        // dd($array_met_alle_offer_objecten); return;
+
         foreach($array_met_alle_offer_objecten as $offer)
         {
 
             $json_offer = json_encode($offer);
-            UploadBolOffersJob::dispatch('prod', $json_offer);
+            UploadBolOffersJob::dispatch('demo', $json_offer);  // hier kiezen: 'prod' of 'demo' server!!!
         }
 
-        return view('boloffers.publish.dump', compact('array_met_alle_offer_objecten'));
+
+
+        // $collection = collect($array_met_alle_offer_objecten);
+        // $sent_eans = $collection->pluck('ean');
+        // $custVars_sent_to_bol = CustomVariant::whereIn('ean', $sent_eans)->get();
+
+        foreach($array_met_alle_offer_objecten as $offer)
+        {
+            $offer->fileName = CustomVariant::where(['ean' => $offer->ean])->select('fileName')->first();
+        }
+
+        return view('boloffers.publish.sent',  ['sent' => $array_met_alle_offer_objecten]);
     }
 
+    public function checkBolOffersStatus()
+    {
+        $custVars_with_publish_at_api_initialized = CustomVariant::where(['isPublishedAtBol' => 'publish_at_api_initialized'])->get();
+
+        return view('boloffers.publish.initialized', ['cvars' => $custVars_with_publish_at_api_initialized]);
+    }
 
     // heb het idee dat: ook al zit je throttle-matig (ca 10 reqs/uur) nog binnen de grenzen,
     // als je binnen enkele minuten, b.v. 3 x achter elkaar een nieuwe POST prepare_CSV_Offer_Export_PRODUCTION() doet,

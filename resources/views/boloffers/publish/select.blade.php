@@ -26,7 +26,7 @@
             @endif
             @if( count($cvars) > 0 )
 
-            <form method="POST" action="{{ route('boloffers.publish.dump') }}">
+            <form method="POST" action="{{ route('boloffers.publish.published') }}">
                 @csrf
 
             <table class="table is-narrow">
@@ -70,8 +70,8 @@
                             <td> geen image! </td>
                             @endif
 
-
                             <td>{{ $cvar->ean }} </td>
+
                             @if($cvar->variantName)
                             <td>{{ $cvar->variantName }} </td>
                             @else
@@ -81,14 +81,40 @@
                             <td>{{ $cvar->size }} </td>
 
                             {{-- <td>{{ $cvar->onHoldByRetailer }}</td> --}}
-                            <td>{{ $cvar->salePrice }}</td>
+
+                            <td>
+                                <div class="field">
+                                    <div class="control">
+                                        <input type="number" name="salePrice_{{$cvar->ean}}" class="input is-primary"
+                                        @isset($cvar->salePrice)
+                                        value="{{$cvar->salePrice}}"
+                                        @endisset
+                                        step="0.01" required>
+                                    </div>
+                                </div>
+                            </td>
 
                             <td>FBR</td>
 
 
-                            @isset($cvar->boldeliverycode)
-                            <td>{{ $cvar->boldeliverycode }}</td>
-                            @endisset
+
+                            <td>
+                                    <div class="field">
+                                            <div class="control">
+                                            <div class="select is-primary">
+                                                <select name="deliveryCode_{{$cvar->ean}}">
+                                                <option selected>3-5d</option>
+                                                <option>1-2d</option>
+                                                <option>2-3d</option>
+                                                <option>4-8d</option>
+                                                <option>1-8d</option>
+                                                </select>
+                                            </div>
+                                            </div>
+                                        </div>
+                            </td>
+
+
 
                             <input type="hidden" name="ean_{{$cvar->ean}}" value="{{$cvar->ean}}">
                             <input type="hidden" name="size_{{$cvar->ean}}" value="{{$cvar->size}}">
@@ -122,8 +148,8 @@
 
                         <input type="hidden" name="variantName_{{$cvar->ean}}" value="{{$cvar->variantName}}">
                         <input type="hidden" name="baseColor_{{$cvar->ean}}" value="{{$cvar->baseColor}}">
-                        <input type="hidden" name="salePrice_{{$cvar->ean}}" value="{{$cvar->salePrice}}">
-                        <input type="hidden" name="deliveryCode_{{$cvar->ean}}" value="{{$cvar->boldeliverycode}}">
+                        {{-- <input type="hidden" name="salePrice_{{$cvar->ean}}" value="{{$cvar->salePrice}}"> --}}
+                        {{-- <input type="hidden" name="deliveryCode_{{$cvar->ean}}" value="{{$cvar->boldeliverycode}}"> --}}
 
 
                             {{-- <td class="has-text-right"> --}}
@@ -141,7 +167,7 @@
                     @endforeach
                 </tbody>
             </table>
-            <button class="button" type="submit" onclick="return confirm('customvarianten publiceren?')">Publish</button>
+            <button class="button is-danger is-outlined" type="submit" onclick="return confirm('customvarianten publiceren?')">Publish</button>
             </form>
 
             @endif
