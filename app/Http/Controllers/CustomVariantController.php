@@ -68,6 +68,9 @@ class CustomVariantController extends Controller
                 $newCustomVariant->fileName = $compositeMediaDesign->fileName;
                 $newCustomVariant->compositeMediaId = (int)$request->compositeMediaId;
                 $newCustomVariant->productionMediaId = $compositeMediaDesign->designId;
+                $newCustomVariant->isInBolCatalog = false;     // toegevoegd 04-06-2019
+                $newCustomVariant->salePrice = 25.00;          // standaard prijs voorlopig toegevoegd, kan aangepast bij uploaden offer naar bol
+                $newCustomVariant->boldeliverycode = "3-5d";   // standaard del.code voorlopig toegevoegd, kan aangepast bij uploaden offer naar bol
                 $newCustomVariant->smakeProductionMediaId = Design::select('smakeId')->where('id', $newCustomVariant->productionMediaId)->first()->smakeId;
                 $newCustomVariant->smakeCompositeMediaId = CompositeMediaDesign::select('smakeId')->where('id' ,$request->compositeMediaId)->first()->smakeId;
                 $uploadCustomVariantBody = $this->buildVariantObject($newCustomVariant);

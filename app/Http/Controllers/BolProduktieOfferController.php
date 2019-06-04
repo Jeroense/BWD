@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\BolApiV3;
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
+use Symfony\Component\Finder\Iterator\CustomFilterIterator;
 
 class BolProduktieOfferController extends Controller
 {
@@ -44,7 +45,7 @@ class BolProduktieOfferController extends Controller
 
 
         $notYetPublishedCustomVariants = CustomVariant::where('isPublishedAtBol',  '=',  null)
-                ->orWhere('isPublishedAtBol',  '=',  '')->orWhere('isPublishedAtBol',  '=',  'unpublish_initialized')->get();
+                ->orWhere('isPublishedAtBol',  '=',  '')->orWhere('isPublishedAtBol',  '=',  'unpublish_at_api_initialized')->get();
 
 
         return view('boloffers.publish.select', ['cvars' => $notYetPublishedCustomVariants] );
@@ -154,7 +155,7 @@ class BolProduktieOfferController extends Controller
         $bol_offer_update_resp['bolreasonphrase'], $bol_offer_update_resp['bolbody']);
         //
 
-        // dan BolProcesStatus table updaten met de response
+        // check status
         if($bol_offer_update_resp['bolstatuscode'] != 202 || !isset($bol_offer_update_resp['bolbody']))
         {
             return;
@@ -162,9 +163,15 @@ class BolProduktieOfferController extends Controller
 
         $process_status_info = json_decode($bol_offer_update_resp['bolbody']);
 
+        // voor zekerheid om crashes tegen te gaan
+        if( $process_status_info->eventType != 'UPDATE_OFFER' || !isset($process_status_info->status))
+        {
+            return;
+        }
+
         BolProcesStatus::create([
             'process_status_id' => $process_status_info->id,
-            'entityId' => $process_status_info->entityId,
+            'entityId' => $process_status_info->entityId,       // deze moet in principe aanwezig zijn, het is een put van een bestaand offer
             'eventType' => $process_status_info->eventType,
             'description' => $process_status_info->description,
             'status' => $process_status_info->status,
@@ -175,8 +182,17 @@ class BolProduktieOfferController extends Controller
 
         ]);
 
+        // dan alvast de deliverycode in de customVariants-table updaten. Deze wordt na elke succesvolle
+        // csv-offer export weer ge-update. Zo klopt het veld 'Del.Code' op url: /boloffers/boloffer-check-initial-status
+        $custVar = CustomVariant::where(['ean' => $offer->ean])->first();
+        if($custVar != null)
+        {
+            $custVar->update(['boldeliverycode' => $req->input('deliveryCode')]);
+        }
 
         dump($offer); dump($req->all()); dump($onhold);
+
+        return;
     }
 
 
@@ -355,7 +371,7 @@ class BolProduktieOfferController extends Controller
         {
 
             $json_offer = json_encode($offer);
-            UploadBolOffersJob::dispatch('demo', $json_offer);  // hier kiezen: 'prod' of 'demo' server!!!
+            UploadBolOffersJob::dispatch('prod', $json_offer);  // hier kiezen: 'prod' of 'demo' server!!!
         }
 
 

@@ -4,16 +4,17 @@
 
 
 
-<div class="container pull-left">
-        {{-- columns is-10 pull-left --}}
-    <div class="columns m-t-5">
+<div class="container column is-10 pull-left">
 
-    {{-- </div> --}}
+    <div class="columns m-t-5">
+    </div>
+
     <hr class="m-t-0">
-    <div class="column is-four-fifth">
-            {{-- class="card"    --}}
-        {{-- <div > --}}
-                {{-- class="card-content" --}}
+
+    <div class="card">
+
+        <div class="card-content">
+
 
             @if( count($bol_produktie_offers) == 0 )
                 <p>Geen Bol produktie offers in Lokale Database. </p>
@@ -106,6 +107,7 @@
             @endif
         </div>
     </div>
+
 </div>
 
 

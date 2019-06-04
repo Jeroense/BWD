@@ -46,12 +46,18 @@ class DeleteBolOffersJob implements ShouldQueue
 
                 dump($bol_Delete_OfferResponse['bolstatuscode'])  ;dump($bol_Delete_OfferResponse['bolbody']);
 
+                if($bol_Delete_OfferResponse['bolstatuscode'] != 202 ||
+                strpos( $bol_Delete_OfferResponse['bolheaders']['Content-Type'][0], 'json' ) === false)
+                {
+                    return;
+                }
+
                 $this->update_BolProcessStatus_Table($bol_Delete_OfferResponse);
 
             }, function () {
                 // Could not obtain lock...
 
-                file_put_contents( storage_path( 'app/public') . '/' . 'TestRedisThrottling_log.txt', ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) .  "\r\n" . "Could not obtain lock.." . "\r\n\r\n"), FILE_APPEND );
+                file_put_contents( storage_path( 'app/public') . '/' . 'Redis_queue_errors_deleteboloffersjob_log.txt', ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) .  "\r\n" . "Could not obtain lock.." . "\r\n\r\n"), FILE_APPEND );
 
                  return $this->release(3);
             });
@@ -59,7 +65,7 @@ class DeleteBolOffersJob implements ShouldQueue
 
     public function update_BolProcessStatus_Table(array $bol_response){
 
-        if( $bol_response['bolstatuscode'] == 202 && isset( $bol_response['bolbody'] )
+        if( isset( $bol_response['bolbody'] )
             && strpos( $bol_response['bolheaders']['Content-Type'][0], 'json' ) !== false ){
 
                 dump('in de update_bol_processStatus_Table functie!!');
@@ -103,7 +109,7 @@ class DeleteBolOffersJob implements ShouldQueue
                         'link_to_self' => $resp_object->links[0]->href,
                         'method_to_self' => $resp_object->links[0]->method,
                     ]);
-                    dump('created proces-status for delete response: '); dump($process_status_in_db->id);
+                    dump('created a proces-status for delete response.');
                 }
                     //--------------------------------------------------------------------------
                     // {"id":1,
@@ -123,7 +129,12 @@ class DeleteBolOffersJob implements ShouldQueue
                     // nu de delete-opdracht succesvol geinitieerd is, de betreffende customvariant , kolom 'isPublishedAtBol' status aanpassen:
                     $customVariantMarkedForDeleteOnBol = CustomVariant::where(['ean' => $this->bol_offer->ean])->first();
                     dump('customvariant marked for delete on bol: ');dump($customVariantMarkedForDeleteOnBol->ean);
-                    $customVariantMarkedForDeleteOnBol->update(['isPublishedAtBol' => 'unpublish_initiated']);
+
+                    if($customVariantMarkedForDeleteOnBol != null)
+                    {
+                        $customVariantMarkedForDeleteOnBol->update(['isPublishedAtBol' => 'unpublish_at_api_initiated']);
+                    }
+
         }
 
     }

@@ -174,19 +174,19 @@ class OfferService
                     ]);
                 }
 
-                $latest_create_offer_export_db_entry->refresh();
-                // $ltest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
+                // $latest_create_offer_export_db_entry->refresh();
+                $ltest_create_offer_export_db_entry = BolProcesStatus::where(['eventType' => 'CREATE_OFFER_EXPORT'])->latest()->first();
 
                 // nu het volgende: een flag in proces_statuses table zetten, of dat er vanuit deze db_entry al eens een offer-export-csv
                 // succesvol opgehaald is (geweest).
                 // if($ltest_create_offer_export_db_entry != null && $ltest_create_offer_export_db_entry->status == 'SUCCESS' &&
                 //      $ltest_create_offer_export_db_entry->csv_success == false){
 
-                if($latest_create_offer_export_db_entry->status == 'SUCCESS' &&
-                    $latest_create_offer_export_db_entry->csv_success == false)
+                if($ltest_create_offer_export_db_entry->status == 'SUCCESS' &&
+                    $ltest_create_offer_export_db_entry->csv_success == false)
                 {
 
-                    $this->get_CSV_Offer_Export_PROD($latest_create_offer_export_db_entry);
+                    $this->get_CSV_Offer_Export_PROD($ltest_create_offer_export_db_entry);
                 }
 
                 return;

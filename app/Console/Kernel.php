@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->call('App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile')
         //   ->weekdays()
-          ->everyThirtyMinutes()
+          ->everyThirtyMinutes()       // heeft geen zin om dit elk half uur te doen, je krijgt een kopie van de vorige export dan
           ->timezone('Europe/Amsterdam');
         //   ->between('8:00', '18:00');
 

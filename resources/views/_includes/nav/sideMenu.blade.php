@@ -80,6 +80,7 @@
                     <ul>
                         <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Openstaande Bestellingen</a></li>
                         <li class="{{ Nav::isRoute('boloffers.index') }}"><a href="{{route('boloffers.index')}}">Gepubliceerd op BOL</a></li>
+                        <li class="{{ Nav::isRoute('boloffers.offer.checkinitialstatus') }}"><a href="{{route('boloffers.offer.checkinitialstatus')}}">Offers in behandeling door BOL</a></li>
                         <li class="{{ Nav::isRoute('boloffers.publish.select') }}"><a href="{{route('boloffers.publish.select')}}">Publiceer op BOL</a></li>
                         <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Bestellingen per Periode</a></li>
                         <li class="{{ Nav::isRoute('orders.index') }}"><a href="{{route('orders.index')}}">Bestellingen per Klanr</a></li>

@@ -100,7 +100,7 @@
 
                             <td>
                                     <div class="field">
-                                            <div class="control">
+                                        <div class="control">
                                             <div class="select is-primary">
                                                 <select name="deliveryCode_{{$cvar->ean}}">
                                                 <option selected>3-5d</option>
@@ -110,8 +110,8 @@
                                                 <option>1-8d</option>
                                                 </select>
                                             </div>
-                                            </div>
                                         </div>
+                                    </div>
                             </td>
 
 
@@ -122,7 +122,7 @@
                             <td>
                                 <div class="field">
                                     <div class="control">
-                                    <input name="stockfor_{{$cvar->ean}}" class="input is-primary" type="number" placeholder="Stock" style="width: 30;" value="{{ old('stockfor_' . $cvar->ean)}}">
+                                        <input name="stockfor_{{$cvar->ean}}" class="input is-primary" type="number" placeholder="Stock" style="width: 30;" value="{{ old('stockfor_' . $cvar->ean)}}">
                                     </div>
 
                                 </div>
@@ -148,20 +148,7 @@
 
                         <input type="hidden" name="variantName_{{$cvar->ean}}" value="{{$cvar->variantName}}">
                         <input type="hidden" name="baseColor_{{$cvar->ean}}" value="{{$cvar->baseColor}}">
-                        {{-- <input type="hidden" name="salePrice_{{$cvar->ean}}" value="{{$cvar->salePrice}}"> --}}
-                        {{-- <input type="hidden" name="deliveryCode_{{$cvar->ean}}" value="{{$cvar->boldeliverycode}}"> --}}
 
-
-                            {{-- <td class="has-text-right"> --}}
-                                {{-- <a class="button is-hovered is-small m-r-5" href="{{ route('customers.show', $customer->id) }}">View</a> --}}
-                                {{-- <a class="button is-hovered is-small" href="{{ route('customers.edit', $customer->id) }}">Edit</a> --}}
-
-                                {{-- <a class="button is-fullwidth m-t-6" style="color: white; background-color:#003040;" onclick="return confirm('Weet je zeker dat je {{ $offer->ean }} wilt updaten?')"
-                                href="{{ route('boloffers.twee') }}">Update</a>
-
-                                <a class="button is-fullwidth is-danger  m-t-6 m-b-6"  onclick="return confirm('Weet je zeker dat je {{ $offer->ean }} wilt verwijderen?')"
-                                href="{{ route('boloffers.twee') }}">Delete</a> --}}
-                            {{-- </td> --}}
                         </tr>
 
                     @endforeach
@@ -188,12 +175,12 @@
 
 @endsection
 
-@section('scripts')
+{{-- @section('scripts')
 <script>
 
 
 </script>
-@endsection
+@endsection --}}
 
 
 

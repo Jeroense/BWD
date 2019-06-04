@@ -21681,3 +21681,1059 @@ array:8 [
 "Alle x_ratelimit headers in response aanwezig"
 Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
 No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 11:00:00 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "10"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559649601"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "9"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "14c98492-cce0-4d4b-87a4-9b59483561b0"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139167372,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-04T13:00:01.289+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/139167372","method":"GET"}]}"
+  "bolstatuscode" => 202
+  "bolreasonphrase" => "Accepted"
+  "requestheaders" => array:3 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NDYyMTYsImlhdCI6MTU1OTY0NTkxNiwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiYzI2ODgzY2QtOWJhZi00MjMwLWJhODgtNGFhNDQ5MmU3ZDk4In0.DPM05uPW0Gps5mzQ4b3DkneXcNG9YVxm3ZMbiMiFbqk325Dm_6eIKElNDFoAd23t3SI8R8dbXPWdOGmRIg6ILdsSGwYYH8qEjjSVMChY22ogI91YHYdFaqI32qby6BztWVPMXcilSnbWq49uZjToN2TYIRk3X7ChYP3ISwtcScGOtu6_ibg18oct46VtTSL2jTWJDamAszOyAjTRPzn5_5yMuBwVM5ftM1mMP_VazInNomBUAaAYZh8m8FzRaJmYsWtZiGPbaE43cDfUMJXlHD5si0IowQRPgrI0eDUOiWyRVkfN210aA6wsq7lt6Ew6C9QsobkwezAxCXvQ5XStGQ"
+    "Content-Type" => "application/vnd.retailer.v3+json"
+  ]
+  "x_ratelimit_limit" => "10"
+  "x_ratelimit_remaining" => "9"
+  "x_ratelimit_reset" => "1559649601"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 11:00:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559646002"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "d64bdc10-e829-48ea-940c-0f8202e9e4f3"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139167372,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-04T13:00:01.289653+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/139167372","method":"GET"}]}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NDYyMTYsImlhdCI6MTU1OTY0NTkxNiwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiYzI2ODgzY2QtOWJhZi00MjMwLWJhODgtNGFhNDQ5MmU3ZDk4In0.DPM05uPW0Gps5mzQ4b3DkneXcNG9YVxm3ZMbiMiFbqk325Dm_6eIKElNDFoAd23t3SI8R8dbXPWdOGmRIg6ILdsSGwYYH8qEjjSVMChY22ogI91YHYdFaqI32qby6BztWVPMXcilSnbWq49uZjToN2TYIRk3X7ChYP3ISwtcScGOtu6_ibg18oct46VtTSL2jTWJDamAszOyAjTRPzn5_5yMuBwVM5ftM1mMP_VazInNomBUAaAYZh8m8FzRaJmYsWtZiGPbaE43cDfUMJXlHD5si0IowQRPgrI0eDUOiWyRVkfN210aA6wsq7lt6Ew6C9QsobkwezAxCXvQ5XStGQ"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559646002"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 11:10:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559646602"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "b6af8657-a7a5-4e7b-a81b-2d63c8646a64"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139167372,"entityId":"efb8fc31-daaf-494e-be14-f1429105ba5a","eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"SUCCESS","createTimestamp":"2019-06-04T13:00:01.289653+02:00"}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NDY5MDEsImlhdCI6MTU1OTY0NjYwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiMmI1MzU4YmEtZGI5Yy00Y2M5LWI3ZGMtNDYzMDQ4MWNkNmNjIn0.G5rG5ydrCCoNpB7s7NoE3kxeyCz6XY3Upj0Te8I0KteuuTSiLnPt-LW67v3n6H5gIlYF9BUnJlo-Ta9EIjXHKwRK3KcN6h-QwDYWHp7RcocGaEVlDcVJW-1l5-0QM93wca6CXFvvTo1sta72nOHIzZWqsEHnWpIEnJ893qeWY7rEO6cx722zOMfosjy1qElN71Oxs5qMOMaZoXHRUyZU5teDSbKTECegbqNyXEhHV60JY24-K67-d1Yd431Ucz8k3JdWM_OkUsYDKT90piphKyljnwexVcxWA7c9sWLWyp97rZXnfZhRiAtQLuwe8iSjYZWWz1J7F5GNAQvLh_GqrA"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559646602"
+]
+"Alle x_ratelimit headers in response aanwezig"
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 11:30:00 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "10"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559649601"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "8"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "8bafe4d3-36b2-4ec1-9a10-9f555e244026"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139211866,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-04T13:30:01.426+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/139211866","method":"GET"}]}"
+  "bolstatuscode" => 202
+  "bolreasonphrase" => "Accepted"
+  "requestheaders" => array:3 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NDgxMDEsImlhdCI6MTU1OTY0NzgwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiM2RkMTM5YzUtNGM1Zi00YThjLTg2ZDgtM2QyYzVlNmFmYmM5In0.YHBZ8yXrWLpzjJ57yhnoAka4kwJIYh5p4rgPCzi4w4DP8QhKOtSeAY48WFDUa8MTOHBztEHbhHJqUD0sKG-8-5iGqjeVw7-nsF1peaqPCKgOP9Ng96rJ-4CuJjXtcL-iRe7pFKIxqVI3oA97ur8rVmK5SMTayfbuNL4wB1RL-qm8DdDJva7u9DzH0phB0iTdrH4Cb2j20x96iY7dFLMAJELWB4t986YVl6hV2rS6dCxZSXxGkIq-AbWbAx6bMBX8ZEpZdpRrLZzbEY_KB6HnEAtHHfBs8lfkNRZuQQY8jbItR7ezE0SxEyUJDYY0ilgOCkAQt6jWxcDUZcBotpAcGw"
+    "Content-Type" => "application/vnd.retailer.v3+json"
+  ]
+  "x_ratelimit_limit" => "10"
+  "x_ratelimit_remaining" => "8"
+  "x_ratelimit_reset" => "1559649601"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 11:30:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559647802"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "345a8272-0d2e-46a6-8c59-dfebfaa7d954"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139211866,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-04T13:30:01.426984+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/139211866","method":"GET"}]}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NDgxMDEsImlhdCI6MTU1OTY0NzgwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiM2RkMTM5YzUtNGM1Zi00YThjLTg2ZDgtM2QyYzVlNmFmYmM5In0.YHBZ8yXrWLpzjJ57yhnoAka4kwJIYh5p4rgPCzi4w4DP8QhKOtSeAY48WFDUa8MTOHBztEHbhHJqUD0sKG-8-5iGqjeVw7-nsF1peaqPCKgOP9Ng96rJ-4CuJjXtcL-iRe7pFKIxqVI3oA97ur8rVmK5SMTayfbuNL4wB1RL-qm8DdDJva7u9DzH0phB0iTdrH4Cb2j20x96iY7dFLMAJELWB4t986YVl6hV2rS6dCxZSXxGkIq-AbWbAx6bMBX8ZEpZdpRrLZzbEY_KB6HnEAtHHfBs8lfkNRZuQQY8jbItR7ezE0SxEyUJDYY0ilgOCkAQt6jWxcDUZcBotpAcGw"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559647802"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 11:40:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559648402"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "86fcce64-97b4-422f-8d9d-bdae10fe719e"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139211866,"entityId":"efb8fc31-daaf-494e-be14-f1429105ba5a","eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"SUCCESS","createTimestamp":"2019-06-04T13:30:01.426984+02:00"}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NDg3MDEsImlhdCI6MTU1OTY0ODQwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiMWY1NWFkZDAtZmY5Ni00OGFjLTliNDYtOTA0NmQ4ZWFlMjdmIn0.LOIT93h8ai9ClheY-MdBzoemf7LbBJlbM7k0L9uxV3cfegLBmD4bztJPaGmnMAEJqiVIo-PtV3DSIShdYRUnWfyG_W7z_djPowFu5r1ecwoXY6m1Rhxvuh_xWWWmxJF3RVZu0UDVb3hLDCiQyX9c_sUnFuFyYxbZTaw0ru4vER77O4Hb1mX7kIDoCmN1F9sMmUVIBfMRpATitpEve8-2_Up1J9BCPKoTV1qk0gQcxLUM8MuADuD4BGY9XBz3y74-aHdxT0KGIZ0FElAd6-1H2dj15TMyrReJWpe_lGCmI5Z6zWv0gRDz7-JJYr2D9Ga5cCRTR8i6qjraEfQ2T-X1OA"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559648402"
+]
+"Alle x_ratelimit headers in response aanwezig"
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 12:00:00 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "10"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559653201"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "9"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "c4152ab9-edf5-4100-8d6f-58feebacfdc7"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139225084,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-04T14:00:01.419+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/139225084","method":"GET"}]}"
+  "bolstatuscode" => 202
+  "bolreasonphrase" => "Accepted"
+  "requestheaders" => array:3 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NDk5MDEsImlhdCI6MTU1OTY0OTYwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiN2Y4N2Y5YTUtYmM4Ny00NWI3LTllMjctNTkzNjQ1YmRmOTMxIn0.dbsC6J2XZWJzy-jn7JqXIWaFzu5GMAHUo7YtBkxoUeuSujYrWV3gAgWpS4oKWQ67ohg_jpvKZXK15xVHZ8eHoPL7_WYZodJJcs9jTdUMvwJcp0EJTYAB11yAuGk8CVYZbCoGyPZ34WNY90fOCzzjRGz7W5jz-2UgNl6EIi03xDkJJQUDcVwzRhWKyTf5lzI6bVbdQzP0XBD51JikrbEucZ7euMly-OUUUQRJmayru_oPiz78vMVIQw9qrr2OW2CWi0MRfw27Yj1mN0LsZuP8NjsRmAquMoXi2fSEViJvPG4sFg2PkuZHB7W8dLW-eux5D_nM-7fVgDBRkc56fnTg2Q"
+    "Content-Type" => "application/vnd.retailer.v3+json"
+  ]
+  "x_ratelimit_limit" => "10"
+  "x_ratelimit_remaining" => "9"
+  "x_ratelimit_reset" => "1559653201"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 12:00:00 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559649602"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "afc1b0b9-a075-4613-93c5-56bb0382e70f"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139225084,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-04T14:00:01.420038+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/139225084","method":"GET"}]}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NDk5MDEsImlhdCI6MTU1OTY0OTYwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiN2Y4N2Y5YTUtYmM4Ny00NWI3LTllMjctNTkzNjQ1YmRmOTMxIn0.dbsC6J2XZWJzy-jn7JqXIWaFzu5GMAHUo7YtBkxoUeuSujYrWV3gAgWpS4oKWQ67ohg_jpvKZXK15xVHZ8eHoPL7_WYZodJJcs9jTdUMvwJcp0EJTYAB11yAuGk8CVYZbCoGyPZ34WNY90fOCzzjRGz7W5jz-2UgNl6EIi03xDkJJQUDcVwzRhWKyTf5lzI6bVbdQzP0XBD51JikrbEucZ7euMly-OUUUQRJmayru_oPiz78vMVIQw9qrr2OW2CWi0MRfw27Yj1mN0LsZuP8NjsRmAquMoXi2fSEViJvPG4sFg2PkuZHB7W8dLW-eux5D_nM-7fVgDBRkc56fnTg2Q"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559649602"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 12:10:00 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559650202"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "5cfcf5b6-6f00-4437-9cbc-4ff0a47678d2"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139225084,"entityId":"d8a212c6-34f1-47ca-9d76-37c3134ec097","eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"SUCCESS","createTimestamp":"2019-06-04T14:00:01.420038+02:00"}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NTA1MDEsImlhdCI6MTU1OTY1MDIwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiYTc1OGFjZWYtODYzMy00N2YzLTkxMmQtNDkyYTNlMmNjYjZiIn0.cxf4WNKrNEF42eyNwE-zby2ItBmRaHoabolILr8wOpBAeZvyB5wOoXD8KG6-1t_-bX5TuSKASjXlwDvrvacZDmJuUKB48BTfskau_8l42UZsW3EqhMkJSD4rNkSxcjMA9pw3dv01xNJDa9SkYY_7eHFcoxV_HIZin1tcTCn9MrvegoGuAZtXmzpXjnvp54sp0Rn-sy0Rkp6xlRvd9mqKUnjNpam72wQzGr0Y6g7rcHDx2C3plF-KQu-62kyQ15LLvVPC8EVhmbP7BlwdRh7gGEBxgVEJkUGlxLHwD0u9_s2fOi8NdDxl32bVvShvvsO5Cmeu-Ip3EhozMQmgP57oag"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559650202"
+]
+"Alle x_ratelimit headers in response aanwezig"
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 18:00:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "10"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559674801"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "9"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "8a39219d-c699-4aca-ae7b-e978de94a13e"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139584671,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-04T20:00:01.984+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/139584671","method":"GET"}]}"
+  "bolstatuscode" => 202
+  "bolreasonphrase" => "Accepted"
+  "requestheaders" => array:3 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NzE1MDEsImlhdCI6MTU1OTY3MTIwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiNjUxOTllY2QtOGMzZi00NmJiLTgwMGItM2QxYWE4YWVjZmVlIn0.Sdg_xT4uTEAKL8h_UGhSGqQesOtFvw46R0Y2DRahYfT8WZxnr4hpbH2Ia-LrR1BlYZEar2qAR1maUJlUQZC9klaCo0Ae0AYjnAXGOa3Xxg29S3Uf2WpH7ixVawNPl4_cJv0EOYrL9-qJExsPM1d_Tty0K0u-_H9B-rzsShPe5mYasn0PbeqBctlrlJtDQdL9wthEWjuarlhgowCnlX0hs7r9iISPGFsykRQ6-DGYlZjDsZjFjNbh7qsDWGgBmQRmXqrHKxKNb35gRV9ghQreXTfhedDjai2fl19qVrMzdZW24ZEMwnoTn9dtRaFV3e36-otDUretqUAeSMWWMRgW-w"
+    "Content-Type" => "application/vnd.retailer.v3+json"
+  ]
+  "x_ratelimit_limit" => "10"
+  "x_ratelimit_remaining" => "9"
+  "x_ratelimit_reset" => "1559674801"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 18:00:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559671203"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "c829403c-9ead-41b5-804f-26a063c9dee6"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139584671,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-04T20:00:01.984555+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/139584671","method":"GET"}]}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NzE1MDEsImlhdCI6MTU1OTY3MTIwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiNjUxOTllY2QtOGMzZi00NmJiLTgwMGItM2QxYWE4YWVjZmVlIn0.Sdg_xT4uTEAKL8h_UGhSGqQesOtFvw46R0Y2DRahYfT8WZxnr4hpbH2Ia-LrR1BlYZEar2qAR1maUJlUQZC9klaCo0Ae0AYjnAXGOa3Xxg29S3Uf2WpH7ixVawNPl4_cJv0EOYrL9-qJExsPM1d_Tty0K0u-_H9B-rzsShPe5mYasn0PbeqBctlrlJtDQdL9wthEWjuarlhgowCnlX0hs7r9iISPGFsykRQ6-DGYlZjDsZjFjNbh7qsDWGgBmQRmXqrHKxKNb35gRV9ghQreXTfhedDjai2fl19qVrMzdZW24ZEMwnoTn9dtRaFV3e36-otDUretqUAeSMWWMRgW-w"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559671203"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 18:10:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559671802"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "cb992da6-e70b-465a-84d6-385dba67f4a1"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139584671,"entityId":"77b437c5-e47e-4272-8fd2-ac45a7adac04","eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"SUCCESS","createTimestamp":"2019-06-04T20:00:01.984555+02:00"}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NzIxMDEsImlhdCI6MTU1OTY3MTgwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiZDVmMDc0ODMtNDBlMS00NzRmLTlhZTItOGNmZTY0MDE5YTBmIn0.SCY1akri5j9ibE8MWf5FIoDr38KIFGpLsYe5ZqpnCnG8m5RNDFukhpGCgrW8BmZvpvNkFoY-s07VCGPz1fgNWFGWAsK6-DCSspCk8g8HXC18iMun1U083sgZMr9JyqczYEn3HW38gX7PKyjjw3-OeWKHNlTIAVGLp3CnnSxmObf4m-JjnZ8PwTEZcnoFaf_oKLzyaekm4eY-yYAujSLpiIYPtpRX_MdOeVwLj71M_qo4M4ierkPoRRa6HZTjDhl5-MsKgvRXhWOiBLlN45mp_vUNP6eWIjElNx9h_S1_c5QcC2XOCReBt86xNTv538DF36bVRHunI3nmbW76AEMKzA"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559671802"
+]
+"Alle x_ratelimit headers in response aanwezig"
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 18:30:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "10"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559674801"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "8"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "90d82fa3-802e-429e-9ebe-b0dac261af5f"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139604204,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-04T20:30:01.923+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/139604204","method":"GET"}]}"
+  "bolstatuscode" => 202
+  "bolreasonphrase" => "Accepted"
+  "requestheaders" => array:3 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NzMzMDEsImlhdCI6MTU1OTY3MzAwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiMDcxMTc2ZTQtZjBkOC00MDI3LWI0ZmQtZjA1MTVlZDQ3ZTU3In0.bfag998B40Rgn3DzxEg7ZHW1VMFIYypwCqDktXUoIsYtpEQzGM1SQnls6VU0z3Pf50ygkrdJ5J75TbkPtPUeIPQSYepEgum5x8U1GARt7LUHyE9l8EsismkKt7uoZYuTnI4uC_5vSInAysWKYo-sJhLyzLPGe3bLham8GyeAdJVBS8jecWgqD8zAqnjTB_D_kedcQo93yW5V3XWlePNeUKxXAVmkUQdhVkkUhf4RZOG_ijB1eU4Sg-6q96uV106R5Htz84vPRPSV22oogvaihwYcT_ivi1szJSqv1tk0nX3rxwmE1A_inJyLJMzcERiWbkMlAPX0aMyphZwSSYl5Qw"
+    "Content-Type" => "application/vnd.retailer.v3+json"
+  ]
+  "x_ratelimit_limit" => "10"
+  "x_ratelimit_remaining" => "8"
+  "x_ratelimit_reset" => "1559674801"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 18:30:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559673003"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "1b628c45-d287-441f-8e1e-ef714278874d"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139604204,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-04T20:30:01.923933+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/139604204","method":"GET"}]}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NzMzMDEsImlhdCI6MTU1OTY3MzAwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiMDcxMTc2ZTQtZjBkOC00MDI3LWI0ZmQtZjA1MTVlZDQ3ZTU3In0.bfag998B40Rgn3DzxEg7ZHW1VMFIYypwCqDktXUoIsYtpEQzGM1SQnls6VU0z3Pf50ygkrdJ5J75TbkPtPUeIPQSYepEgum5x8U1GARt7LUHyE9l8EsismkKt7uoZYuTnI4uC_5vSInAysWKYo-sJhLyzLPGe3bLham8GyeAdJVBS8jecWgqD8zAqnjTB_D_kedcQo93yW5V3XWlePNeUKxXAVmkUQdhVkkUhf4RZOG_ijB1eU4Sg-6q96uV106R5Htz84vPRPSV22oogvaihwYcT_ivi1szJSqv1tk0nX3rxwmE1A_inJyLJMzcERiWbkMlAPX0aMyphZwSSYl5Qw"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559673003"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Tue, 04 Jun 2019 18:40:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559673602"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "a0a05f89-b9b1-42a1-89d0-c54b42ef3d5a"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":139604204,"entityId":"77b437c5-e47e-4272-8fd2-ac45a7adac04","eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"SUCCESS","createTimestamp":"2019-06-04T20:30:01.923933+02:00"}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk2NzM4MjAsImlhdCI6MTU1OTY3MzUyMCwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiZTBhZmVlYjQtNzBhNS00MTVjLWI0YWItZDc0MzQ3Nzc1YzA5In0.hlWCBqW2paLzHS-gix8uSJ043jBb6VWA_Tg8nU6rcvf7G6ecYmrRQ9JeC8plcPUWejg_7yh21Tv-AkEBDQ-m0Ei2NfCJY8wKxfXwc4PKvRolmJCfenK608MaF4asDDl_Vrbk0PqSf8Vk_uEqMP2YLWHV1gjSb12Dq92sFOK1frWRKwiU878C0kvjvQk0uu46IpnhwvsFspU2VH0Wa0etlF70N3HsiNoQrxDSNQ4D_6ALu1L_XxrB9f7HC0C8o4nyhKuvK5nQK4iaitTrrEINsJk1uaHN-EaqsJQT_kN7eRwKK0PDm37z86SC-BAXK1Gqtf3GYwsqlr8yilURRkzMaQ"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559673602"
+]
+"Alle x_ratelimit headers in response aanwezig"
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
