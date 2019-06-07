@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('pageTitle', 'Verzoek tot publicatie op BOL-api gedaan voor:')
+@section('pageTitle', 'Verzoek tot mutatie op BOL-api gedaan voor:')
 @section('content')
 
 
@@ -22,7 +22,8 @@
                 @endif
 
             @if( count($cvars) == 0 )
-                <p>Geen custom varianten aanwezig met status 'publish_at_api_initialized'. </p>
+                {{-- <p>Geen custom varianten aanwezig met status 'publish_at_api_initialized'. </p> --}}
+                <p>Geen offer-mutaties in de wacht-rij bij BOL. </p>
             @endif
             @if( count($cvars) > 0 )
 
@@ -89,15 +90,44 @@
 
                             <td>
                                     @if($cvar->boldeliverycode)
+
                                     {{ $cvar->boldeliverycode }}
                                     @else
-                                    Onbekend
+                                     Onbekend
                                     @endif
 
                             </td>
 
                             <td>
-                                    {{ $cvar->isPublishedAtBol }}
+                                @if($cvar->isPublishedAtBol)
+                                    @switch($cvar->isPublishedAtBol)
+
+                                        @case('publish_at_api_initiated')
+                                            Verzoek tot publicatie op api ingediend.
+                                            @break
+
+                                        @case('unpublish_at_api_initiated')
+                                            Verzoek tot verwijdering van api ingediend.
+                                            @break
+
+                                        {{-- @case('update_for_price_at_api_initiated')
+                                            Verzoek tot prijs-update aan api ingediend.
+                                        @break
+
+                                        @case('update_for_stock_at_api_initiated')
+                                            Verzoek tot stock-update aan api ingediend.
+                                        @break
+
+                                        @case('update_for_delcode_onhold_at_api_initiated')
+                                            Verzoek tot update van delivery-code en/of onhold aan api ingediend.
+                                        @break --}}
+
+                                        @default
+                                            Geen info..
+                                    @endswitch
+                                @endif
+                                    {{-- {{ $cvar->isPublishedAtBol }} --}}
+
                             </td>
                         </tr>
 

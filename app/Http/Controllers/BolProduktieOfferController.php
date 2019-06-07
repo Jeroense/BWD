@@ -45,7 +45,8 @@ class BolProduktieOfferController extends Controller
 
 
         $notYetPublishedCustomVariants = CustomVariant::where('isPublishedAtBol',  '=',  null)
-                ->orWhere('isPublishedAtBol',  '=',  '')->orWhere('isPublishedAtBol',  '=',  'unpublish_at_api_initialized')->get();
+                ->orWhere('isPublishedAtBol',  '=',  '')->orWhere('isPublishedAtBol',  '=',  'unpublish_at_api_initiated')
+                ->orWhere('isPublishedAtBol',  '=',  'unpublished_at_api')->get();
 
 
         return view('boloffers.publish.select', ['cvars' => $notYetPublishedCustomVariants] );
@@ -391,7 +392,8 @@ class BolProduktieOfferController extends Controller
 
     public function checkBolOffersStatus()
     {
-        $custVars_with_publish_at_api_initialized = CustomVariant::where(['isPublishedAtBol' => 'publish_at_api_initialized'])->get();
+        $custVars_with_publish_at_api_initialized = CustomVariant::where(['isPublishedAtBol' => 'publish_at_api_initialized'])
+            ->orWhere( ['isPublishedAtBol' => 'unpublish_at_api_initiated'])->get();
 
         return view('boloffers.publish.initialized', ['cvars' => $custVars_with_publish_at_api_initialized]);
     }

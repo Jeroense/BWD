@@ -10,6 +10,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Http\Traits\BolApiV3;
 use App\BolProcesStatus;
 use Illuminate\Support\Facades\Redis;
+use App\BolProduktieOffer;
+use App\CustomVariant;
 
 class GetBolProcesStatusJob implements ShouldQueue
 {
@@ -33,7 +35,8 @@ class GetBolProcesStatusJob implements ShouldQueue
      */
     public function handle()
     {
-        Redis::throttle('checking_pending_process_statusses')->allow(5)->every(1)->then(function () {
+        Redis::throttle('checking_pending_process_statusses')->allow(5)->every(1)->then(function ()
+        {
 
 
                 dump('checking_pending_process_status for: ', $this->bol_process_status->process_status_id, $this->bol_process_status->eventType);
@@ -51,13 +54,13 @@ class GetBolProcesStatusJob implements ShouldQueue
 
                 $this->update_BolProcessStatus_Table($bol_proc_status_response);
 
-            }, function () {
-                // Could not obtain lock...
+        }, function () {
+            // Could not obtain lock...
 
-                file_put_contents( storage_path( 'app/public') . '/' . 'GetBolProcesStatusJob_eror_no_lock_log.txt', ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) .  "\r\n" . "Could not obtain lock.." . "\r\n\r\n"), FILE_APPEND );
+            file_put_contents( storage_path( 'app/public') . '/' . 'GetBolProcesStatusJob_eror_no_lock_log.txt', ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) .  "\r\n" . "Could not obtain lock.." . "\r\n\r\n"), FILE_APPEND );
 
-                 return $this->release(3);
-            });
+                return $this->release(3);
+        });
     }
 
 
@@ -94,13 +97,141 @@ class GetBolProcesStatusJob implements ShouldQueue
                     ]);
 
 
+                $fresh_process_status = $this->bol_process_status->fresh();
+
+                if($fresh_process_status->status !== 'SUCCESS')
+                {
+                    return;
+                }
+
+                switch($fresh_process_status->eventType)
+                {
+                    case 'CREATE_OFFER':
+                    ;
+                    break;
+
+                    case 'DELETE_OFFER':
+
+                        $local_bol_prod_offer = BolProduktieOffer::where(['offerId' => $fresh_process_status->entityId])->first();
+
+                        if($local_bol_prod_offer == null)
+                        {
+                            return;
+                        }
+                        $custom_variant = CustomVariant::where(['ean' => $local_bol_prod_offer->ean])->first();
+
+                        if($custom_variant == null)
+                        {
+                            return;
+                        }
+
+                        $custom_variant->update(['isPublishedAtBol' => 'unpublished_at_api']);
+                        $local_bol_prod_offer->delete();
+
+                    break;
+
+                    case 'UPDATE_OFFER':                                        // voor update 'onhold' en  'deliveryCode'
+                    ;
+
+                    case 'UPDATE_OFFER_PRICE':                                  // voor update prijs
+                    ;
+                    break;
+
+                    case 'UPDATE_OFFER_STOCK':                                  // stock update
+                    ;
+                    break;
+
+                    default:
+                    ;
+                }
+
+                //---------------------------------------------------------------------------------------------------------------
+                // nu zou je (in theorie) alvast, bij eventType 'CREATE_OFFER' of eventType 'DELETE_OFFER', en bij status 'SUCCESS'
+                // het bijhorende BolProduktieOffer-record en het bijhorende CustomVariant-record kunnen deleten/adden.
+                // maar ook al geeft de proces status response (na enkele minuten) een 'SUCCES' voor een 'DELETE_OFFER' , dan nog is deze mutatie
+                // meestal niet zichtbaar in de hierna gegenereerde offer-export-csv-file! (de gedelete-offer staat dan vaak nog
+                // gewoon gelist als aangeboden/published). Het is dus de vraag WANNEER iets precies verwerkt is door bol.
+                // deze records worden zowieso per succesvolle gegenereerde offer-export-csv up-gedate, maar dit duurt meestal
+                // ca. een uur..
+                //
+                // bovenstaande geldt ook voor updates van prijs, stock en onhold/deliverycode
+
+                // als je er vanuit gaat, dat de proces-status-repsonse leading is, d.w.z. , dat de produkt-export-csv-file
+                // 'achterloopt', dan zou je na proces-status responses met status 'SUCCESS' bij eventTypes 'CREATE_OFFER'
+                // 'DELETE_OFFER' , 'UPDATE_OFFER_PRICE' 'UPDATE_OFFER_STOCK'  etc direct de records BolProduktieOffer en CustomVariant
+                // moeten kunnen aanpassen, en besluiten, slechts eenmaal per dag een produkt-export-csv-file aan te maken
+                //
+                // Het volgende lijkt juist:
+                //
+                // scenario: ik heb 4 BolProduktieOffers published on bol:
+
+                // offerId's :
+
+                // 840ac44d-4348-27d8-e053-828b620a7e46
+                // d8dfb377-b8b5-4c61-b741-4e13d445b64d
+                // e4600c52-bed5-4c71-bf74-fbd8b985173e
+                // 464af259-0b9a-4254-b85f-b95ccafad30a
+                //
+                // nu doe ik een DELETE voor offer met id: d8dfb377-b8b5-4c61-b741-4e13d445b64d. Na 5 minuten is dit een 'SUCCESS'
+
+                // Nu vraag ik elke half uur een offer-export-csv op.
+                // beide opeenvolgende offer-export-csv-file's (na 30 min en na een uur) bevatten (nog steeds) het offer met id:
+
+                // d8dfb377-b8b5-4c61-b741-4e13d445b64d    , als zijnde 'published':
+
+// 200 OK
+
+// offerId,ean,conditionName,conditionCategory,conditionComment,bundlePricesPrice,fulfilmentDeliveryCode,stockAmount,onHoldByRetailer,fulfilmentType,mutationDateTime
+// 464af259-0b9a-4254-b85f-b95ccafad30a,7435156898837,NEW,NEW,,25.00,4-8d,30,true,FBR,2019-06-04 11:03:12.26 UTC
+// 840ac44d-4348-27d8-e053-828b620a7e46,7435156898875,NEW,NEW,,19.95,1-8d,100,false,FBR,2019-03-14 10:41:25.596 UTC
+// e4600c52-bed5-4c71-bf74-fbd8b985173e,7435156898820,NEW,NEW,,25.00,4-8d,28,true,FBR,2019-06-04 18:22:24.997 UTC
+// d8dfb377-b8b5-4c61-b741-4e13d445b64d,7435156898844,NEW,NEW,,19.95,3-5d,5,true,FBR,2019-06-04 18:38:42.282 UTC
 
 
+                //
 
+                // Als ik nu (wat ik geprogrammeerd heb als zijnde de normale proces-gang na het binnenhalen van een succesvolle offer-export-csv)
+                // voor elke offerId uit deze export-csv een request doe naar offers/{offerId} dan krijg ik ALLEEN voor
+
+                // GET offers/d8dfb377-b8b5-4c61-b741-4e13d445b64d    :
+
+                // 404 Not Found
+
+                // {
+                //  "type":"http://api.bol.com/problems",
+                //  "title":"Not Found",
+                //  "status":404,
+                //  "detail":"Offer with id: d8dfb377-b8b5-4c61-b741-4e13d445b64d not found.",
+                //  "host":"Instance-001",
+                //  "instance":"https://api.bol.com/retailer/offers/d8dfb377-b8b5-4c61-b741-4e13d445b64d"
+                // }
+
+
+                // Conclusie: de BolProcess status lijkt 'leading' te zijn.
+
+                // Niet te vaak offer-exports-csv-file's ophalen!!
+
+                // De offer-export-csv file is vaak niet up-to date/ duurt erg lang.
+                // Als je frequent de offer-exports-csv-file ophaalt, worden alle offerId's die hier in staan,
+                //  in de BolProduktieOffer-table gezet,
+                // (ook, zoals blijkt) zitten hier, niet meer up to date offerid's, bij van reeds verwijderde offers.
+
+                // Dus wellicht beste om offer-exports-csv-file 1x per dag ophalen, ochtends?
 
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

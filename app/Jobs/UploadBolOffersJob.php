@@ -54,15 +54,28 @@ class UploadBolOffersJob implements ShouldQueue
 
             $this->update_BolProcessStatus_Table($bolOfferResponse);
 
-            // zet na een 202, de bijhorende customVariant, het veld: 'isPublishedAtBol' op: 'publish_at_api_initialized'
+            // zet na een 202, de bijhorende customVariant, het veld: 'isPublishedAtBol' op: 'publish_at_api_initiated'
             $single_offer_json_body_decoded = json_decode($this->bol_single_offer_json_body);
             $het_ean = $single_offer_json_body_decoded->ean;
             $custVar = \App\CustomVariant::where(['ean' => $het_ean])->first();
 
             if($custVar != null)   // voor zekerheid, tja...
             {
-                $custVar->update(['isPublishedAtBol' => 'publish_at_api_initialized']);
+                $custVar->update(['isPublishedAtBol' => 'publish_at_api_initiated']);
             }
+
+            // nu ook: om niet afhankelijk te zijn van de ERG trage/achterlopende offer-export-csv file (die vaak nog offerId's
+            // bevat die reeds een uur etc. geleden deleted zijn) moet de data uit de hier ge-POST-e $this->bol_single_offer_json_body
+            // opgelagen worden in een extra lokale db-table ('offer_data_uploaded_to_bol'), om deze data snel te kunnen gebruiken om een record in de
+            // BolProduktieOffers-table aan te maken, met correcte data, na een 'GetBolProcesStatus' response met 'eventType' ->
+            // 'CREATE_OFFER' en 'status' -> 'SUCCESS'
+            // Deze 'GetBolProcesStatus' - response, levert bij 'SUCCESS' alleen maar: 1) het (nieuwe) offerId
+            // 2) of het een 'SUCCESS' was. 3) een description, waarin het ean wel vermeldt staat, maar die lastig te ontleden
+            // en gebruiken is, kans op fouten na api-updates / aanpassingen door bol etc
+            //
+            // Om redelijk snel de lokale db aan te passen, mag de hier ge-POST-e data niet verloren gaan.
+
+            // Created Migration: 2019_06_05_170742_create_offer_data_uploaded_to_bols_table
 
         }, function () {
             // Could not obtain lock...

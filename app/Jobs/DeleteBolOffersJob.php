@@ -66,7 +66,8 @@ class DeleteBolOffersJob implements ShouldQueue
     public function update_BolProcessStatus_Table(array $bol_response){
 
         if( isset( $bol_response['bolbody'] )
-            && strpos( $bol_response['bolheaders']['Content-Type'][0], 'json' ) !== false ){
+            && strpos( $bol_response['bolheaders']['Content-Type'][0], 'json' ) !== false )
+        {
 
                 dump('in de update_bol_processStatus_Table functie!!');
 
@@ -83,7 +84,8 @@ class DeleteBolOffersJob implements ShouldQueue
 
                 $process_status_in_db = BolProcesStatus::where(['process_status_id' => $resp_object->id, 'eventType' => $resp_object->eventType])->latest()->first();
 
-                if($process_status_in_db != null){
+                if($process_status_in_db != null)
+                {
 
                     $process_status_in_db->update([
                         'entityId' => isset($resp_object->entityId) ? $resp_object->entityId : $process_status_in_db->entityId,
@@ -97,7 +99,8 @@ class DeleteBolOffersJob implements ShouldQueue
                     dump('updated proces-status for delete response: '); dump($process_status_in_db->id);
                 }
 
-                if($process_status_in_db == null){
+                if($process_status_in_db == null)
+                {
 
                     BolProcesStatus::create([
                         'process_status_id' => $resp_object->id,

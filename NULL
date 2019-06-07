@@ -22737,3 +22737,743 @@ Running scheduled command: App\Http\Controllers\RobotController@updatePendingPro
 No scheduled commands are ready to run.
 No scheduled commands are ready to run.
 No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Wed, 05 Jun 2019 12:00:02 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "10"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559739602"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "9"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "c930f5e5-507f-41e4-8f12-e84e345aef21"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":140259337,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-05T14:00:02.071+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/140259337","method":"GET"}]}"
+  "bolstatuscode" => 202
+  "bolreasonphrase" => "Accepted"
+  "requestheaders" => array:3 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk3MzYzMDEsImlhdCI6MTU1OTczNjAwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiODRiYmQ3NzEtMzEwYy00MDI4LTk5MWEtY2VjY2JjMTg1MTY5In0.PUBz_NX3mbLJkG5QnGqeP6U9KA6QJHp6-gVa9XbwGx6u19zaiODyMb-alfbKQlFK_Ga2x0w9vs9IaR23JmjCrI_-ssLtO3hoG0QT8kVmamKM5rAZV0cdI407dLNuv8vYRP-pXl7fX5VgiJ2K8wEtxxpAWExhoyZloAej44dRWe_9El-tG7T50LCBQ38JUnQ5zDNwOAP_DozA_k7hw6VJ2cy3CQcc10NF9E6W4dTAhpaq3-zqV2x124sOWUZwaCzC2Nxf_O9tUGiUwgi67xej-t3XedzdOWG42bNviwHNhh6oh6_91GzwdYPPBdvt4dFOGtGUckbQ8j-T0hWg1bqdUw"
+    "Content-Type" => "application/vnd.retailer.v3+json"
+  ]
+  "x_ratelimit_limit" => "10"
+  "x_ratelimit_remaining" => "9"
+  "x_ratelimit_reset" => "1559739602"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Wed, 05 Jun 2019 12:00:02 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559736003"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "0340d17e-2bb4-417e-bd0f-8d72a8ef7815"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":140259337,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-05T14:00:02.071884+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/140259337","method":"GET"}]}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk3MzYzMDEsImlhdCI6MTU1OTczNjAwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiODRiYmQ3NzEtMzEwYy00MDI4LTk5MWEtY2VjY2JjMTg1MTY5In0.PUBz_NX3mbLJkG5QnGqeP6U9KA6QJHp6-gVa9XbwGx6u19zaiODyMb-alfbKQlFK_Ga2x0w9vs9IaR23JmjCrI_-ssLtO3hoG0QT8kVmamKM5rAZV0cdI407dLNuv8vYRP-pXl7fX5VgiJ2K8wEtxxpAWExhoyZloAej44dRWe_9El-tG7T50LCBQ38JUnQ5zDNwOAP_DozA_k7hw6VJ2cy3CQcc10NF9E6W4dTAhpaq3-zqV2x124sOWUZwaCzC2Nxf_O9tUGiUwgi67xej-t3XedzdOWG42bNviwHNhh6oh6_91GzwdYPPBdvt4dFOGtGUckbQ8j-T0hWg1bqdUw"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559736003"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Wed, 05 Jun 2019 12:10:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559736603"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "48df0527-b032-4ac3-a61d-2fae6dc150f4"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":140259337,"entityId":"e3c2490d-d044-477e-b50f-009452e9f1cc","eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"SUCCESS","createTimestamp":"2019-06-05T14:00:02.071884+02:00"}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk3MzY5MDEsImlhdCI6MTU1OTczNjYwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiYTdlZGIwNGItODBjYi00NzgyLWJlYTUtODk0ZjcyODZiN2Y5In0.h5AHg3QoTkKhzpFkNwmhak3Ovbolk1_4JTBVDkpDRy1o9Y-cYlrJxpeWPz96s8M4da6auZLxJ7VqNSQQOwPdOiheRnHz2Sx5186VdIinzkuRNJE5RJY7B9EZZOOa2e26qx7SkpfRD-RlEGOR8_T79vhL6jFTfv7NZPoFWFFW_Zlq5HGcXjsITdnpwnwIMU082IQx8ncrnxfl0dyT6F__fThhu-6McJYdJqtnRixQTPcxgjrhDeMedYEuDmeHQCXTqxnApRd8FADMJNl3yrLr2Q-Si772H-hZzrMz2nfHhPhtSO1c8z4W_4-DRL1u45Y7V0H7sV7IqZKSKVKE01bnNA"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559736603"
+]
+"Alle x_ratelimit headers in response aanwezig"
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Wed, 05 Jun 2019 12:30:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "10"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559739602"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "8"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "84f40eee-cef5-4efc-9032-57212045e40f"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":140276883,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-05T14:30:02.126+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/140276883","method":"GET"}]}"
+  "bolstatuscode" => 202
+  "bolreasonphrase" => "Accepted"
+  "requestheaders" => array:3 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk3MzgxMDEsImlhdCI6MTU1OTczNzgwMiwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiODYyNDM4MzYtODQ4Zi00NmE3LTkwZjktODBkNzAwMDBmNWRiIn0.cYK9hXvrrLtWm8f4s7-KjTn6UTQ03ov3X0wnlm_L4bF_ujx8Xmv8R7CM7jEzR1JM8uiPfYbxfnNA9eC2zCz3Qmv3kbVvUlb41iukOIsPAVqbW4EpXOv9DFkdJ4TXu-8toH7N8yURrXeAYU9N5OJmv3u4OYBh0Jn7RzhyNkWJyq-IlYT-OjxDIO-gb980RZNCWWuNHAJDME6-KfQytXa6cu7lHrwWYRHiLj8ny_c_-3g1a7E6Ub4zvNZBRocLW_6G3k93V8ZHidIBnTSaKsRXruo1FrKsFs1FaZh3cqWKd0ltcgueGDcRcVpl9fjCWogJECbGkQkeRv-TGQRj2z1GDQ"
+    "Content-Type" => "application/vnd.retailer.v3+json"
+  ]
+  "x_ratelimit_limit" => "10"
+  "x_ratelimit_remaining" => "8"
+  "x_ratelimit_reset" => "1559739602"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Wed, 05 Jun 2019 12:30:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559737803"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "3bd34873-bd81-4876-8bf9-bee6252a7530"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":140276883,"eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"PENDING","createTimestamp":"2019-06-05T14:30:02.126522+02:00","links":[{"rel":"self","href":"https://api.bol.com/retailer/process-status/140276883","method":"GET"}]}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk3MzgxMDEsImlhdCI6MTU1OTczNzgwMiwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiODYyNDM4MzYtODQ4Zi00NmE3LTkwZjktODBkNzAwMDBmNWRiIn0.cYK9hXvrrLtWm8f4s7-KjTn6UTQ03ov3X0wnlm_L4bF_ujx8Xmv8R7CM7jEzR1JM8uiPfYbxfnNA9eC2zCz3Qmv3kbVvUlb41iukOIsPAVqbW4EpXOv9DFkdJ4TXu-8toH7N8yURrXeAYU9N5OJmv3u4OYBh0Jn7RzhyNkWJyq-IlYT-OjxDIO-gb980RZNCWWuNHAJDME6-KfQytXa6cu7lHrwWYRHiLj8ny_c_-3g1a7E6Ub4zvNZBRocLW_6G3k93V8ZHidIBnTSaKsRXruo1FrKsFs1FaZh3cqWKd0ltcgueGDcRcVpl9fjCWogJECbGkQkeRv-TGQRj2z1GDQ"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559737803"
+]
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+"Status-code token-server: "
+200
+"putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header."
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+array:8 [
+  "bolheaders" => array:14 [
+    "Date" => array:1 [
+      0 => "Wed, 05 Jun 2019 12:40:01 GMT"
+    ]
+    "Server" => array:1 [
+      0 => "Apache Tomcat"
+    ]
+    "X-XSS-Protection" => array:1 [
+      0 => "1; mode=block"
+    ]
+    "X-Content-Type-Options" => array:1 [
+      0 => "nosniff"
+    ]
+    "X-Frame-Options" => array:1 [
+      0 => "SAMEORIGIN"
+    ]
+    "Strict-Transport-Security" => array:1 [
+      0 => "max-age=31536000"
+    ]
+    "X-Application-Context" => array:1 [
+      0 => "Edge:8090"
+    ]
+    "X-RateLimit-Limit" => array:1 [
+      0 => "100"
+    ]
+    "X-RateLimit-Reset" => array:1 [
+      0 => "1559738403"
+    ]
+    "X-RateLimit-Remaining" => array:1 [
+      0 => "99"
+    ]
+    "X-Request-ID" => array:1 [
+      0 => "ba62391a-faaa-4a0d-8312-4d86ec0806dd"
+    ]
+    "Content-Type" => array:1 [
+      0 => "application/vnd.retailer.v3+json;charset=UTF-8"
+    ]
+    "Vary" => array:1 [
+      0 => "Accept-Encoding,User-Agent"
+    ]
+    "Transfer-Encoding" => array:1 [
+      0 => "chunked"
+    ]
+  ]
+  "bolbody" => "{"id":140276883,"entityId":"e3c2490d-d044-477e-b50f-009452e9f1cc","eventType":"CREATE_OFFER_EXPORT","description":"Create an offer export.","status":"SUCCESS","createTimestamp":"2019-06-05T14:30:02.126522+02:00"}"
+  "bolstatuscode" => 200
+  "bolreasonphrase" => "OK"
+  "requestheaders" => array:2 [
+    "Accept" => "application/vnd.retailer.v3+json"
+    "Authorization" => "Bearer eyJraWQiOiJyc2EyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJhenAiOiIzMDhlOWVhMC04OTFjLTRlMWYtYjQwOS1kMTgyYjhlOTk0NzMiLCJjbGllbnRuYW1lIjoiYi5ob2VrcyIsImlzcyI6Imh0dHBzOlwvXC9sb2dpbi5ib2wuY29tIiwic2NvcGVzIjoiUkVUQUlMRVIiLCJleHAiOjE1NTk3Mzg3MDEsImlhdCI6MTU1OTczODQwMSwiYWlkIjoiQ0xOVEM6YmUyYjcwMTYtNzM0Ni1jMzZlLWQxMzgtNzc3MDgxNzNmN2JjIFNMUjoxNDMyNDExIiwianRpIjoiNTU4ZTczMTItZTc3MC00YzFmLTk4YTMtNzliMjUxNTQzYWRiIn0.ODXkX-O5_5tnjnUybGBJ_qloKh_cvUfG6MV6tRMi5-eH6wafOlPW8jH97Y74eJXuWI1RcmTx-uS2689OmftscqHMvBTyO_4iLzkPhg_e9ib_3fobPP5H23R7rd4PcNcbbNzi_5QH_HkSfobkGxQAzrREk3BdCRcBAl407o8q9BZCS7i2S9mPhRSuxzR55ct2OFtVGKCBr-rsphsRTn2xGy8t-H_uJld_GXNW4Fr61SPDG1UkQD4extlshI3LtBxa4X-1WwuUZffdRyZx_cnAwRueSIlto2eXd0m8S_67LRP3yTdi5DZ0yVGfVk5hBJ1TbvYOg4wSyl2W07G1z66gRQ"
+  ]
+  "x_ratelimit_limit" => "100"
+  "x_ratelimit_remaining" => "99"
+  "x_ratelimit_reset" => "1559738403"
+]
+"Alle x_ratelimit headers in response aanwezig"
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+"Alle x_ratelimit headers in response aanwezig"
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+
+   Predis\Connection\ConnectionException  : Error while reading line from the server. [tcp://127.0.0.1:6379]
+
+  at C:\Users\skugga\BWD-master-25-03-2019\BWD\vendor\predis\predis\src\Connection\AbstractConnection.php:155
+    151|      */
+    152|     protected function onConnectionError($message, $code = null)
+    153|     {
+    154|         CommunicationException::handle(
+  > 155|             new ConnectionException($this, static::createExceptionMessage($message), $code)
+    156|         );
+    157|     }
+    158| 
+    159|     /**
+
+  Exception trace:
+
+  1   Predis\Connection\AbstractConnection::onConnectionError("Error while reading line from the server.")
+      C:\Users\skugga\BWD-master-25-03-2019\BWD\vendor\predis\predis\src\Connection\StreamConnection.php:314
+
+  2   Predis\Connection\StreamConnection::read()
+      C:\Users\skugga\BWD-master-25-03-2019\BWD\vendor\predis\predis\src\Connection\AbstractConnection.php:120
+
+  Please use the argument -v to see more details.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"De 1e order is aanwezig en heeft een orderId"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"De 1e order is aanwezig en heeft een orderId"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"De 1e order is aanwezig en heeft een orderId"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"De 1e order is aanwezig en heeft een orderId"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"De 1e order is aanwezig en heeft een orderId"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"DB token nog geldig. Gebruikt hier access-token uit de DB"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"De 1e order is aanwezig en heeft een orderId"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"De 1e order is aanwezig en heeft een orderId"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"De 1e order is aanwezig en heeft een orderId"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"De 1e order is aanwezig en heeft een orderId"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"De 1e order is aanwezig en heeft een orderId"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"De 1e order is aanwezig en heeft een orderId"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"De 1e order is aanwezig en heeft een orderId"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+No scheduled commands are ready to run.
+Running scheduled command: App\Http\Controllers\RobotController@updatePendingProcessStatusses
+Running scheduled command: App\Http\Controllers\RobotController@processBolOrders
+"Status-code token-server: "
+200
+"Oude DB token is expired. Nieuw token opgevraagd bij bol!"
+"De 1e order is aanwezig en heeft een orderId"
+"1043946570"
+"1042831430"
+"Zijn er lege orderIds? : "
+"Nee"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6042823871"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331382"
+"Er is tenminste 1 order item zonder cancel request: item: "
+"6107331383"

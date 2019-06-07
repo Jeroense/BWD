@@ -449,13 +449,13 @@ trait BolApiV3 {
         {
 
             if($unixtime == null || $x_ratelimit_limit == null || $x_ratelimit_reset == null || $x_ratelimit_remaining == null){
-                dump('putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header.');
+                // dump('putResponseInFIle: ontbreekt unixtime of ontbreekt x_ratelimit header.');
                 file_put_contents( storage_path( 'app/public') . '/' . $fileName, ((string)date('D, d M Y H:i:s') . "\r\n" . $code . " " . $phrase  .
                 "\r\n\r\n" . (string)$body) . "\r\n\r\n", FILE_APPEND );
                 }
 
             if($unixtime != null && $x_ratelimit_limit != null && $x_ratelimit_reset != null && $x_ratelimit_remaining != null){
-                dump('Alle x_ratelimit headers in response aanwezig');
+                // dump('Alle x_ratelimit headers in response aanwezig');
             file_put_contents( storage_path( 'app/public') . '/' . $fileName, ((string)date('D, d M Y H:i:s') . "\r\n" . $unixtime . "\r\n" . $x_ratelimit_limit . "\r\n" . $x_ratelimit_remaining . "\r\n" . $x_ratelimit_reset . "\r\n" . "\r\n" . $code . " " . $phrase  .
             "\r\n\r\n" . (string)$body) . "\r\n\r\n", FILE_APPEND );
             }

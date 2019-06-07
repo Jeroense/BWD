@@ -98,7 +98,8 @@ class RefactoredTestBolOrdersAsyncController extends Controller{
             if( isset($bolRespBodystdClassObject->orders[0]->orderId) && (string)$bolRespBodystdClassObject->orders[0]->orderId != '' &&  $this->nietBestaandeOrderIDSinOrderResponse == false){      // er is tenmiste 1 order, en alle orderid's zijn niet null of ''.
                 dump("Er is tenminste 1 (bij bol openstaande) order aanwezig en alle orderid's zijn niet null of empty strings.");
 
-                foreach($bolRespBodystdClassObject->orders as $order){
+                foreach($bolRespBodystdClassObject->orders as $order)
+                {
                     $this->erIsTenminsteEenOrderItemZonderCancelRequest = false; // is er tenminste 1 orderitem met 'CancelRequest' = false   aanwezig?
                     $this->nullOrEmptyOrderIDsArePresent = [];
                     foreach ($order->orderItems as $item) {

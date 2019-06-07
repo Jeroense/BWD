@@ -30,21 +30,25 @@ class OrderService
 
 
 
-    public function getOrdersFromBol($serverType){
+    public function getOrdersFromBol($serverType)
+    {
 
 
 
         $bolOrdersResponse = $this->make_V3_PlazaApiRequest($serverType,  'orders?fulfilment-method=FBR', 'get');
 
-        if($bolOrdersResponse['bolstatuscode'] != 200){     // checken op http-errors/codes
+        if($bolOrdersResponse['bolstatuscode'] != 200)
+        {
             $this->checkAndLogBolErrorResponse($bolOrdersResponse);
+
             return;
         }
 
-        if($bolOrdersResponse['bolstatuscode'] == 200){
 
 
-            if( strpos( $bolOrdersResponse['bolheaders']['Content-Type'][0], 'json') === false ){
+
+            if( strpos( $bolOrdersResponse['bolheaders']['Content-Type'][0], 'json') === false )
+            {
 
                 return 'Geen JSON in bol-orders-response!';
             }
@@ -54,56 +58,114 @@ class OrderService
 
             $bolRespBodystdClassObject = json_decode($bolOrdersResponse['bolbody']);
 
-            if(!isset($bolRespBodystdClassObject->orders) || !isset($bolRespBodystdClassObject->orders[0]->orderId)){
 
-                dump( 'Geen openstaande orders vanuit BOL!', $bolRespBodystdClassObject);
+            if( empty($bolRespBodystdClassObject->orders) || empty($bolRespBodystdClassObject->orders[0]->orderId))
+            {
+
+                dump( 'Geen openstaande orders vanuit BOL!', $bolRespBodystdClassObject);  // dit klopt niet helemaal..
                 return 'Geen openstaande orders vanuit BOL!';
             }
 
-
+            dump("De 1e order is aanwezig en heeft een orderId");
 
             // checken of er orders aanwezig zijn, en of elke order in de order response een orderid heeft
-            if( isset($bolRespBodystdClassObject->orders[0]->orderId)  ){   // OrderId isset = true bij String.Empty
-                foreach($bolRespBodystdClassObject->orders as $order){
+            // if( isset($bolRespBodystdClassObject->orders[0]->orderId)  ) {
+            //     OrderId isset = true bij String.Empty
+                foreach($bolRespBodystdClassObject->orders as $order)
+                {
                     dump($order->orderId);
-                    if( !isset($order->orderId) || ( isset( $order->orderId ) && (string)$order->orderId == '' ) ) {
+                    if( !isset($order->orderId) || ( isset( $order->orderId ) && (string)$order->orderId == '' ) )
+                    {
                         \array_push( $this->nullOrEmptyOrderIDsArePresent, 'ispresent');
                     }
                 }
-                if(\in_array('ispresent', $this->nullOrEmptyOrderIDsArePresent)){
-                    $this->nietBestaandeOrderIDSinOrderResponse = true;
-                    dump($this->nullOrEmptyOrderIDsArePresent);
-                }
-                dump('Zijn er lege orderIds? : ', \in_array('ispresent', $this->nullOrEmptyOrderIDsArePresent) ? 'Ja' : 'Nee');
-            }
+                    if(\in_array('ispresent', $this->nullOrEmptyOrderIDsArePresent))
+                    {
+                        $this->nietBestaandeOrderIDSinOrderResponse = true;
 
-            if($this->nietBestaandeOrderIDSinOrderResponse){
-                $this->checkAndLogBolErrorResponse($bolOrdersResponse);
+                    }
+                    dump('Zijn er lege orderIds? : ', \in_array('ispresent', $this->nullOrEmptyOrderIDsArePresent) ? 'Ja' : 'Nee');
+            //--------------
+
+            if($this->nietBestaandeOrderIDSinOrderResponse)
+            {
+
+                $this->putResponseInFile("Missing-orderIDs-in-OrderResponse-{$serverType}", $bolOrdersResponse['bolstatuscode'],
+                                            $bolOrdersResponse['bolreasonphrase'], $bolOrdersResponse['bolbody']);
+
                 dump('Ongeldige of ontbrekende OrderIDs in Order response!');
-                return;
+
+
             }
 
-            // is er een order aanwezig in de resp-body en zijn alle orderid's niet null of String.Empty?
-            if( isset($bolRespBodystdClassObject->orders[0]->orderId) && (string)$bolRespBodystdClassObject->orders[0]->orderId != '' &&  $this->nietBestaandeOrderIDSinOrderResponse == false){      // er is tenmiste 1 order, en alle orderid's zijn niet null of ''.
-                dump("Er is tenminste 1 (bij bol openstaande) order aanwezig en alle orderid's zijn niet null of empty strings.");
 
-                foreach($bolRespBodystdClassObject->orders as $order){
-                    // $this->erIsTenminsteEenOrderItemZonderCancelRequest = false; // is er tenminste 1 orderitem met 'CancelRequest' = false   aanwezig?
-                    // $this->nullOrEmptyOrderIDsArePresent = [];
-                    foreach ($order->orderItems as $item) {
 
-                            if( $item->cancelRequest == false ){
-                            $this->erIsTenminsteEenOrderItemZonderCancelRequest = true;
-                            dump('Er is tenminste 1 order item zonder cancel request: item: '); dump($item->orderItemId);
-                        }
+
+                foreach($bolRespBodystdClassObject->orders as $order)
+                {
+
+                    if( empty($order->orderId) || empty($order->orderItems) )
+                    {
+                        continue;
+                    }
+
+                    foreach ($order->orderItems as $item)
+                    {
+
+                            if( $item->cancelRequest == false )
+                            {
+                                $this->erIsTenminsteEenOrderItemZonderCancelRequest = true;
+                                dump('Er is tenminste 1 order item zonder cancel request: item: '); dump($item->orderItemId);
+                            }
                     }
 
 
                     GetBolOrdersJob::dispatch($order, $serverType);
 
                 }
+
+        // }
+    }
+
+
+    public function checkAndLogBolErrorResponse($bol_response)
+    {
+        $code = (string)$bol_response['bolstatuscode']; $firstNumber = \substr($code, 0, 1);
+
+
+        if(strpos( $bol_response['bolheaders']['Content-Type'][0], 'json') )
+        {
+            if( isset($bol_response['bolbody']) )
+            {
+
+                $this->bolErrorBody = (string)$bol_response['bolbody'];
+            }
+
+            switch($firstNumber)
+            {
+                case '4':
+                    putContent('/client_errors.txt', $code, $bol_response['bolreasonphrase']);
+                break;
+
+                case '5':
+                    putContent('/server_errors.txt', $code, $bol_response['bolreasonphrase']);
+                break;
+
+                default:
+                    putContent('/other_errors.txt', $code, $bol_response['bolreasonphrase']);
             }
         }
+        return;
+    }
+
+    public function putContent($fileName, $code, $phrase)
+    {
+        file_put_contents( storage_path( 'app/public') . $fileName, ($code . " " . $phrase  . "\r\n\r\n"), FILE_APPEND );
+        if($this->bolErrorBody != null){
+            file_put_contents( storage_path( 'app/public') . $fileName, $this->bolErrorBody . "\r\n\r\n", FILE_APPEND );
+            $this->bolErrorBody = null;
+        }
+        return;
     }
 
     // end code bart
@@ -340,13 +402,13 @@ class OrderService
 
     }
 
-    public function getBolOrders() // array
-    {
-        $orders = [];
-        // $orders = ......
+    // public function getBolOrders() // array
+    // {
+    //     // $orders = [];
 
-        return $orders;
-    }
+
+    //     return $orders;
+    // }
 
     /*********** Smake functions ***********/
 

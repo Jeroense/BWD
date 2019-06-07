@@ -15,11 +15,12 @@
         <div class="card-content">
         <p>Opdracht tot verwijderen van Offer met offer-ID: {{ $offer->offerId }} , en EAN: {{ $offer->ean }} aan BOL doorgegeven.</p>
 
+        <p>De verwerking door BOL hiervan duurt enkele seconden.</p>
+        <p>Met onderstaande button kun je checken of BOL de opdracht goed heeft ontvangen.</p>
 
 
 
-
-
+        <a href="{{ route('boloffers.offer.checkinitialstatus') }}">Naar Offer mutaties</a>
         </div>
     </div>
 </div>
