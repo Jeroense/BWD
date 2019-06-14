@@ -102,18 +102,15 @@ Route::prefix('boltestserver')->middleware('role:superadministrator|administrato
 
     Route::get('/getbolorders-v3-via-reftestorderscontroller', 'RefactoredTestBolOrdersController@getOrdersFromBol');
 
-    Route::get('/getbolorders-v3-by-id', 'TestController@getBolOrderByIdV3');
-    Route::get('/prep-offerexport-demo', 'TestController@prepare_CSV_Offer_Export_DEMO');
-
-    Route::get('/process-status/{id}', 'TestController@getProcessStatusById' );
-    Route::get('/process-statusses', 'TestController@getProcessStatusses' );
-
-    Route::get('/test-where-first-exists', 'TestController@test_if_exists');
 
 
+    Route::get('/getbolorders-v3-by-id',    'TestController@getBolOrderByIdV3');
+    Route::get('/prep-offerexport-demo',    'TestController@prepare_CSV_Offer_Export_DEMO');
+    Route::get('/process-status/{id}',      'TestController@getProcessStatusById' );
+    Route::get('/process-statusses',        'TestController@getProcessStatusses' );
+    Route::get('/test-where-first-exists',  'TestController@test_if_exists');
     Route::get('/test-jobqeue-redis-throttling', 'TestController@testJobqeueRedisThrottling');
-
-    Route::get('/latest-first', 'TestController@voorbeeld_latest_first');
+    Route::get('/latest-first',             'TestController@voorbeeld_latest_first');
 });
 
 

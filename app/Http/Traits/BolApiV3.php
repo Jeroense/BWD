@@ -583,7 +583,7 @@ trait BolApiV3 {
                     $bolConditionObject->category = 'NEW';   //  Enum:"NEW" "SECONDHAND"
 
                     $bolQtyPrice = new \stdClass();
-                    $bolQtyPrice->quantity = 1;
+                    $bolQtyPrice->quantity = 1;             // bol ondersteund heden zowieso ALLEEN de waarde: 1  als qty!
                     $bolQtyPrice->price = (Double)$offerData['sal'];
 
                     $bolPricingBundle = new \stdClass();

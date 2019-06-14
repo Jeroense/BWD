@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNewOfferDataUploadedToBolTable extends Migration
+class CreateOfferDataUploadedToBolTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,25 +13,31 @@ class CreateNewOfferDataUploadedToBolTable extends Migration
      */
     public function up()
     {
-        // deze table bevat de bol-offer data, die ge-POST wordt bij een POST  op:  retailer/offers
-        // dus bij aanmaken van een nieuw offer op de plaza-api.
-        // deze data moet onthouden worden, aangezien de initiele POST-request data anders verloren gaat.
-        // De bol/plaza-api geeft het merendeel van deze data ook niet terug, bij de proces-status response
+        // deze table bevat de bol-offer data, uit de JSON-body, die ge-POST wordt bij een POST  op:  retailer/offers
+        // of bij een PUT op: /retailer/offers/{offer-id}
+        // dus bij aanmaken van een nieuw offer, of een update van een bestaande offer, op de plaza-api.
+        // deze data moet onthouden worden, aangezien na de initiele POST/PUT-request deze data anders niet meer in de lokale DB beschikbaar is.
+        // De bol/plaza-api geeft het merendeel van deze data ook niet terug, bij de proces-status response.
+        // het doel van deze table is dus: om de POST data van de json-body voor een offer te onthouden, om deze na een
+        // process-status response met status 'SUCCES' en eventType 'CREATE_OFFER'  de dan aan te maken lokale BolProduktieOffer entry
+        // te voorzien van de juiste data. Want: we willen niet afhankelijk zijn van de offer-export-CSV file.
 
-        Schema::create('new_offer_data_uploaded_to_bol', function (Blueprint $table) {
+        Schema::create('offer_data_uploaded_to_bol', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('offerId');                  // hierin komt de 'entityId' uit de successvolle BolProcesStatus-response
-
+            $table->string('offerId')->nullable();       // hierin komt de 'entityId' uit de successvolle BolProcesStatus-response
+                                                        // offerId wel nullable, omdat bij de initiele POST van een nieuw offer er nog geen
+                                                        // offerId bekend is.
             $table->string('ean');
-            $table->string('productTitle');
-            $table->string('deliveryCode');
-            $table->unsignedInteger('stock');
+            $table->string('productTitle')->nullable();
+            $table->string('deliveryCode')->nullable();
+            $table->unsignedInteger('stock')->nullable();
             $table->boolean('stockManagedByRetailer')->nullable();
-            $table->float('price',6,2);
-            $table->unsignedInteger('quantityPrice');      // is: $bolQtyPrice->quantity
-            $table->boolean('onHoldByRetailer');
-            $table->string('fulfilment')->default('FBR');
-            $table->string('condition')->default('NEW');
+            $table->float('price',6,2)->nullable();
+            $table->unsignedInteger('quantityPrice')->nullable();      // is: $bolQtyPrice->quantity
+            $table->boolean('onHoldByRetailer')->nullable();
+            $table->string('fulfilment')->default('FBR')->nullable();
+            $table->string('condition')->default('NEW')->nullable();
+            $table->string('status')->default('OPEN');      // 'OPEN' or 'CLOSED'  of dit record 'verwerkt' is.
             $table->string('refcode')->nullable();
             $table->timestamps();
 
@@ -86,6 +92,6 @@ class CreateNewOfferDataUploadedToBolTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('offer_data_uploaded_to_bols');
+        Schema::dropIfExists('offer_data_uploaded_to_bol');
     }
 }

@@ -12,12 +12,16 @@ use App\BolProcesStatus;
 use Illuminate\Support\Facades\Redis;
 use App\BolProduktieOffer;
 use App\CustomVariant;
+use App\OfferDataUploadedToBol;
+use Illuminate\Support\Facades\App;
 
 class GetBolProcesStatusJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, BolApiV3;
 
     protected $bol_process_status;
+
+    public $tries = 3;     // max number of tries for this job
     /**
      * Create a new job instance.
      *
@@ -44,6 +48,13 @@ class GetBolProcesStatusJob implements ShouldQueue
                 $bol_proc_status_response =  $this->make_V3_PlazaApiRequest_for_process_status_Full_URL($this->bol_process_status->link_to_self,
                 \strtolower( $this->bol_process_status->method_to_self));
 
+                // log proces-status response in file
+                file_put_contents( storage_path( 'app/public') . '/' . "bol-proces-status-response-PROD.txt",
+                ((string)date('D, d M Y H:i:s:v') . "\r\n" . \microtime(true) . "\r\n" . $bol_proc_status_response['bolstatuscode'] . "\r\n" .
+                 $bol_proc_status_response['bolreasonphrase'] . "\r\n\r\n" . $bol_proc_status_response['bolbody'] .
+                 "\r\n\r\n"), FILE_APPEND );
+                //
+
                 if($bol_proc_status_response['bolstatuscode'] != 200 ||
                     strpos( $bol_proc_status_response['bolheaders']['Content-Type'][0], 'json' ) === false)
                 {
@@ -67,15 +78,15 @@ class GetBolProcesStatusJob implements ShouldQueue
     public function update_BolProcessStatus_Table(array $bol_response)
     {
 
-        if( $bol_response['bolstatuscode'] == 200 && isset( $bol_response['bolbody'] )   // wat dubbel, maar goed
-            && strpos( $bol_response['bolheaders']['Content-Type'][0], 'json' ) !== false )
+        if( $bol_response['bolstatuscode'] == 200 && !empty( $bol_response['bolbody'] )  ) // wat dubbel, maar goed
+
             {
                 dump('in de update_bol_processStatus_Table functie!!');
 
                 $resp_object = json_decode($bol_response['bolbody']);
 
                 // check om te kijken of deze minimale velden gezet zijn in de proces-status-response-body
-                if( !isset($resp_object->id) || !isset($resp_object->eventType) || !isset($resp_object->status) )
+                if( empty($resp_object->id) || empty($resp_object->eventType) || empty($resp_object->status) )
                 {
                     return 'Geen proces-status->ID of geen proces-status->eventType of geen proces-status->status in response aanwezig!';
                 }
@@ -86,14 +97,14 @@ class GetBolProcesStatusJob implements ShouldQueue
 
 
                 $this->bol_process_status->update([
-                    'entityId' => isset($resp_object->entityId) ? $resp_object->entityId : $this->bol_process_status->entityId,
+                    'entityId' => !empty($resp_object->entityId) ? $resp_object->entityId : $this->bol_process_status->entityId,
                     'eventType' => $resp_object->eventType,
-                    'description' => isset($resp_object->description) ? $resp_object->description : $this->bol_process_status->description,
+                    'description' => !empty($resp_object->description) ? $resp_object->description : $this->bol_process_status->description,
                     'status' => $resp_object->status,
-                    'errorMessage' => isset($resp_object->errorMessage) ? $resp_object->errorMessage : $this->bol_process_status->errorMessage,
-                    'createTimestamp' => isset($resp_object->createTimestamp) ? $resp_object->createTimestamp : $this->bol_process_status->createTimestamp,
-                    'link_to_self' => isset($resp_object->links[0]->href) ? $resp_object->links[0]->href : $this->bol_process_status->link_to_self,
-                    'method_to_self' => isset($resp_object->links[0]->method) ? $resp_object->links[0]->method : $this->bol_process_status->method_to_self,
+                    'errorMessage' => !empty($resp_object->errorMessage) ? $resp_object->errorMessage : $this->bol_process_status->errorMessage,
+                    'createTimestamp' => !empty($resp_object->createTimestamp) ? $resp_object->createTimestamp : $this->bol_process_status->createTimestamp,
+                    'link_to_self' => !empty($resp_object->links[0]->href) ? $resp_object->links[0]->href : $this->bol_process_status->link_to_self,
+                    'method_to_self' => !empty($resp_object->links[0]->method) ? $resp_object->links[0]->method : $this->bol_process_status->method_to_self,
                     ]);
 
 
@@ -107,7 +118,13 @@ class GetBolProcesStatusJob implements ShouldQueue
                 switch($fresh_process_status->eventType)
                 {
                     case 'CREATE_OFFER':
-                    ;
+
+
+                    // eerst request doen (op GetBolOffersJob queue gooien) GET naar: offers/{offerid}
+                    // van daaruit wordt een BolProduktieOffer record aangemaakt mbv deze proces-status
+                    // om dit record te updaten (met name voor: 'notPublishableReasonsCode' en 'notPublishableReasonsDescription')
+                    \App\Jobs\GetBolOffersJob::dispatch('prod', $fresh_process_status->entityId)    ;
+
                     break;
 
                     case 'DELETE_OFFER':
@@ -118,31 +135,35 @@ class GetBolProcesStatusJob implements ShouldQueue
                         {
                             return;
                         }
+
+                        $local_bol_prod_offer->delete();
+
                         $custom_variant = CustomVariant::where(['ean' => $local_bol_prod_offer->ean])->first();
 
-                        if($custom_variant == null)
+                        if($custom_variant == null)  // dit zou natuurlijk niet moeten kunnen voorkomen, maar goed
                         {
                             return;
                         }
 
                         $custom_variant->update(['isPublishedAtBol' => 'unpublished_at_api']);
-                        $local_bol_prod_offer->delete();
+
 
                     break;
 
                     case 'UPDATE_OFFER':                                        // voor update 'onhold' en  'deliveryCode'
-                    ;
+                    \App\Jobs\GetBolOffersJob::dispatch('prod', $fresh_process_status->entityId);
+                    break;
 
                     case 'UPDATE_OFFER_PRICE':                                  // voor update prijs
-                    ;
+                        \App\Jobs\GetBolOffersJob::dispatch('prod', $fresh_process_status->entityId);
                     break;
 
                     case 'UPDATE_OFFER_STOCK':                                  // stock update
-                    ;
+                        \App\Jobs\GetBolOffersJob::dispatch('prod', $fresh_process_status->entityId);
                     break;
 
                     default:
-                    ;
+                    return;
                 }
 
                 //---------------------------------------------------------------------------------------------------------------
@@ -152,7 +173,7 @@ class GetBolProcesStatusJob implements ShouldQueue
                 // meestal niet zichtbaar in de hierna gegenereerde offer-export-csv-file! (de gedelete-offer staat dan vaak nog
                 // gewoon gelist als aangeboden/published). Het is dus de vraag WANNEER iets precies verwerkt is door bol.
                 // deze records worden zowieso per succesvolle gegenereerde offer-export-csv up-gedate, maar dit duurt meestal
-                // ca. een uur..
+                // ca. een uur.. of nog langer, dus zo weinig mogelijk uitgaan van offer export csv
                 //
                 // bovenstaande geldt ook voor updates van prijs, stock en onhold/deliverycode
 
@@ -216,7 +237,7 @@ class GetBolProcesStatusJob implements ShouldQueue
                 //  in de BolProduktieOffer-table gezet,
                 // (ook, zoals blijkt) zitten hier, niet meer up to date offerid's, bij van reeds verwijderde offers.
 
-                // Dus wellicht beste om offer-exports-csv-file 1x per dag ophalen, ochtends?
+                // Dus wellicht beste om offer-exports-csv-file 1x per dag/week ophalen, ochtends?
 
         }
     }

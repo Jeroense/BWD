@@ -22,6 +22,7 @@ class GetBolOrdersJob implements ShouldQueue
     protected $order;
     protected $servertype;
     private $bolErrorBody;
+    public $tries = 3;
     /**
      * Create a new job instance.
      *
@@ -585,22 +586,22 @@ class GetBolOrdersJob implements ShouldQueue
         $newOrder->orderStatus = 'new';
 
         // ivm totale bolsaleprice en transactionfee van alle geldige orderitems van deze order
-        $offeritems_total_transaction_fee_for_order = 0.00;
-        $offeritems_total_price_for_order = 0.00;
+        $orderitems_total_transaction_fee_for_order = 0.00;
+        $orderitems_total_price_for_order = 0.00;
         foreach($bolOrder['orderItems'] as $item)
         {
             if(!empty($item['offerPrice']) && $item['cancelRequest'] == false)
             {
-                $offeritems_total_price_for_order += $item['offerPrice'];
+                $orderitems_total_price_for_order += $item['offerPrice'];
             }
             if(!empty($item['transactionFee']) && $item['cancelRequest'] == false)
             {
-                $offeritems_total_transaction_fee_for_order += $item['transactionFee'];
+                $orderitems_total_transaction_fee_for_order += $item['transactionFee'];
             }
         }
 
-        $newOrder->orderAmount = $offeritems_total_price_for_order;
-        $newOrder->boltransactionFee = $offeritems_total_transaction_fee_for_order;
+        $newOrder->orderAmount = $orderitems_total_price_for_order;
+        $newOrder->boltransactionFee = $orderitems_total_transaction_fee_for_order;
 
         $newOrder->save();
 

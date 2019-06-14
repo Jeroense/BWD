@@ -19,6 +19,7 @@ class DeleteBolOffersJob implements ShouldQueue
 
     protected $bol_offer;
     protected $server_type;
+    public $tries = 3;
     /**
      * Create a new job instance.
      *

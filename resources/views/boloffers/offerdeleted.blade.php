@@ -20,7 +20,7 @@
 
 
 
-        <a href="{{ route('boloffers.offer.checkinitialstatus') }}">Naar Offer mutaties</a>
+        <a type="button" href="{{ route('boloffers.offer.checkinitialstatus') }}">Naar Offer mutaties</a>
         </div>
     </div>
 </div>

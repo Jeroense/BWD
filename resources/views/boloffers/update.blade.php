@@ -32,9 +32,9 @@
                 <th>Name</th>
 
                 <th>Price</th>
-                <th>Fulfil</th>
-                <th>Del.Code</th>
-                <th>Hold?</th>
+                {{-- <th>Fulfil</th> --}}
+                <th>Del.Code / OnHold</th>
+                {{-- <th>Hold?</th> --}}
                 <th>Stock</th>
 
 
@@ -66,6 +66,7 @@
 
 
                         <td>
+                          <div class="box">
                             <form method="POST" action="{{ route('boloffers.offer.offerprice_updated', $offer) }}">
                                 @csrf
                                     <div class="field">
@@ -74,36 +75,38 @@
                                             class="input is-primary" style="width: 100px" step="0.01" required>
                                         </div>
                                     </div>
-                                    <button class="button" type="submit" onclick="return confirm('Prijs van offer {{$offer->ean}} updaten?')">Update</button>
+                                    <button class="button is-primary is-outlined" type="submit" onclick="return confirm('Prijs van offer {{$offer->ean}} updaten?')">Update</button>
                             </form>
+                          </div>
                         </td>
 
-                        <td>FBR</td>
+                        {{-- <td>FBR</td> --}}
 
 
-                        @isset($offer->fulfilmentDeliveryCode)
+                        {{-- @isset($offer->fulfilmentDeliveryCode) --}}
 
                             <td>
+                                <div class="box">
                                 <form method="POST" action="{{ route('boloffers.offer.onhold_and_deliverycode_updated', $offer) }}">
                                     @csrf
                                     <div class="field">
                                         <div class="control">
-                                        <div class="select is-primary">
-                                            <select name="deliveryCode">
-                                            <option>3-5d</option>
-                                            <option>1-2d</option>
-                                            <option>2-3d</option>
-                                            <option>4-8d</option>
-                                            <option>1-8d</option>
-                                            </select>
-                                        </div>
+                                            <div class="select is-primary">
+                                                <select name="deliveryCode">
+                                                <option>3-5d</option>
+                                                <option>1-2d</option>
+                                                <option>2-3d</option>
+                                                <option>4-8d</option>
+                                                <option>1-8d</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
 
-                            </td>
-                        @endisset
+                            {{-- </td> --}}
+                        {{-- @endisset --}}
 
-                            <td>
+                            {{-- <td> --}}
                                 <div class="field">
                                     <label class="checkbox">
                                         <input name="onhold" type="checkbox" class=" " id="onholdcheckbox"
@@ -113,8 +116,9 @@
                                     </label>
 
                                 </div>
-                                    <button class="button" type="submit" onclick="return confirm('Delivery code en Onhold van offer {{$offer->ean}} updaten?')">Update</button>
+                                    <button class="button is-primary is-outlined" type="submit" onclick="return confirm('Delivery code en Onhold van offer {{$offer->ean}} updaten?')">Update</button>
                                 </form>
+                            </div>
                             </td>
 
 
@@ -123,6 +127,7 @@
 
 
                         <td>
+                          <div class="box">
                             <form method="POST" action="{{ route('boloffers.offer.stock_updated', $offer) }}">
                                 @csrf
                                     <div class="field">
@@ -131,8 +136,9 @@
                                             style="width: 100px;" value="{{ old('stockfor_' . $offer->ean)}}">
                                         </div>
                                     </div>
-                                <button class="button" type="submit" onclick="return confirm('Stock van offer {{$offer->ean}} updaten?')">Update</button>
+                                <button class="button is-primary is-outlined" type="submit" onclick="return confirm('Stock van offer {{$offer->ean}} updaten?')">Update</button>
                             </form>
+                          </div>
                         </td>
 
 
@@ -167,6 +173,14 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
+            </div>
+        @endif
+
+        @if (session('code') && session('phrase'))
+            <div class="alert alert-success">
+                <p> HTTP of netwerk error:  </p>
+               <p> {{ session('code') }}  {{ session('phrase') }} </p>
+               <p> Er is iets mis met de internetverbinding of met de server van BOL. Probeer het later nog eens. </p>
             </div>
         @endif
 

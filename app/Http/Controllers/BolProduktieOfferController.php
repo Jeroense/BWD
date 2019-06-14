@@ -55,15 +55,16 @@ class BolProduktieOfferController extends Controller
 
     public function updateBolOffer(BolProduktieOffer $offer)
     {
-
-        $custVariant = CustomVariant::where(['ean' => $offer['ean']])->first();
+        // je kunt de properties van een model aanroepen/zetten als een object (met '$offer->ean'), maar ook als een array, (met $offer['ean'])
+        $custVariant = CustomVariant::where(['ean' => $offer->ean])->first();
 
         if($custVariant != null)
         {
 
             $offer['fileName'] = $custVariant->fileName;
+            // $offer->fileName = $custVariant->fileName;  // dit kan/mag ook! een nieuwe property toevoegen en zetten.
         }
-
+        // dd($offer);
         return view('boloffers.update', compact('offer'));
     }
 
@@ -90,8 +91,8 @@ class BolProduktieOfferController extends Controller
 
         $put_body_for_price_update = json_encode($update_price_body_object);
 
-        dump( $put_body_for_price_update );
-        dump($offer); dump($req->all()); dump( (float)$req['salePrice']);
+        // dump( $put_body_for_price_update );
+        // dump($offer); dump($req->all()); dump( (float)$req['salePrice']);
 
         $bol_prijs_update_response = $this->make_V3_PlazaApiRequest("prod", "offers/{$offer->offerId}/price", "put", $put_body_for_price_update);
 
@@ -103,7 +104,9 @@ class BolProduktieOfferController extends Controller
         // dan BolProcesStatus table updaten met de response
         if($bol_prijs_update_response['bolstatuscode'] != 202 || !isset($bol_prijs_update_response['bolbody']))
         {
-            return;
+            return  redirect()->back()->withInput()->with(['code'=> $bol_prijs_update_response['bolstatuscode'],
+                                                           'phrase' => $bol_prijs_update_response['bolreasonphrase']
+                                                          ]);
         }
 
         $process_status_info = json_decode($bol_prijs_update_response['bolbody']);
@@ -120,7 +123,10 @@ class BolProduktieOfferController extends Controller
             'method_to_self' => $process_status_info->links[0]->method
 
         ]);
-        //
+
+        return view('boloffers.priceupdated', ['offer' => $offer,
+                                               'price' => $req->input('salePrice'),
+                                              ]);
     }
 
 
@@ -157,15 +163,17 @@ class BolProduktieOfferController extends Controller
         //
 
         // check status
-        if($bol_offer_update_resp['bolstatuscode'] != 202 || !isset($bol_offer_update_resp['bolbody']))
+        if($bol_offer_update_resp['bolstatuscode'] != 202 || empty($bol_offer_update_resp['bolbody']))
         {
-            return;
+            return redirect()->back()->withInput()->with(['code'=> $bol_offer_update_resp['bolstatuscode'],
+                                                          'phrase' => $bol_offer_update_resp['bolreasonphrase']
+                                                        ]);
         }
 
         $process_status_info = json_decode($bol_offer_update_resp['bolbody']);
 
         // voor zekerheid om crashes tegen te gaan
-        if( $process_status_info->eventType != 'UPDATE_OFFER' || !isset($process_status_info->status))
+        if( $process_status_info->eventType != 'UPDATE_OFFER' || empty($process_status_info->status))
         {
             return;
         }
@@ -191,9 +199,13 @@ class BolProduktieOfferController extends Controller
             $custVar->update(['boldeliverycode' => $req->input('deliveryCode')]);
         }
 
-        dump($offer); dump($req->all()); dump($onhold);
+        // dump($offer); dump($req->all()); dump($onhold);
 
-        return;
+        return view('boloffers.onholdanddeliverycodeupdated', ['offer' => $offer,
+                                                               'deliverycode' => $req->input('deliveryCode'),
+                                                               'onhold' => $req->input('onhold')
+                                                               ]);
+
     }
 
 
@@ -222,16 +234,18 @@ class BolProduktieOfferController extends Controller
         //
 
                 // dan BolProcesStatus table updaten met de response
-                if($bol_offer_update_resp['bolstatuscode'] != 202 || !isset($bol_offer_update_resp['bolbody']))
+                if($bol_offer_update_resp['bolstatuscode'] != 202 || empty($bol_offer_update_resp['bolbody']))
                 {
-                    return;
+                    return redirect()->back()->withInput()->with(['code'=> $bol_offer_update_resp['bolstatuscode'],
+                                                     'phrase' => $bol_offer_update_resp['bolreasonphrase']
+                                                    ]);
                 }
 
                 $process_status_info = json_decode($bol_offer_update_resp['bolbody']);
 
                 BolProcesStatus::create([
                     'process_status_id' => $process_status_info->id,
-                    'entityId' => $process_status_info->entityId,
+                    'entityId' => $process_status_info->entityId,       // deze krijg je gelijk terug, heb je zelf meegegeven als offerId
                     'eventType' => $process_status_info->eventType,
                     'description' => $process_status_info->description,
                     'status' => $process_status_info->status,
@@ -242,8 +256,17 @@ class BolProduktieOfferController extends Controller
 
                 ]);
 
+                \App\OfferDataUploadedToBol::create([
+                    'process_status_id' => $process_status_info->id,
+                    'eventType' => $process_status_info->eventType,
+                    'offerId' => $offer->offerId,
+                    'ean' => $offer->ean,
+                    'stock' => $req->input('stock'),
+                    'stockManagedByRetailer' => true
+                ]);
 
-        dump($offer); dump($req->all());
+        return view('boloffers.stockupdated', ['offer' => $offer, 'stock' => $req->input('stock')]);
+        // dump($offer); dump($req->all());
     }
 
 
@@ -392,10 +415,10 @@ class BolProduktieOfferController extends Controller
 
     public function checkBolOffersStatus()
     {
-        $custVars_with_publish_at_api_initialized = CustomVariant::where(['isPublishedAtBol' => 'publish_at_api_initialized'])
+        $custVars_with_publish_at_api_initiated = CustomVariant::where(['isPublishedAtBol' => 'publish_at_api_initiated'])
             ->orWhere( ['isPublishedAtBol' => 'unpublish_at_api_initiated'])->get();
 
-        return view('boloffers.publish.initialized', ['cvars' => $custVars_with_publish_at_api_initialized]);
+        return view('boloffers.publish.initiated', ['cvars' => $custVars_with_publish_at_api_initiated]);
     }
 
     // heb het idee dat: ook al zit je throttle-matig (ca 10 reqs/uur) nog binnen de grenzen,

@@ -33,6 +33,7 @@ class TestController extends Controller
         if($offer->doesntExist()){
             dump('offer bestaat niet in DB!');
         }
+        dump( $offer->exists() ?: 'bestaat niet');
     }
 
     public function voorbeeld_latest_first()
@@ -40,6 +41,7 @@ class TestController extends Controller
         $stati1 = \App\BolProcesStatus::where([['eventType', '=', 'UPDATE_OFFER']])->latest()->first();
         $stati2 = \App\BolProcesStatus::where([['eventType', '=', 'UPDATE_OFFER']])->first();
         $smurf = \App\BolProcesStatus::where([['eventType', '=', 'SMURF']])->first();
+
         dump($stati1);dump($stati1->doesntExist()); dump($stati1 === null); dump($smurf);dump($stati2);
 
         $arr = [ ['ean' => '123456789', 'name' => 'jantje'],

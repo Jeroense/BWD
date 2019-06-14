@@ -29,27 +29,28 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->call('App\Http\Controllers\RobotController@processBolOrders')->everyThirtyMinutes();
 
-        // $schedule->call('App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile')
-        //   ->weekdays()
-        //   ->dailyAt('7:00')       // heeft geen zin om dit elk half uur te doen, je krijgt een kopie van de vorige export dan, zie uitleg in GetBolProcessStatusJob.php
-        //   ->timezone('Europe/Amsterdam');
+        $schedule->call('App\Http\Controllers\RobotController@requestBolToConstructBolOffersExportCSVFile')
+          ->weekdays()
+          ->dailyAt('12:02')       // heeft geen zin om dit elk half uur te doen, je krijgt een kopie van de vorige export dan, zie uitleg in GetBolProcessStatusJob.php
+          ->timezone('Europe/Amsterdam');
         //   ->between('8:00', '18:00');
 
-        // $schedule->call('App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB')
-        // ->weekdays()
-        // ->everyTenMinutes()
-        // ->timezone('Europe/Amsterdam');
+        $schedule->call('App\Http\Controllers\RobotController@update_offer_export_process_statusses_in_local_DB')
+        ->weekdays()
+        ->everyTenMinutes()
+        ->timezone('Europe/Amsterdam');
         // ->between('8:15', '18:15');
 
         $schedule->call('App\Http\Controllers\RobotController@updatePendingProcessStatusses')
         // ->weekdays()
-        ->everyFiveMinutes()
+        // ->everyFiveMinutes()
+        ->everyMinute()
         ->timezone('Europe/Amsterdam');
         // ->between('8:15', '18:15');
 
-        $schedule->call('App\Http\Controllers\RobotController@processBolOrders')
-        ->everyFiveMinutes()
-        ->timezone('Europe/Amsterdam');
+        // $schedule->call('App\Http\Controllers\RobotController@processBolOrders')
+        // ->everyFiveMinutes()
+        // ->timezone('Europe/Amsterdam');
 
         // $schedule->call('App\Http\Controllers\RobotController@publishProducts')->everyMinute();
         // $schedule->call('App\Http\Controllers\RobotController@statusCheck')->everyMinute();
