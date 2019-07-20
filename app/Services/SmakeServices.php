@@ -1,0 +1,293 @@
+<?php
+
+namespace App\Services;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Traits\SmakeApi;
+use App\Http\Traits\DebugLog;
+use App\CustomVariant;
+use App\Order;
+use App\OrderItem;
+use App\Customer;
+use App\PostAddress;
+use App\ProductAttribute;
+use App\AttributeValue;
+
+class SmakeServices
+{
+    public $logFile = 'public/logs/message.txt';
+
+    use SmakeApi;
+    use DebugLog;
+
+    public function getProductsToBePublished()
+    {
+        return CustomVariant::where('isPublishedAtBol', 'initiated')->pluck('id');
+    }
+   
+    public function publishProducts()
+    {
+
+    }
+
+    public function getNewOrders()
+    {
+        return Order::where('orderStatus', 'new')->pluck('id');
+    }
+
+    public function dispatchOrder($id)
+    {
+        return 'orderstatus';
+    }
+
+    public function orderCustomVariant($orderId)
+    {
+
+
+
+    //*********************************************************************************************************** */
+        return 0;   // safety net to prevent accidental orders
+    //*********************************************************************************************************** */
+
+
+
+
+        $this->updateOrderStatus($orderId);
+        $orderBody = $this->buildOrderObject($orderId);
+        $path = env('CHECKOUT_PATH','');
+        $checkoutResponse = $this->postSmakeData($orderBody, $path); // if address is not complete -> statusCode 422 will be returned by Smake
+
+        if($checkoutResponse->getStatusCode() != 201) {  // 201 created
+            return $checkoutResponse->getStatusCode();
+        }
+
+        $thisOrder = json_decode($checkoutResponse->getBody());
+        $orderIsAccepted = $this->IsOrderAccepted($thisOrder->id);
+
+        if ($orderIsAccepted->getStatusCode() != 200) {
+            return $orderIsAccepted->getStatusCode();
+        }
+
+        $shippingHandle = $this->isValidShippingHandle($thisOrder->id);
+        $shippingLine = $this->buildAndSubmitShippingLine($thisOrder->id, $shippingHandle);
+
+        if($shippingLine->getStatusCode() != 200) {
+            return $shippingLine->getStatusCode();
+        }
+
+        $completedCheckout = $this->finalyzeCheckout($shippingLine);
+
+        if($completedCheckout->getStatusCode() != 200) {
+            return $completedCheckout->getStatusCode();
+        }
+
+        $data = json_decode($completedCheckout->getBody());
+
+        $orderData = [];
+        $orderData['smakeOrderId'] = $data->id;
+        $orderData['orderStatus'] = $data->state;
+        $orderData['shippingRate'] = $data->shipping_line->price;
+        $orderData['shippingMethod'] = $data->shipping_line->handle;
+        $orderData['orderAmount'] = $data->subtotal;
+        $orderData['totalTax'] = $data->total_tax;
+        $this->updateOrder($orderId, $orderData);
+
+        return $completedCheckout->getStatusCode();
+    }
+
+    public function updateOrderStatus($id)
+    {
+        $order = Order::find($id);
+        $order->orderStatus = 'initialized';
+        $order->save();
+
+        return;
+    }
+
+    public function buildOrderObject($orderId)
+    {
+        $customer = Customer::find(Order::find($orderId)->customerId);
+        $deliveryAddress = $customer->hasDeliveryAddress != 0 ? PostAddress::where('customerId', $customer->id)->first() : $customer;
+        $lnPrefix = $deliveryAddress->lnPrefix == "" ? "" : ', ' . $deliveryAddress->lnPrefix;
+
+        $app = app();
+        $shippingAddress = $app->make('stdClass');
+        $shippingAddress->first_name = $deliveryAddress->firstName;
+        $shippingAddress->last_name = $deliveryAddress->lastName . $lnPrefix;
+        $shippingAddress->street1 = $deliveryAddress->street . ' ' . $deliveryAddress->houseNr;  // housenrPostfix toevoegen.
+        $shippingAddress->zip = $deliveryAddress->postalCode;
+        $shippingAddress->city = $deliveryAddress->city;
+        $shippingAddress->country_code = $deliveryAddress->countryCode;
+        $shippingAddress->province_code = $deliveryAddress->provinceCode;
+        $shippingAddress->phone = $deliveryAddress->phone;
+        $shippingAddress->email = $deliveryAddress->email;
+
+        $logo = $app->make('stdClass');
+        $logo->image_id = //****** SmakeImageID
+        $whiteLabelAddress = $app->make('stdClass');
+        $whiteLabelAddress->first_name = $deliveryAddress->firstName;
+        $whiteLabelAddress->last_name = $deliveryAddress->lastName . $lnPrefix;
+        $whiteLabelAddress->street1 = $deliveryAddress->street . ' ' . $deliveryAddress->houseNr;
+        $whiteLabelAddress->zip = $deliveryAddress->postalCode;
+        $whiteLabelAddress->city = $deliveryAddress->city;
+        $whiteLabelAddress->country_code = $deliveryAddress->countryCode;
+        $whiteLabelAddress->province_code = $deliveryAddress->provinceCode;
+        $whiteLabelAddress->phone = $deliveryAddress->phone;
+        $whiteLabelAddress->email = $deliveryAddress->email;
+        $whiteLabelAddress->logo = $logo;
+
+        $billingAddress = $app->make('stdClass');
+        $billingAddress->first_name = 'Barry';
+        $billingAddress->last_name = 'Bles';
+        $billingAddress->street1 = 'Ulenpasweg 2F4';
+        $billingAddress->zip = '7041 GB';
+        $billingAddress->city = "'s-Heerenberg";
+        $billingAddress->country_code = 'NL';
+        $billingAddress->province_code = 'GD';
+        $billingAddress->phone = '0314653130';
+        $billingAddress->email = 'administratie@borduurwerkdeal.nl';
+
+        $orderedItems = OrderItem::where('orderId', $orderId)->get();
+        $items = array();
+
+        foreach($orderedItems as $item)
+        {
+            $smakeVariantId = CustomVariant::where('id', $item->variantId)->value('smakeVariantId');
+            $itemObject = $app->make('stdClass');
+            $itemObject->variant_id = $smakeVariantId;
+            $itemObject->quantity = $item->qty;
+            array_push($items, $itemObject);
+        }
+
+        $checkout = $app->make('stdClass');
+        $checkout->email = 'info@internetsport.nl';
+        $checkout->items = $items;
+        $checkout->shipping_address = $shippingAddress;
+        $checkout->whitelabel_address = $whiteLabelAddress;
+        $checkout->billing_address = $billingAddress;
+
+        return json_encode((array)$checkout);
+    }
+
+    public function updateOrder($orderId, $orderData)
+    {
+        $update = Order::find($orderId);
+        $update->smakeOrderId = $orderData['smakeOrderId'];
+        $update->orderStatus = $orderData['orderStatus'];
+        $update->shippingMethod = $orderData['shippingMethod'];
+        $update->shippingRate = $orderData['shippingRate'];
+        $update->orderAmount = $orderData['orderAmount'];
+        $update->totalTax = $orderData['totalTax'];
+        $update->save();
+
+        return;
+    }
+
+    public function IsOrderAccepted($id)
+    {
+        $url = 'checkouts/'.$id.'/shipping-rates';
+        $response = $this->getSmakeData($url);
+
+        if ($response->getStatusCode() != 202 && $response->getStatusCode() != 200) {    // reasonPhrase = "Accepted"
+            return $response;
+        }
+
+        $pollUrl = $response->getHeaders()['Location'][0];  // retrieve poll url
+
+        for($i = 0; $i < 100; $i++)
+        {
+            usleep(100000);
+            $pollResult = $this->Poll($pollUrl);
+
+            if($pollResult->getStatusCode() === 200) {
+                return $pollResult;
+            }
+        }
+
+        return $pollResult;
+    }
+
+    public function isValidShippingHandle($id)
+    {
+        $url = 'checkouts/'.$id.'/shipping-rates';
+        $response = $this->getSmakeData($url);
+        $shippingOptions = json_decode($response->getBody())->data;
+        $shippingHandles = [];
+
+        foreach($shippingOptions as $option)    // build array of available shipping 'handle' options
+        {
+            array_push($shippingHandles, $option->handle);
+        }
+
+        return $shippingHandles[0];
+    }
+
+    public function buildAndSubmitShippingLine($id, $shippingLine)
+    {
+        $app = app();
+        $shippingHandle = $app->make('stdClass');
+        $shippingHandle->handle = $shippingLine;
+        $shippingLine = $app->make('stdClass');
+        $shippingLine->shipping = $shippingHandle;
+        $shippingResponse = $this->putSmakeData(json_encode($shippingLine), 'checkouts/'.$id);
+
+        if ($shippingResponse->getStatusCode() != 200) {
+            // \Session::flash('flash_message', 'Er is iets fout gegaan met het versturen van de order naar Smake, neem contact op met de systeembeheerder');
+            return $shippingResponse;
+        }
+
+        return $shippingResponse;
+    }
+
+    public function finalyzeCheckout($shippingLine)
+    {
+        $shippingData = json_decode($shippingLine->getBody());
+        $app = app();
+        $payment = $app->make('stdClass');
+        $payment->handle = "invoice";
+        $payment->amount = $shippingData->total;
+        $completeCheckout = $app->make('stdClass');
+        $completeCheckout->payment = $payment;
+
+     //   $checkOutResponse= $this->putSmakeData(json_encode($completeCheckout), 'checkouts/'.$shippingData->id.'/complete');
+
+        if ($checkOutResponse->getStatusCode() != 200) {
+            return $checkOutResponse;
+        }
+
+        return $checkOutResponse;
+    }
+
+    public function orderProgress()
+    {
+        $CurrentStates = Order::where([
+            ['orderStatus', '!=','initialized'],
+            ['orderStatus', '!=','new']
+        ])->pluck('id');
+
+        if(count($CurrentStates) < 1) {
+            return;
+        }
+
+        foreach($CurrentStates as $state){
+            $result = $this->updateStatus($state);
+        }
+
+        return $result;
+    }
+
+    public function updateStatus($id)
+    {
+        $SelectedOrder = Order::find($id);
+        $response = $this->getSmakeData('orders?filter[id]='.$SelectedOrder->smakeOrderId);
+        $CurrentSmakeStatus = json_decode($response->getBody())->data[0]->state;
+
+        if($CurrentSmakeStatus != $SelectedOrder->orderStatus) {
+            $SelectedOrder->orderStatus = $CurrentSmakeStatus;
+            $SelectedOrder->save();
+        }
+
+        return $response->getStatusCode();
+    }
+}
+

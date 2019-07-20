@@ -7,65 +7,79 @@
                 <div class="notification is-danger">{{ Session::get('flash_message') }}</div>
             @endif
             <div>
-                <a href="{{ route('orders.store') }}" id="orderRoute" returnUrl="{{ route('variants.index', '') }}"></a>
+                <a href="{{ route('customvariants.updateSalesPrice') }}" id="updatePrice" returnUrl="{{ route('customvariants.publish') }}"></a>
+            </div>
+
+            <div class="pull-right control">
+                <div class="field">
+                    <div class="control">
+                        <div class="select is-danger">
+                            <select id="mySelectBox" name="mySelectName" onchange="filter(value);">
+                                <option value="all">Alle custom varianten</option>
+                                <option value="published">Gepubliceerd op Bol.com</option>
+                                <option value="unpublished">Niet gepubliceerd op Bol.com</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
             <table class="table">
+                <br>
+                <hr>
                 <tbody>
                     @if ($customVariants->count() !== 0)
                         @foreach ($customVariants as $customVariant)
-                            <tr class="orderForm">
-                                <td><p style="max-width: 350px;" class="imageHead is-size-6 has-text-centered has-text-weight-bold m-t-10 m-b-10">{{$customVariant->designName}}
+                            <tr class="orderForm" value="{{ $customVariant->isPublishedAtBol }}">
+                                <td><p style="max-width: 350px;" class="imageHead is-size-6 has-text-centered has-text-weight-bold m-t-10 m-b-10">{{ $customVariant->designName }}
                                     <img src="{{url('/customVariants')}}/{{ $customVariant->filename }}" width="250"></p>
                                     <div class="has-text-centered has-text-weight-bold is-size-5 m-b-20">{{ $customVariant->variantName }}</div>
                                 </td>
                                 <td>
                                     <div class="has-text-centered m-b-20">
-                                        <p>Maat: <span class='has-text-weight-bold is-size-5'>{{ $customVariant->size }}</span></p>
+                                        @if ($customVariant->isPublishedAtBol == "published")
+                                            <div class="tile">
+                                                <div class="tile is-parent is-vertical m-l-10">
+                                                    <article class="tile is-child notification is-danger is-outlined">
+                                                        <p class="subtitle">Aanwezig op Bol.com</p>
+                                                    </article>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        <br>
+                                        <div class="control m-l-20">Maat: <span class='has-text-weight-bold is-size-5'>{{ $customVariant->size }}</span></div>
                                     </div>
-                                    {{-- <form class="form" action="{{ route('customvariants.orderVariant', $customVariant->id) }}" method="post"> --}}
-                                    <form class="form" action="{{ route('orders.create', $customVariant->id) }}" method="post">
+                                    <form class="form">
+                                        {{-- <form class="form" action="{{ route('customvariants.initiatePublishing') }}" method="post" --}}
                                         {!! csrf_field() !!}
-
-                                        <div class="input-group plus-minus-input">
-                                            {{-- <input id="customerId" type="hidden" value="test"> --}}
-                                            <input id="variantId{{ $loop->iteration }}" type="hidden" value="{{ $customVariant->id }}">
-                                            <div class="input-group-button is-danger is-outlined is-pulled-left m-b-15 m-l-50">
-                                                <button type="button"
-                                                        class="button hollow circle"
-                                                        data-quantity="minus"
-                                                        data-field="quantity"
-                                                        onclick="AmountMin({{ $loop->iteration }});">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                            <div class="input-group-field is-pulled-left">
-                                                <input class="input-group-field is-size-6"
-                                                    id="orderAmount{{ $loop->iteration }}"
-                                                    name="orderAmount{{ $loop->iteration }}"
-                                                    type="number"
-                                                    size="2"
-                                                    maxlength="4"
-                                                    placeholder="Aantal"
-                                                    {{-- value="0" --}}
-                                                    onkeyup="checkAmount(value, {{ $loop->iteration }});">
-                                            </div>
-                                            <div class="input-group-button is-pulled-left">
-                                                <button type="button"
-                                                        class="button hollow circle"
-                                                        data-quantity="plus"
-                                                        data-field="quantity"
-                                                        onclick="AmountPlus({{ $loop->iteration }});">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
                                         <div>
+                                            <div class="field is-horizontal m-l-20">
+                                                <div class="field-label is-normal">
+                                                    <label class="label">Verkoopprijs:</label>
+                                                </div>
+                                                <div class="field-body">
+                                                    <div class="field">
+                                                    <p class="control">
+                                                        <input type="text"
+                                                               class="input"
+                                                               name="name"
+                                                               id="name"
+                                                               value="{{ $customVariant->salesprice }}"
+                                                               onchange="persistPrice( {{ $customVariant->id }}, value, {{ $minimalSalesPrice }});">
+                                                    </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <button type="button"
-                                                     id="orderButton{{ $loop->iteration }}"
-                                                     class="buttonHidden button is-normal is-outlined is-pulled-left m-t-25 m-b-5 m-l-50"
-                                                     disabled
-                                                     onclick="updateOrderItems({{ $loop->iteration }});">
-                                                Bestellen
+                                                    id="orderButton"
+                                                    class="buttonHidden button is-outlined is-danger is-pulled-left m-t-30 m-b-5 m-l-20"
+                                                    onclick="publishItem({{ $customVariant->id }});">
+                                                @if ($customVariant->isPublishedAtBol !== "published")
+                                                    Publiceren op Bol.com
+                                                @else
+                                                    Verwijderen van Bol.com
+                                                @endif
+
                                             </button>
                                         </div>
                                     </form>
@@ -81,7 +95,8 @@
     </div>
 @endsection
 @section('scripts')
-    {{-- <script src="{{ asset('js/createOrder.js') }}"></script> --}}
+<script src="{{ asset('js/filterVariants.js') }}"></script>
+<script src="{{ asset('js/UpdateSalesPrices.js') }}"></script>
 @endsection
 
 

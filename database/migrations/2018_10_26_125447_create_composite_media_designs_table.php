@@ -15,15 +15,15 @@ class CreateCompositeMediaDesignsTable extends Migration
     {
         Schema::create('composite_media_designs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('designName')->Unique();
-            $table->string('baseColor');
+            $table->string('designName', 190)->Unique();
+            $table->string('baseColor', 25);
             $table->integer('designId');
             $table->integer('smakeId')->nullable();
-            $table->string('fileName');
-            $table->string('fileFolder');
+            $table->string('fileName', 100);
+            $table->string('fileFolder', 190);
             $table->integer('fileSize')->nullable();
-            $table->string('smakeFileName')->nullable();
-            $table->string('smakeDownloadUrl')->nullable();
+            $table->string('smakeFileName', 100)->nullable();
+            $table->string('smakeDownloadUrl', 190)->nullable();
             $table->double('width_px',5,0);
             $table->double('height_px',5,0);
             $table->timestamps();

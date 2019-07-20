@@ -5,7 +5,8 @@
                 <li class="{{ Nav::isResource('manage') }}">
                     <h3><span class="icon-color fas fa-tasks"></span>Systeem Beheer</h3>
                     <ul>
-                        <li class="{{ Nav::isRoute('system.index') }}"><a href="{{route('system.index')}}">Systeem Info</a></li>
+                        <li class="{{ Nav::isRoute('system.index') }}
+                                   {{ Nav::isRoute('system.edit') }}"><a href="{{route('system.index')}}">Systeem Info</a></li>
                         <li class="{{ Nav::isRoute('users.index') }}
                                    {{ Nav::isRoute('users.create') }}
                                    {{ Nav::isRoute('users.edit') }}
@@ -39,11 +40,11 @@
                     </ul>
                 </li>
                 <li class="{{ Nav::isResource('products') }}">
-                    <h3><span class="icon-color fas fa-industry"></span>Smake</h3>
+                    <h3><span class="icon-color fas fa-industry"></span>Smake - Bol</h3>
                     <ul>
                         <li class="{{ Nav::isRoute('products.productDownload') }}
                                    {{ Nav::isRoute('products.download') }}"><a href="{{route('products.productDownload')}}">Producten Downloaden</a></li>
-                        <li class="{{ Nav::isRoute('productAttributes.index') }}"><a href="{{route('productAttributes.index')}}">Product Attributen</a></li>
+                        <li class="{{ Nav::isRoute('productAttributes.index') }}"><a href="{{route('productAttributes.index')}}">Bol Product Attributen</a></li>
                     </ul>
                 </li>
 

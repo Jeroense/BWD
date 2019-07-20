@@ -10,7 +10,8 @@ class DesignController extends Controller
 {
     use SmakeApi;
 
-    public function dashboard() {
+    public function dashboard()
+    {
         return view('designs.dashboard');
     }
 
@@ -19,12 +20,14 @@ class DesignController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         $images = Design::All();
         return view('designs.index', compact('images'));
     }
 
-    public function upload() {
+    public function upload()
+    {
         return view('designs.upload');
     }
 

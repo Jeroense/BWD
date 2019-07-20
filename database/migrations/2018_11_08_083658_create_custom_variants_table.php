@@ -17,21 +17,23 @@ class CreateCustomVariantsTable extends Migration
             $table->increments('id');
             $table->integer('variantId')->unsigned()->nullable();
             $table->integer('smakeVariantId')->unsigned()->nullable();
-            $table->string('variantName');
-            $table->string('ean');
-            $table->string('size');
+            $table->string('variantName', 190);
+            $table->string('ean', 15);
+            $table->string('size', 10);
             $table->double('price',8,2)->nullable();
             $table->double('tax',8,2)->nullable();
             $table->double('taxRate',8,2)->nullable();
             $table->double('total',8,2)->nullable();
-            $table->string('filename');
+            $table->double('salesprice',8,2)->nullable();
+            $table->string('filename', 100);
             $table->integer('compositeMediaId')->unsigned();
             $table->integer('smakeCompositeMediaId')->unsigned()->nullable();
             $table->integer('productionMediaId')->unsigned();
             $table->integer('smakeProductionMediaId')->unsigned()->nullable();
             $table->double('width_mm',5,1);
             $table->double('height_mm',5,1);
-            $table->string('isPublishedAtBol')->nullable(); // initiated, pending, published, Failure
+            $table->string('isInBolCatalog', 50)->nullable(); // initiated, inCatalog  (update is set by change in any product Attribute and creates new product feed)
+            $table->string('isPublishedAtBol', 50)->nullable(); // initiated, delete, pending, published, Failure
             $table->timestamps();
 
             $table->foreign('variantId')

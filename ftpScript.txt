@@ -1,0 +1,7 @@
+debug -0 bolftp.log 3
+open ftp.bol.nl
+user <boluser> <bolpassword>
+put -O,<upload directory> <filename>
+
+
+exit

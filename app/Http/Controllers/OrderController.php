@@ -21,11 +21,13 @@ class OrderController extends Controller
     use DebugLog;
     use SmakeApi;
 
-    public function dashboard() {
+    public function dashboard()
+    {
         return view('orders.dashboard');
     }
 
-    public function index() {
+    public function index()
+    {
         return view('orders.index');
     }
 
@@ -46,7 +48,8 @@ class OrderController extends Controller
             $newOrder->shippingMethod = 'versand-niederlade-69';
             $newOrder->save();
 
-            foreach($orderItems as $orderItem) {
+            foreach($orderItems as $orderItem)
+            {
                 $newItem = new OrderItem();
                 $newItem->orderId = $newOrder->id;
                 $newItem->qty = $orderItem->items->qty;

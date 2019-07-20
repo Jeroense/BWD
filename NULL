@@ -13894,3 +13894,33 @@ Running scheduled command: App\Http\Controllers\RobotController@publishProducts
 Running scheduled command: App\Http\Controllers\RobotController@publishProducts
 Running scheduled command: App\Http\Controllers\RobotController@publishProducts
 Running scheduled command: App\Http\Controllers\RobotController@publishProducts
+Running scheduled command: App\Http\Controllers\RobotController@publishProducts
+PHP Fatal error:  Cannot redeclare App\Services\OrderService::getNewOrders() in C:\Development\BWD\app\Services\OrderService.php on line 634
+
+   Symfony\Component\Debug\Exception\FatalErrorException  : Cannot redeclare App\Services\OrderService::getNewOrders()
+
+  at C:\Development\BWD\app\Services\OrderService.php:634
+    630|     }
+    631| 
+    632|     /*********** Smake functions ***********/
+    633| 
+  > 634|     public function getNewOrders()
+    635|     {
+    636|         return Order::where('orderStatus', 'new')->pluck('id');
+    637|     }
+    638|
+
+
+   Whoops\Exception\ErrorException  : Cannot redeclare App\Services\OrderService::getNewOrders()
+
+  at C:\Development\BWD\app\Services\OrderService.php:634
+    630|     }
+    631| 
+    632|     /*********** Smake functions ***********/
+    633| 
+  > 634|     public function getNewOrders()
+    635|     {
+    636|         return Order::where('orderStatus', 'new')->pluck('id');
+    637|     }
+    638|
+

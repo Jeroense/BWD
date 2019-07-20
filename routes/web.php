@@ -32,6 +32,8 @@ Route::prefix('products')->middleware('role:superadministrator|administrator')->
 Route::prefix('customvariants')->middleware('role:superadministrator|administrator')->group(function() {
     Route::resource('/customvariants', 'CustomVariantController');
     Route::get('/publish','CustomVariantController@publish')->name('customvariants.publish');
+    Route::post('/initiatePublishing','CustomVariantController@initiatePublishing')->name('customvariants.initiatePublishing');
+    Route::post('/updateSalesPrice','CustomVariantController@updateSalesPrice')->name('customvariants.updateSalesPrice');
     Route::post('/orderVariant/{id}','CustomVariantController@orderVariant')->name('customvariants.orderVariant');
     Route::get('/orderVariant/{id}','CustomVariantController@orderVariant')->name('customvariants.orderVariant');
 });

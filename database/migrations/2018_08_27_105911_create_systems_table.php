@@ -15,20 +15,20 @@ class CreateSystemsTable extends Migration
     {
         Schema::create('systems', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('organizationName');
-            $table->string('street');
-            $table->string('houseNr');
-            $table->string('postalCode');
-            $table->string('city');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('cocNr');
-            $table->string('vatNr');
-            $table->string('appSerNr');
-            $table->string('systemKey');
+            $table->string('organizationName', 150);
+            $table->string('street', 150);
+            $table->string('houseNr', 100);
+            $table->string('postalCode', 7);
+            $table->string('city', 150);
+            $table->string('email', 100);
+            $table->string('phone', 25);
+            $table->string('cocNr', 25);
+            $table->string('vatNr', 100);
+            $table->string('appSerNr', 100);
+            $table->string('systemKey', 150);
             $table->text('apiKeyBol');
             $table->text('apiKeySmake');
-            $table->string('logo_id')->nullable();
+            $table->string('logo_id', 100)->nullable();
             $table->timestamps();
         });
     }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Traits\SmakeApi;
+use App\Http\Traits\DebugLog;
 use App\CompositeMediaDesign;
+use App\Product;
 use App\Order;
 use App\OrderItem;
 use App\Customer;
@@ -17,6 +19,7 @@ use App\TshirtMetric;
 class CustomVariantController extends Controller
 {
     use SmakeApi;
+    use DebugLog;
 
     public function index()
     {
@@ -24,7 +27,8 @@ class CustomVariantController extends Controller
         $customers = Customer::select('lastName', 'firstName', 'lnPrefix', 'id')->orderBy('lastName')->orderBy('firstName')->get();
 
         $persons = [];
-        foreach($customers as $customer) {
+        foreach($customers as $customer)
+        {
            array_push($persons, $customer->lnPrefix == null
                 ? ['fullName' => $customer->lastName . ', ' . $customer->firstName, 'id' => $customer->id]
                 : ['fullName' => $customer->lastName . ', ' . $customer->firstName . ' ' . $customer->lnPrefix, 'id' => $customer->id]);
@@ -36,16 +40,40 @@ class CustomVariantController extends Controller
     public function publish()
     {
         $customVariants = CustomVariant::All();
-        return view('customVariants.publish', compact ('customVariants'));
+        $product = Product::first();
+        foreach($customVariants as $variant)
+        {
+            if($variant->salesprice == null) {
+                $variant->salesprice = $product->salesprice;
+            }
+        }
+        $minimalSalesPrice = $product->salesprice;
+        return view('customVariants.publish', compact ('customVariants', 'minimalSalesPrice'));
+    }
+
+    public function initiatePublishing()
+    {
+        // set "isPublished" to initiated
+    }
+
+    public function updateSalesPrice(Request $jsonData)
+    {
+        $prijs = (double) $jsonData->salesPrice;
+        CustomVariant::where('id', $jsonData->id)->update(['salesprice' => $prijs]);
+        $app = app();
+        $returnObj = $app->make('stdClass');
+        $returnObj->ok = "true";
+        $returnObj->returnUrl = "publish";
+        $returnObj->message = "updated successfully";
+        return response()->json($returnObj);
     }
 
     public function createVariant(Request $request)
     {
-        // dd($request);
         $compositeMediaDesign = CompositeMediaDesign::find($request->compositeMediaId);
-        if($compositeMediaDesign->smakeId === null){
+        if($compositeMediaDesign->smakeId === null) {
             $uploadResult = $this->uploadCompositeMediaDesign($compositeMediaDesign);
-            if($uploadResult == 'error'){
+            if($uploadResult == 'error') {
                 \Session::flash("flash_message", "Er is iets fout gegaan met het uploaden van het 'Design', neem contact op met de systeembeheerder");
                 return redirect()->route('variants.index');
             }
@@ -54,7 +82,7 @@ class CustomVariantController extends Controller
             $currentEan = 'ean'.$i;
             $currentSize = 'Size'.$i;
             $currentVariantId = 'variantId'.$i;
-            if($request->has($currentEan)){
+            if($request->has($currentEan)) {
                 $shirtLength = TshirtMetric::select('length_mm')->where('size', $request->$currentSize)->get()[0]->length_mm;
                 $pixelSize = $shirtLength / 1125;  //was 1325 at first test order
                 $newCustomVariant = new CustomVariant();
@@ -74,7 +102,7 @@ class CustomVariantController extends Controller
                 $newSmakeCustomVariant = $this->UploadCustomVariant($newCustomVariant, $uploadCustomVariantBody);
 
                 if($newSmakeCustomVariant == null) {
-                    if(\Session::pull('error') == 404){
+                    if(\Session::pull('error') == 404) {
                         return redirect()->route('variants.index')->with('status', 'Deze variant is momenteel niet beschikbaar');
                     } else {
                         return redirect()->route('variants.index')->with('status', 'Er is iets fout gegaan met het versturen van de custom variant naar Smake, neem contact op met de systeembeheerder');
@@ -131,7 +159,7 @@ class CustomVariantController extends Controller
                 usleep(100000);
                 $pollResult = $this->Poll($pollUrl);
 
-                if($pollResult->getStatusCode() === 200){
+                if($pollResult->getStatusCode() === 200) {
                     $designedVariantId = json_decode($pollResult->getBody())->resource_url;
                     $smakeNewCustomVariant = json_decode($this->getSmakeData('designed-variants/'.substr(strrchr($designedVariantId, '/'), 1))->getBody());
                     break;

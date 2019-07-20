@@ -23,7 +23,8 @@ class VariantController extends Controller
         return view('variants.index', compact('compositeMediaDesigns'));
     }
 
-    public function selectSizes($id) {
+    public function selectSizes($id)
+    {
         $customVariant = CompositeMediaDesign::find($id);
         $shirtsOfColor = Attribute::where('value', $customVariant->baseColor)->pluck('variantId');
         $AvailableSizesWithVariantIds = Attribute::whereIn('variantId', $shirtsOfColor)->where('key', 'size')->get()->pluck('value','variantId')->Unique();

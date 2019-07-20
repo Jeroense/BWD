@@ -15,8 +15,9 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('smakeId');
-            $table->string('productName');
+            $table->string('smakeId', 25);
+            $table->string('productName', 150);
+            $table->double('salesprice',8,2)->nullable();
             $table->mediumText('productDescription');
             $table->timestamps();
         });
@@ -25,7 +26,6 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('productId')->nullable();
             $table->unsignedInteger('variantId')->unique()->nullable();
-            $table->unsignedInteger('variantId')->nullable();
             $table->boolean('isBwdVariant')->nullable();
             $table->char('ean', 15)->unique()->nullable();
             $table->decimal('price',7,2)->nullable();
@@ -34,8 +34,8 @@ class CreateProductsTable extends Migration
             $table->string('size', 5)->nullable();
             $table->string('color', 25)->nullable();
             $table->integer('mediaId')->nullable();
-            $table->string('localMediaFileName')->nullable();
-            $table->string('smallFileName')->nullable();
+            $table->string('localMediaFileName', 100)->nullable();
+            $table->string('smallFileName', 100)->nullable();
             $table->boolean('isCustomVariant')->nullable();
             $table->boolean('isUploaded')->nullable();
             $table->timestamps();
@@ -50,8 +50,8 @@ class CreateProductsTable extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('variantId');
-            $table->string('key');
-            $table->string('value');
+            $table->string('key', 100);
+            $table->string('value', 100);
 
             $table->foreign('variantId')
                     ->references('id')

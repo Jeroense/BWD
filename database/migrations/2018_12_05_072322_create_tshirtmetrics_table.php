@@ -16,8 +16,8 @@ class CreateTshirtmetricsTable extends Migration
     {
         Schema::create('tshirtmetrics', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('size');
-            $table->string('length_mm');
+            $table->string('size', 25);
+            $table->string('length_mm', 25);
 
             $table->index('size');
         });

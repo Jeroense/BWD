@@ -22,7 +22,7 @@ class SystemController extends Controller
     {
         $sysinfo = System::first();
         // dd($sysinfo);
-        if(!$sysinfo == null){
+        if(!$sysinfo == null) {
             return view('manage.system.index', compact('sysinfo'));
         }
         $sysInfo = new System();
@@ -36,7 +36,6 @@ class SystemController extends Controller
 
     public function storeLogo(Request $request)
     {
-        // dd($request);
         $image = $request->file('file');
         $logo = new Design();
         $logo->originalName = $image->getClientOriginalName();
@@ -45,9 +44,7 @@ class SystemController extends Controller
         $logo->fileName = time().md5($logo->originalName).'.'.$image->getClientOriginalExtension();
         $logo->path = public_path('systemImages');
         $image->move($logo->path, $logo->fileName);
-
         $logoPath = env('IMAGE_PATH', '');
-        // dd('dump');
         $response = $this->UploadMedia($logoPath, $logo->fileName, $logo->fileSize, 'media');
 
         $this->log_responseBody('text', $response, $file = 'public/logs/message.txt');
@@ -56,11 +53,9 @@ class SystemController extends Controller
         if ($response->getStatusCode() === 201) {
 
             $logoResponse = json_decode($response->getBody());
-            // $systemData = System::firstOrCreate(['id' => '1']);
             $this->log_var('logo_id = ' . $logoResponse->id, $file = 'logs/message.txt');
             $systemData = System::find(1);
             $systemData->update(['logo_id' => $logoResponse->id]);
-            // $systemData->update(['organizationName' => 'Shifa']);
             $this->log_var('name = ' . $systemData->organizationName, $file = 'logs/message.txt');
         } else {
             unset($response);
@@ -174,7 +169,6 @@ class SystemController extends Controller
             'cocNr' => 'required|max:10',
             'vatNr' => 'required|max:15',
             'appSerNr' => 'required|max:255',
-            // 'systemKey' => 'required|max:255',
             'apiKeyBol' => 'required|max:255',
             'apiKeySmake' => 'required|max:255'
         ]);

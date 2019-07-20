@@ -15,13 +15,13 @@ class UserController extends Controller {
     public $logFile = 'logs/message.txt';
     use DebugLog;
 
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         $users = User::orderBy('id', 'desc')->paginate(10);
         $pageTitle = 'Overzicht Gebruikers';
         return view('manage.users.index', compact('users', 'pageTitle'))->withUsers($users);
@@ -32,7 +32,8 @@ class UserController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         $pageTitle = 'Nieuwe Gebruiker Aanmaken';
         return view('manage.users.create', compact('pageTitle'));
     }
@@ -43,7 +44,8 @@ class UserController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $this->validate($request, [
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users'
@@ -82,7 +84,8 @@ class UserController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id)
+    {
         $user = User::findOrFail($id);
         return view('manage.users.show', compact('user'));
     }
@@ -93,7 +96,8 @@ class UserController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
         $roles = Role::all();
         $user = User::where('id', $id)->with('roles')->first();
         return view( 'manage.users.edit', compact('user', 'roles'));
@@ -106,7 +110,8 @@ class UserController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $this->validate($request, [
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email,'.$id
@@ -130,13 +135,6 @@ class UserController extends Controller {
         $user->save();
         $user->syncRoles(explode(',', $request->roles));
         return redirect()->route('users.show', $id);
-
-        // if ($user->save()) {
-        //     return redirect()->route('users.show', $id);
-        // } else {
-        //     Session::flash('error', 'There was a problem saving the updated user info to the database. Try again later.');
-        //     return redirect()->route('users.edit', $id);
-        // }
     }
 
     /**

@@ -17,10 +17,10 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->integer('smakeOrderId')->unsigned()->nullable();
             $table->integer('customerId')->unsigned()->nullable();
-            $table->string('bolOrderNr')->nullable();
-            $table->string('orderStatus')->nullable();
-            $table->string('deliveryDate')->nullable();
-            $table->string('shippingMethod')->nullable();
+            $table->string('bolOrderNr', 100)->nullable();
+            $table->string('orderStatus', 50)->nullable();
+            $table->string('deliveryDate', 100)->nullable();
+            $table->string('shippingMethod', 100)->nullable();
             $table->double('shippingRate',8,2)->nullable();
             $table->double('orderAmount',8,2)->nullable();
             $table->double('totalTax',8,2)->nullable();

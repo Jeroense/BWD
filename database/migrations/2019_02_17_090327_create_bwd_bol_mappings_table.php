@@ -15,24 +15,24 @@ class CreateBwdBolMappingsTable extends Migration
     {
         Schema::create('bwd_bol_mappings', function (Blueprint $table) {
             $table->increments('mapping_id');
-            $table->string('smakeVariantId');
-            $table->string('ean');
-            $table->string('id');
-            $table->string('filename');
-            $table->string('size');
-            $table->string('variantName');
-            $table->string('productgroup');
-            $table->string('materialdescription');
-            $table->string('gender');
-            $table->string('seasonalyear');
-            $table->string('targetaudience');
-            $table->string('salespitch');
-            $table->string('brand');
-            $table->string('material');
-            $table->string('sleevelength');
-            $table->string('shirttype');
-            $table->string('seasonalcollection');
-            $table->string('instructions');
+            $table->string('smakeVariantId', 100);
+            $table->string('ean', 15);
+            $table->string('id', 100);
+            $table->string('filename', 100);
+            $table->string('size', 25);
+            $table->string('variantName', 190);
+            $table->string('productgroup', 100);
+            $table->string('materialdescription', 190);
+            $table->string('gender', 25);
+            $table->string('seasonalyear', 100);
+            $table->string('targetaudience', 100);
+            $table->mediumText('salespitch');
+            $table->string('brand', 190);
+            $table->string('material', 190);
+            $table->string('sleevelength', 100);
+            $table->string('shirttype', 100);
+            $table->string('seasonalcollection', 100);
+            $table->string('instructions', 190);
             $table->timestamps();
         });
     }

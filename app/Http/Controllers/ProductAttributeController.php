@@ -76,7 +76,6 @@ class ProductAttributeController extends Controller
     public function edit($id)
     {
         $attribute = ProductAttribute::with('attrValues')->find($id);
-        // dd($attribute);
         return view('productAttributes.edit', compact('attribute'));
     }
 

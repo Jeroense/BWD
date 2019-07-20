@@ -40,8 +40,6 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-
-
         $this->validate($request, [
             'name' => 'required|max:100|alpha_dash|unique:permissions,name',
             'display_name' => 'required|max:255',

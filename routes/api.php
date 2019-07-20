@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 Route::prefix('v1')->group(function() {
     Route::resource('/', 'CompositeMediaDesignController');
     Route::post('/store', 'OrderController@store')->name('orders.store');
+    
 });
 
 // Route::prefix('v1')->group(function() {

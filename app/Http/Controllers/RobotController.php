@@ -32,13 +32,13 @@ class RobotController extends Controller
 
     public function processBolOrders()
     {
-        $bolOrders = $this->getBolOrders();
-
+        $bolOrders = $this->autoOrder->getOrdersFromBol();
+        
         if(count($bolOrders) < 1) {
             return 0;
         }
 
-        $status = $this->persistBolOrders($bolOrders);
+        $status = $this->autoOrder->persistBolOrders($bolOrders);
         return $status;
     }
 
