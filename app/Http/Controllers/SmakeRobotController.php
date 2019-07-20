@@ -12,43 +12,31 @@ class RobotController extends Controller
     public $logFile = 'public/logs/message.txt';
     use DebugLog;
 
-    protected $autoOrder;
+    protected $smakeService;
     public function __construct(OrderService $service)
     {
-        $this->autoOrder = $service;
+        $this->smakeService = $service;
     }
 
     public function publishProducts()
     {
-        $newProducts = $this->autoOrder->getProductsToBePublished();
+        $newProducts = $this->smakeService->getProductsToBePublished();
 
         if(count($newProducts) < 1){
             return;
         }
 
-        $productFeed = $this->autoOrder->buildProductFeed($newProducts);
-        return $this->autoOrder->publishProducts($productFeed);
-    }
-
-    public function processBolOrders()
-    {
-        $bolOrders = $this->autoOrder->getOrdersFromBol();
-        
-        if(count($bolOrders) < 1) {
-            return 0;
-        }
-
-        $status = $this->autoOrder->persistBolOrders($bolOrders);
-        return $status;
+        $productFeed = $this->smakeService->buildProductFeed($newProducts);
+        return $this->smakeService->publishProducts($productFeed);
     }
 
     public function findAndDispatchOrders()
     {
-        $newOrders = $this->autoOrder->getNewOrders();
+        $newOrders = $this->smakeService->getNewOrders();
 
         if($newOrders != null) {
             foreach($newOrders as $order) {
-                $result = $this->autoOrder->orderCustomVariant($order);
+                $result = $this->smakeService->orderCustomVariant($order);
 
                 // ???? $this->updateBolOrderStatus($updates);
 
@@ -62,7 +50,7 @@ class RobotController extends Controller
 
     public function statusCheck()
     {
-        $updates = $this->autoOrder->orderProgress();
+        $updates = $this->smakeService->orderProgress();
         $status = $this->updateBolOrderStatus($updates);
         return $status;
     }
